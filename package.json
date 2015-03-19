@@ -1,6 +1,6 @@
 {
   "name": "numeric-quantity",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convert integer plus fraction into a decimal value",
   "main": "index.js",
   "scripts": {
