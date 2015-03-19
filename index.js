@@ -51,7 +51,7 @@ module.exports = function(qty) {
   var denominator = 1;
 
   // Numerify capture section [1]
-  finalResult = ar[1] - 0;
+  finalResult = parseInt(ar[1]);
 
   // If capture section [2] is null, then we're dealing with an integer
   // and there is nothing left to process
@@ -62,22 +62,22 @@ module.exports = function(qty) {
   if (ar[2].search(/^\./) !== -1) {
     // If first char is "." it's a decimal so just trim to 3 decimal places
 
-    numerator = ("0" + ar[2]) - 0
+    numerator = parseFloat(ar[2]);
     finalResult += Math.round(numerator * 1000) / 1000;
 
   } else if (ar[2].search(/^\s*\//) != -1) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
 
-    numerator = ar[1] - 0;
-    denominator = ar[2].replace("/", "") - 0;
+    numerator = parseInt(ar[1]);
+    denominator = parseInt(ar[2].replace("/", ""));
     finalResult = Math.round((numerator * 1000) / denominator) / 1000;
 
   } else {
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
 
     fractionArray = ar[2].split("/");
-    numerator = (fractionArray[0] - 0);
-    denominator = (fractionArray[1] - 0);
+    numerator = parseInt(fractionArray[0]);
+    denominator = parseInt(fractionArray[1]);
     finalResult += Math.round((numerator * 1000) / denominator) / 1000;
 
   }
