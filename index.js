@@ -23,26 +23,37 @@ module.exports = function(qty) {
     .replace(/\u215D/g, " 5/8")
     .replace(/\u215E/g, " 7/8");
 
-  // 0: entire string
-  // 1: the whole number ("2" from "2 2/3")
-  //    OR
-  //    the numerator ("2" from "2/3")
-  // 2: entire fraction ("2/3" from "2 2/3")
-  //    OR
-  //    decimal portion (".66" from "2.66")
-  //    OR
-  //    denominator ("/3" from "2/3")
+  /*
+                    Regex captures
 
-  // re.exec("1")      // ["1",     "1", null,   null]
-  // re.exec("1.23")   // ["1.23",  "1", ".23",  null]
-  // re.exec("1 2/3")  // ["1 2/3", "1", " 2/3", " 2"]
-  // re.exec("2/3")    // ["2/3",   "2", "/3",   null]
+  +=====+====================+========================+
+  |  #  |    Description     |        Example         |
+  +=====+====================+========================+
+  |  0  |  entire string     |  "2 2/3" from "2 2/3"  |
+  +-----+--------------------+------------------------+
+  |  1  |  the whole number  |  "2" from "2 2/3"      |
+  |     |  - OR -            |                        |
+  |     |  the numerator     |  "2" from "2/3"        |
+  +-----+--------------------+------------------------+
+  |  2  |  entire fraction   |  "2/3" from "2 2/3"    |
+  |     |  - OR -            |                        |
+  |     |  decimal portion   |  ".66" from "2.66"     |
+  |     |  - OR -            |                        |
+  |     |  denominator       |  "/3" from "2/3"       |
+  +=====+====================+========================+
+
+  re.exec("1")       // [ "1",     "1", null,   null ]
+  re.exec("1.23")    // [ "1.23",  "1", ".23",  null ]
+  re.exec("1 2/3")   // [ "1 2/3", "1", " 2/3", " 2" ]
+  re.exec("2/3")     // [ "2/3",   "2", "/3",   null ]
+  re.exec("2 / 3")   // [ "2 / 3", "2", "/ 3",  null ]
+  */
   var re = /^\s*(\d+)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
 
   var ar = re.exec(sQty);
 
   // if the regex fails, return -1
-  if (ar == null) {
+  if ( ar == null ) {
     return finalResult;
   }
 
@@ -51,34 +62,34 @@ module.exports = function(qty) {
   var denominator = 1;
 
   // Numerify capture section [1]
-  finalResult = parseInt(ar[1]);
+  finalResult = parseInt( ar[1] );
 
   // If capture section [2] is null, then we're dealing with an integer
   // and there is nothing left to process
-  if (ar[2] == null) {
+  if ( ar[2] == null ) {
     return finalResult;
   }
 
-  if (ar[2].search(/^\./) !== -1) {
-    // If first char is "." it's a decimal so just trim to 3 decimal places
+  if ( ar[2].search(/^\./) !== -1 ) {
 
-    numerator = parseFloat(ar[2]);
+    // If first char is "." it's a decimal so just trim to 3 decimal places
+    numerator = parseFloat( ar[2] );
     finalResult += Math.round(numerator * 1000) / 1000;
 
-  } else if (ar[2].search(/^\s*\//) != -1) {
-    // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
+  } else if ( ar[2].search(/^\s*\//) != -1 ) {
 
-    numerator = parseInt(ar[1]);
-    denominator = parseInt(ar[2].replace("/", ""));
+    // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
+    numerator = parseInt( ar[1] );
+    denominator = parseInt( ar[2].replace("/", "") );
     finalResult = Math.round((numerator * 1000) / denominator) / 1000;
 
   } else {
-    // Otherwise it's a mixed fraction (e.g. "1 2/3")
 
+    // Otherwise it's a mixed fraction (e.g. "1 2/3")
     fractionArray = ar[2].split("/");
-    numerator = parseInt(fractionArray[0]);
-    denominator = parseInt(fractionArray[1]);
-    finalResult += Math.round((numerator * 1000) / denominator) / 1000;
+    numerator = parseInt( fractionArray[0] );
+    denominator = parseInt( fractionArray[1] );
+    finalResult += Math.round( numerator * 1000 / denominator ) / 1000;
 
   }
 
