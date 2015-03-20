@@ -3,51 +3,58 @@ module.exports = function(qty) {
   var finalResult = -1;
 
   // Resolve any unicode vulgar fractions
-  var sQty = (qty + "")
-    .replace(/\u00BC/g, " 1/4")
-    .replace(/\u00BD/g, " 1/2")
-    .replace(/\u00BE/g, " 3/4")
-    .replace(/\u2150/g, " 1/7")
-    .replace(/\u2151/g, " 1/9")
-    .replace(/\u2152/g, " 1/10")
-    .replace(/\u2153/g, " 1/3")
-    .replace(/\u2154/g, " 2/3")
-    .replace(/\u2155/g, " 1/5")
-    .replace(/\u2156/g, " 2/5")
-    .replace(/\u2157/g, " 3/5")
-    .replace(/\u2158/g, " 4/5")
-    .replace(/\u2159/g, " 1/6")
-    .replace(/\u215A/g, " 5/6")
-    .replace(/\u215B/g, " 1/8")
-    .replace(/\u215C/g, " 3/8")
-    .replace(/\u215D/g, " 5/8")
-    .replace(/\u215E/g, " 7/8");
+  var vulgarFractionsRegex = /(\u00BC|\u00BD|\u00BE|\u2150|\u2151|\u2152|\u2153|\u2154|\u2155|\u2156|\u2157|\u2158|\u2159|\u215A|\u215B|\u215C|\u215D|\u215E)/;
 
-  /*
-                    Regex captures
+  var vulgarFractionsCharMap = {
+    "\u00BC": " 1/4",
+    "\u00BD": " 1/2",
+    "\u00BE": " 3/4",
+    "\u2150": " 1/7",
+    "\u2151": " 1/9",
+    "\u2152": " 1/10",
+    "\u2153": " 1/3",
+    "\u2154": " 2/3",
+    "\u2155": " 1/5",
+    "\u2156": " 2/5",
+    "\u2157": " 3/5",
+    "\u2158": " 4/5",
+    "\u2159": " 1/6",
+    "\u215A": " 5/6",
+    "\u215B": " 1/8",
+    "\u215C": " 3/8",
+    "\u215D": " 5/8",
+    "\u215E": " 7/8"
+  };
 
-  +=====+====================+========================+
-  |  #  |    Description     |        Example         |
-  +=====+====================+========================+
-  |  0  |  entire string     |  "2 2/3" from "2 2/3"  |
-  +-----+--------------------+------------------------+
-  |  1  |  the whole number  |  "2" from "2 2/3"      |
-  |     |  - OR -            |                        |
-  |     |  the numerator     |  "2" from "2/3"        |
-  +-----+--------------------+------------------------+
-  |  2  |  entire fraction   |  "2/3" from "2 2/3"    |
-  |     |  - OR -            |                        |
-  |     |  decimal portion   |  ".66" from "2.66"     |
-  |     |  - OR -            |                        |
-  |     |  denominator       |  "/3" from "2/3"       |
-  +=====+====================+========================+
+  var sQty = (qty + "").replace(vulgarFractionsRegex, function(m, vf) {
+    return vulgarFractionsCharMap[vf];
+  });
 
-  re.exec("1")       // [ "1",     "1", null,   null ]
-  re.exec("1.23")    // [ "1.23",  "1", ".23",  null ]
-  re.exec("1 2/3")   // [ "1 2/3", "1", " 2/3", " 2" ]
-  re.exec("2/3")     // [ "2/3",   "2", "/3",   null ]
-  re.exec("2 / 3")   // [ "2 / 3", "2", "/ 3",  null ]
-  */
+  /**
+   *                    Regex captures
+   *
+   *  +=====+====================+========================+
+   *  |  #  |    Description     |        Example         |
+   *  +=====+====================+========================+
+   *  |  0  |  entire string     |  "2 2/3" from "2 2/3"  |
+   *  +-----+--------------------+------------------------+
+   *  |  1  |  the whole number  |  "2" from "2 2/3"      |
+   *  |     |  - OR -            |                        |
+   *  |     |  the numerator     |  "2" from "2/3"        |
+   *  +-----+--------------------+------------------------+
+   *  |  2  |  entire fraction   |  "2/3" from "2 2/3"    |
+   *  |     |  - OR -            |                        |
+   *  |     |  decimal portion   |  ".66" from "2.66"     |
+   *  |     |  - OR -            |                        |
+   *  |     |  denominator       |  "/3" from "2/3"       |
+   *  +=====+====================+========================+
+   *
+   *  re.exec("1")       // [ "1",     "1", null,   null ]
+   *  re.exec("1.23")    // [ "1.23",  "1", ".23",  null ]
+   *  re.exec("1 2/3")   // [ "1 2/3", "1", " 2/3", " 2" ]
+   *  re.exec("2/3")     // [ "2/3",   "2", "/3",   null ]
+   *  re.exec("2 / 3")   // [ "2 / 3", "2", "/ 3",  null ]
+   */
   var re = /^\s*(\d+)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
 
   var ar = re.exec(sQty);

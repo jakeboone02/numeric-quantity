@@ -36,7 +36,7 @@ assert(nq(".9")).is(-1);
 assert(nq("0.0.0")).is(-1);
 // Whole numbers
 assert(nq("1")).is(1);
-// TODO: don't allow leading zeroes on whole numbers
+// TODO?: don't allow leading zeroes on whole numbers
 // assert(nq("010")).is(-1);
 assert(nq("100")).is(100);
 // Decimals
@@ -63,6 +63,29 @@ assert(nq("3/5")).is(0.6);
 assert(nq("1 3/5")).is(1.6);
 assert(nq("4/5")).is(0.8);
 assert(nq("1 4/5")).is(1.8);
+// Unicode vulgar fractions
+assert(nq("\u00BC")).is(0.25);   // 1/4
+assert(nq("\u00BD")).is(0.5);    // 1/2
+assert(nq("\u00BE")).is(0.75);   // 3/4
+assert(nq("\u2150")).is(0.143);  // 1/7
+assert(nq("\u2151")).is(0.111);  // 1/9
+assert(nq("\u2152")).is(0.1);    // 1/10
+assert(nq("\u2153")).is(0.333);  // 1/3
+assert(nq("\u2154")).is(0.667);  // 2/3
+assert(nq("\u2155")).is(0.2);    // 1/5
+assert(nq("\u2156")).is(0.4);    // 2/5
+assert(nq("\u2157")).is(0.6);    // 3/5
+assert(nq("\u2158")).is(0.8);    // 4/5
+assert(nq("\u2159")).is(0.167);  // 1/6
+assert(nq("\u215A")).is(0.833);  // 5/6
+assert(nq("\u215B")).is(0.125);  // 1/8
+assert(nq("\u215C")).is(0.375);  // 3/8
+assert(nq("\u215D")).is(0.625);  // 5/8
+assert(nq("\u215E")).is(0.875);  // 7/8
+// Mixed unicode vulgar fraction
+assert(nq("2 \u2155")).is(2.2);  // 2 1/5
+// Mixed unicode vulgar fraction - no space
+assert(nq("2\u2155")).is(2.2);   // 2 1/5
 
 // Report results
 console.log(passCount + " of " + testCount + " tests passed.");
