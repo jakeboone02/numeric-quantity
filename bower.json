@@ -1,0 +1,24 @@
+{
+  "name": "numeric-quantity",
+  "main": "index.js",
+  "version": "0.1.2",
+  "homepage": "https://github.com/jakeboone02/numeric-quantity",
+  "authors": [
+    "Jake Boone <jakeboone02@gmail.com>"
+  ],
+  "description": "Convert integer plus fraction into a decimal value",
+  "keywords": [
+    "convert",
+    "number",
+    "fraction",
+    "decimal"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
