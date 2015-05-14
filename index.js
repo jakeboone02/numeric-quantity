@@ -1,6 +1,7 @@
 module.exports = function(qty) {
 
-  var finalResult = -1;
+  var badResult = -1;
+  var finalResult = badResult;
 
   // Resolve any unicode vulgar fractions
   var vulgarFractionsRegex = /(\u00BC|\u00BD|\u00BE|\u2150|\u2151|\u2152|\u2153|\u2154|\u2155|\u2156|\u2157|\u2158|\u2159|\u215A|\u215B|\u215C|\u215D|\u215E)/;
@@ -55,45 +56,64 @@ module.exports = function(qty) {
    *  re.exec("2/3")     // [ "2/3",   "2", "/3",   null ]
    *  re.exec("2 / 3")   // [ "2 / 3", "2", "/ 3",  null ]
    */
-  var re = /^\s*(\d+)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
+  var re = /^\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
 
   var ar = re.exec(sQty);
 
-  // if the regex fails, return -1
-  if ( ar == null ) {
-    return finalResult;
+  // If the regex fails, give up
+  if (!ar) {
+    return badResult;
+  }
+
+  // Store the capture groups so we don't have to access the array
+  // elements over and over
+  var captureGroup1 = ar[1];
+  var captureGroup2 = ar[2];
+
+  // The regex can pass and still capture nothing in the relevant groups,
+  // which means it failed for our purposes
+  if (!captureGroup1 && !captureGroup2) {
+    return badResult;
+  }
+
+  // Numerify capture group 1
+  if (!captureGroup1 && captureGroup2 && captureGroup2.search(/^\./) !== -1) {
+    finalResult = 0;
+  } else {
+    finalResult = parseInt( captureGroup1 );
+  }
+
+  if(isNaN(finalResult)) {
+    return badResult;
   }
 
   var fractionArray;
   var numerator = 0;
   var denominator = 1;
 
-  // Numerify capture section [1]
-  finalResult = parseInt( ar[1] );
-
-  // If capture section [2] is null, then we're dealing with an integer
+  // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
-  if ( ar[2] == null ) {
+  if ( !captureGroup2 ) {
     return finalResult;
   }
 
-  if ( ar[2].search(/^\./) !== -1 ) {
+  if ( captureGroup2.search(/^\./) !== -1 ) {
 
     // If first char is "." it's a decimal so just trim to 3 decimal places
-    numerator = parseFloat( ar[2] );
+    numerator = parseFloat( captureGroup2 );
     finalResult += Math.round(numerator * 1000) / 1000;
 
-  } else if ( ar[2].search(/^\s*\//) != -1 ) {
+  } else if ( captureGroup2.search(/^\s*\//) !== -1 ) {
 
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
-    numerator = parseInt( ar[1] );
-    denominator = parseInt( ar[2].replace("/", "") );
+    numerator = parseInt( captureGroup1 );
+    denominator = parseInt( captureGroup2.replace("/", "") );
     finalResult = Math.round((numerator * 1000) / denominator) / 1000;
 
   } else {
 
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
-    fractionArray = ar[2].split("/");
+    fractionArray = captureGroup2.split("/");
     numerator = parseInt( fractionArray[0] );
     denominator = parseInt( fractionArray[1] );
     finalResult += Math.round( numerator * 1000 / denominator ) / 1000;
@@ -101,4 +121,4 @@ module.exports = function(qty) {
   }
 
   return finalResult;
-}
+};
