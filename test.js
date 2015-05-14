@@ -8,7 +8,7 @@ var passCount = 0;
 
 function Tester(attempt) {
   this.attempt = attempt;
-};
+}
 
 Tester.prototype.is = function(test) {
   var passes = this.attempt === test;
@@ -18,28 +18,32 @@ Tester.prototype.is = function(test) {
   }
 
   console.log(!!passes ? "pass" : "FAIL: '" + this.attempt + "' is not '" + test + "'");
-}
+};
 
 function assert(attempt) {
   testCount++;
   return new Tester(attempt);
 }
 
+var badResult = -1;
+
 // Text
-assert(nq("NaN")).is(-1);
-assert(nq("")).is(-1);
+assert(nq("NaN")).is(badResult);
+assert(nq("NaN.25")).is(badResult);
+assert(nq("NaN 1/4")).is(badResult);
+assert(nq("")).is(badResult);
 // Invalid numbers
-assert(nq("/1")).is(-1);
-assert(nq("/0")).is(-1);
-assert(nq("/0.5")).is(-1);
-assert(nq(".9")).is(-1);
-assert(nq("0.0.0")).is(-1);
+assert(nq("/1")).is(badResult);
+assert(nq("/0")).is(badResult);
+assert(nq("/0.5")).is(badResult);
+assert(nq("0.0.0")).is(badResult);
 // Whole numbers
 assert(nq("1")).is(1);
 // TODO?: don't allow leading zeroes on whole numbers
-// assert(nq("010")).is(-1);
+// assert(nq("010")).is(badResult);
 assert(nq("100")).is(100);
 // Decimals
+assert(nq(".9")).is(0.9);
 assert(nq("1.1")).is(1.1);
 // Halves
 assert(nq("1.51")).is(1.51);
