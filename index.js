@@ -1,4 +1,14 @@
-module.exports = function(qty) {
+(function (global, factory) {
+    if (typeof exports === "object" && typeof module !== "undefined" && module.exports) {
+      module.exports = factory();
+    } else if (typeof define === "function" && define.amd) {
+      define(factory);
+    } else {
+      global.numericQuantity = factory();
+    }
+}(this, function() {
+
+var numericQuantity = function(qty) {
 
   var badResult = -1;
   var finalResult = badResult;
@@ -122,3 +132,6 @@ module.exports = function(qty) {
 
   return finalResult;
 };
+
+return numericQuantity;
+}));

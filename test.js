@@ -2,7 +2,8 @@
  * Crude test suite
  */
 
-var nq = require("./");
+var nq = this.numericQuantity !== undefined ? this.numericQuantity : require("./");
+
 var testCount = 0;
 var passCount = 0;
 
@@ -94,4 +95,6 @@ assert(nq("2\u2155")).is(2.2);   // 2 1/5
 // Report results
 console.log(passCount + " of " + testCount + " tests passed.");
 
-process.exit(testCount - passCount ? 1 : 0);
+if (typeof process !== "undefined") {
+  process.exit(testCount - passCount ? 1 : 0);
+}
