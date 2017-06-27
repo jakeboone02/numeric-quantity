@@ -4,7 +4,7 @@
 
 ##### npm
 
-https://www.npmjs.com/package/numeric-quantity
+[numeric-quantity](https://www.npmjs.com/package/numeric-quantity)
 
 ```
 npm i --save numeric-quantity
