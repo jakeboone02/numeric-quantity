@@ -4,7 +4,7 @@
   "description": "Convert integer plus fraction into a decimal value",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./test.js"
   },
   "repository": {
     "type": "git",
