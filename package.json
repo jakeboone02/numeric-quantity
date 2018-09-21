@@ -3,6 +3,7 @@
   "version": "0.3.1",
   "description": "Convert integer plus fraction into a decimal value",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "node ./test.js"
   },
