@@ -8,6 +8,11 @@
   }
 }(this, function () {
 
+  /**
+   * Converts a string to a number.  The string can include mixed numbers
+   * or vulgar fractions.
+   * @param {string} qty The string to convert to a number
+   */
   var numericQuantity = function (qty) {
 
     var badResult = -1;
