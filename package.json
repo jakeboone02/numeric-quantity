@@ -2,9 +2,13 @@
   "name": "numeric-quantity",
   "version": "0.3.3",
   "description": "Convert integer plus fraction into a decimal value",
-  "main": "index.js",
+  "main": "dist/numeric-quantity.cjs.js",
+  "module": "dist/numeric-quantity.esm.js",
+  "browser": "dist/numeric-quantity.umd.js",
   "types": "index.d.ts",
   "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "node ./test.js"
   },
   "repository": {
@@ -22,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/jakeboone02/numeric-quantity/issues"
   },
-  "homepage": "https://github.com/jakeboone02/numeric-quantity"
+  "homepage": "https://github.com/jakeboone02/numeric-quantity",
+  "devDependencies": {
+    "rollup": "^1.20.0"
+  }
 }
