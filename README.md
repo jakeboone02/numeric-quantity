@@ -12,12 +12,18 @@ Converts a string to a number. The string can include mixed numbers or vulgar fr
 npm i --save numeric-quantity
 ```
 
+or
+
+```
+yarn add numeric-quantity
+```
+
 ##### Browser
 
 In the browser, available as a global function `numericQuantity`.
 
 ```
-<script src="bower_components/numeric-quantity/index.js"></script>
+<script src="path/to/numeric-quantity.umd.js"></script>
 <script>
   console.log(numericQuantity("10 1/2"));  // 10.5
 </script>
@@ -26,7 +32,7 @@ In the browser, available as a global function `numericQuantity`.
 ### Usage
 
 ```
-var numericQuantity = require("numeric-quantity");  // assuming node environment
+import numericQuantity from 'numeric-quantity';
 
 console.log( numericQuantity("1 1/2") );   // 1.5
 console.log( numericQuantity("2 2/3") );   // 2.666
