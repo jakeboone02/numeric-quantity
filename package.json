@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "node ./test.js"
+    "test": "node ./tests/test.js"
   },
   "repository": {
     "type": "git",
