@@ -2,6 +2,8 @@
 
 Converts a string to a number. The string can include mixed numbers or vulgar fractions.
 
+For the inverse operation, converting a number to an imperial measurement, check out [format-quantity](https://www.npmjs.com/package/format-quantity).
+
 ### Installation
 
 ##### npm
