@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/numeric-quantity.svg)](//npmjs.com/package/numeric-quantity)
+
 # numeric-quantity
 
 Converts a string to a number. The string can include mixed numbers or vulgar fractions.
@@ -7,8 +9,6 @@ For the inverse operation, converting a number to an imperial measurement, check
 ### Installation
 
 ##### npm
-
-[numeric-quantity](https://www.npmjs.com/package/numeric-quantity)
 
 ```
 npm i --save numeric-quantity
