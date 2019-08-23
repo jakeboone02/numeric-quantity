@@ -9,12 +9,12 @@ Converts a string to a number. The string can include mixed numbers or vulgar fr
 
 For the inverse operation, converting a number to an imperial measurement, check out [format-quantity](https://www.npmjs.com/package/format-quantity).
 
-### Installation
+## Installation
 
-##### npm
+### npm
 
 ```
-npm i --save numeric-quantity
+npm i numeric-quantity
 ```
 
 or
@@ -23,7 +23,7 @@ or
 yarn add numeric-quantity
 ```
 
-##### Browser
+### Browser
 
 In the browser, available as a global function `numericQuantity`.
 
@@ -34,7 +34,7 @@ In the browser, available as a global function `numericQuantity`.
 </script>
 ```
 
-### Usage
+## Usage
 
 ```js
 import numericQuantity from 'numeric-quantity';
@@ -42,3 +42,5 @@ import numericQuantity from 'numeric-quantity';
 console.log( numericQuantity("1 1/2") );   // 1.5
 console.log( numericQuantity("2 2/3") );   // 2.666
 ```
+
+The return value will be `-1` if the provided string does not resemble a positive number.  `numeric-quantity` does not support negative numbers.
