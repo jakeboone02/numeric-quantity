@@ -5,7 +5,7 @@
   "main": "dist/numeric-quantity.cjs.js",
   "module": "dist/numeric-quantity.esm.js",
   "browser": "dist/numeric-quantity.umd.js",
-  "types": "index.d.ts",
+  "types": "dist/numeric-quantity.d.ts",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -28,6 +28,8 @@
   },
   "homepage": "https://github.com/jakeboone02/numeric-quantity",
   "devDependencies": {
-    "rollup": "^1.20.0"
+    "rollup": "^1.20.0",
+    "rollup-plugin-typescript2": "^0.23.0",
+    "typescript": "^3.5.3"
   }
 }

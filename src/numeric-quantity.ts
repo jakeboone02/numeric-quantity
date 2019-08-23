@@ -1,16 +1,35 @@
+type VulgarFraction =
+  | '\u00BC'
+  | '\u00BD'
+  | '\u00BE'
+  | '\u2150'
+  | '\u2151'
+  | '\u2152'
+  | '\u2153'
+  | '\u2154'
+  | '\u2155'
+  | '\u2156'
+  | '\u2157'
+  | '\u2158'
+  | '\u2159'
+  | '\u215A'
+  | '\u215B'
+  | '\u215C'
+  | '\u215D'
+  | '\u215E';
+
 /**
  * Converts a string to a number.  The string can include mixed numbers
  * or vulgar fractions.
- * @param {string} qty The string to convert to a number
  */
-var numericQuantity = function(qty) {
-  var badResult = -1;
-  var finalResult = badResult;
+function numericQuantity(qty: string) {
+  const badResult = -1;
+  let finalResult = badResult;
 
   // Resolve any unicode vulgar fractions
-  var vulgarFractionsRegex = /(\u00BC|\u00BD|\u00BE|\u2150|\u2151|\u2152|\u2153|\u2154|\u2155|\u2156|\u2157|\u2158|\u2159|\u215A|\u215B|\u215C|\u215D|\u215E)/;
+  const vulgarFractionsRegex = /(\u00BC|\u00BD|\u00BE|\u2150|\u2151|\u2152|\u2153|\u2154|\u2155|\u2156|\u2157|\u2158|\u2159|\u215A|\u215B|\u215C|\u215D|\u215E)/;
 
-  var vulgarFractionsCharMap = {
+  const vulgarFractionsCharMap: { [k in VulgarFraction]: string } = {
     '\u00BC': ' 1/4',
     '\u00BD': ' 1/2',
     '\u00BE': ' 3/4',
@@ -31,9 +50,10 @@ var numericQuantity = function(qty) {
     '\u215E': ' 7/8',
   };
 
-  var sQty = (qty + '').replace(vulgarFractionsRegex, function(m, vf) {
-    return vulgarFractionsCharMap[vf];
-  });
+  const sQty = `${qty}`.replace(
+    vulgarFractionsRegex,
+    (m, vf: VulgarFraction) => vulgarFractionsCharMap[vf]
+  );
 
   /**
    *                    Regex captures
@@ -60,9 +80,9 @@ var numericQuantity = function(qty) {
    *  re.exec("2/3")     // [ "2/3",   "2", "/3",   null ]
    *  re.exec("2 / 3")   // [ "2 / 3", "2", "/ 3",  null ]
    */
-  var re = /^\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
+  const re = /^\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
 
-  var ar = re.exec(sQty);
+  const ar = re.exec(sQty);
 
   // If the regex fails, give up
   if (!ar) {
@@ -71,8 +91,7 @@ var numericQuantity = function(qty) {
 
   // Store the capture groups so we don't have to access the array
   // elements over and over
-  var captureGroup1 = ar[1];
-  var captureGroup2 = ar[2];
+  const [, captureGroup1, captureGroup2] = ar;
 
   // The regex can pass and still capture nothing in the relevant groups,
   // which means it failed for our purposes
@@ -91,10 +110,6 @@ var numericQuantity = function(qty) {
     return badResult;
   }
 
-  var fractionArray;
-  var numerator = 0;
-  var denominator = 1;
-
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
   if (!captureGroup2) {
@@ -103,22 +118,21 @@ var numericQuantity = function(qty) {
 
   if (captureGroup2.search(/^\./) !== -1) {
     // If first char is "." it's a decimal so just trim to 3 decimal places
-    numerator = parseFloat(captureGroup2);
+    const numerator = parseFloat(captureGroup2);
     finalResult += Math.round(numerator * 1000) / 1000;
   } else if (captureGroup2.search(/^\s*\//) !== -1) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
-    numerator = parseInt(captureGroup1);
-    denominator = parseInt(captureGroup2.replace('/', ''));
+    const numerator = parseInt(captureGroup1);
+    const denominator = parseInt(captureGroup2.replace('/', ''));
     finalResult = Math.round((numerator * 1000) / denominator) / 1000;
   } else {
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
-    fractionArray = captureGroup2.split('/');
-    numerator = parseInt(fractionArray[0]);
-    denominator = parseInt(fractionArray[1]);
+    const fractionArray = captureGroup2.split('/');
+    const [numerator, denominator] = fractionArray.map(v => parseInt(v));
     finalResult += Math.round((numerator * 1000) / denominator) / 1000;
   }
 
   return finalResult;
-};
+}
 
 export default numericQuantity;
