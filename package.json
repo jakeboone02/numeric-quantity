@@ -6,6 +6,7 @@
   "module": "dist/numeric-quantity.esm.js",
   "browser": "dist/numeric-quantity.umd.js",
   "types": "dist/numeric-quantity.d.ts",
+  "files": ["dist"],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
