@@ -25,7 +25,7 @@ yarn add numeric-quantity
 
 In the browser, available as a global function `numericQuantity`.
 
-```
+```html
 <script src="path/to/numeric-quantity.umd.js"></script>
 <script>
   console.log(numericQuantity("10 1/2"));  // 10.5
@@ -34,7 +34,7 @@ In the browser, available as a global function `numericQuantity`.
 
 ### Usage
 
-```
+```js
 import numericQuantity from 'numeric-quantity';
 
 console.log( numericQuantity("1 1/2") );   // 1.5
