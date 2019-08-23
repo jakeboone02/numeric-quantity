@@ -2,34 +2,34 @@
  * Crude test suite
  */
 
-var nq =
+const nq =
   this.numericQuantity !== undefined ? this.numericQuantity : require('..');
 
-var testCount = 0;
-var passCount = 0;
+let testCount = 0;
+let passCount = 0;
 
-function Tester(attempt) {
-  this.attempt = attempt;
-}
-
-Tester.prototype.is = function(test) {
-  var passes = this.attempt === test;
-
-  if (!!passes) {
-    passCount++;
+class Tester {
+  constructor(attempt) {
+    this.attempt = attempt;
   }
 
-  console.log(
-    !!passes ? 'pass' : "FAIL: '" + this.attempt + "' is not '" + test + "'"
-  );
-};
+  is(test) {
+    const passes = this.attempt === test;
+    if (passes) {
+      passCount++;
+    }
+    console.log(
+      passes ? 'pass' : "FAIL: '" + this.attempt + "' is not '" + test + "'"
+    );
+  }
+}
 
 function assert(attempt) {
   testCount++;
   return new Tester(attempt);
 }
 
-var badResult = -1;
+const badResult = -1;
 
 // Text
 assert(nq('NaN')).is(badResult);
