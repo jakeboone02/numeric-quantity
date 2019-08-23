@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/numeric-quantity.svg)](//npmjs.com/package/numeric-quantity)
+[![Travis (.org)](https://img.shields.io/travis/jakeboone02/numeric-quantity)](https://travis-ci.org/jakeboone02/numeric-quantity)
 
 # numeric-quantity
 
