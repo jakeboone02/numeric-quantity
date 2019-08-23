@@ -1,12 +1,14 @@
 {
   "name": "numeric-quantity",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Convert integer plus fraction into a decimal value",
   "main": "dist/numeric-quantity.cjs.js",
   "module": "dist/numeric-quantity.esm.js",
   "browser": "dist/numeric-quantity.umd.js",
   "types": "dist/numeric-quantity.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
