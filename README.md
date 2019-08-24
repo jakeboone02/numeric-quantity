@@ -43,4 +43,4 @@ console.log( numericQuantity("1 1/2") );   // 1.5
 console.log( numericQuantity("2 2/3") );   // 2.666
 ```
 
-The return value will be `-1` if the provided string does not resemble a positive number.  `numeric-quantity` does not support negative numbers.
+The return value will be `NaN` if the provided string does not resemble a number.
