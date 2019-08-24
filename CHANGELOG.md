@@ -1,3 +1,7 @@
+## 0.5.1 (2019-08-24)
+
+- Fixed README.md note about return values
+
 ## 0.5.0 (2019-08-24)
 
 ### Breaking change
