@@ -1,6 +1,6 @@
 {
   "name": "numeric-quantity",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Convert integer plus fraction into a decimal value",
   "main": "dist/numeric-quantity.cjs.js",
   "module": "dist/numeric-quantity.esm.js",
