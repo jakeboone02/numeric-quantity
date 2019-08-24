@@ -6,7 +6,7 @@
 
 ### Bug fixes
 
-- Handles negative numbers properly
+- Handles negative numbers properly (fixes [#3](https://github.com/jakeboone02/numeric-quantity/issues/3))
 
 ## 0.4.2 (2019-08-23)
 
