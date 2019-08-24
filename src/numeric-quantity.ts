@@ -23,7 +23,7 @@ type VulgarFraction =
  * or vulgar fractions.
  */
 function numericQuantity(qty: string) {
-  const badResult = -1;
+  const badResult = NaN;
   let finalResult = badResult;
 
   // Resolve any unicode vulgar fractions
@@ -50,10 +50,12 @@ function numericQuantity(qty: string) {
     '\u215E': ' 7/8',
   };
 
-  const sQty = `${qty}`.replace(
-    vulgarFractionsRegex,
-    (m, vf: VulgarFraction) => vulgarFractionsCharMap[vf]
-  );
+  const sQty = `${qty}`
+    .replace(
+      vulgarFractionsRegex,
+      (m, vf: VulgarFraction) => vulgarFractionsCharMap[vf]
+    )
+    .trim();
 
   /**
    *                    Regex captures
@@ -63,11 +65,13 @@ function numericQuantity(qty: string) {
    *  +=====+====================+========================+
    *  |  0  |  entire string     |  "2 2/3" from "2 2/3"  |
    *  +-----+--------------------+------------------------+
-   *  |  1  |  the whole number  |  "2" from "2 2/3"      |
+   *  |  1  |  the dash          |  "-" from "-2 2/3"     |
+   *  +-----+--------------------+------------------------+
+   *  |  2  |  the whole number  |  "2" from "2 2/3"      |
    *  |     |  - OR -            |                        |
    *  |     |  the numerator     |  "2" from "2/3"        |
    *  +-----+--------------------+------------------------+
-   *  |  2  |  entire fraction   |  "2/3" from "2 2/3"    |
+   *  |  3  |  entire fraction   |  "2/3" from "2 2/3"    |
    *  |     |  - OR -            |                        |
    *  |     |  decimal portion   |  ".66" from "2.66"     |
    *  |     |  - OR -            |                        |
@@ -80,7 +84,7 @@ function numericQuantity(qty: string) {
    *  re.exec("2/3")     // [ "2/3",   "2", "/3",   null ]
    *  re.exec("2 / 3")   // [ "2 / 3", "2", "/ 3",  null ]
    */
-  const re = /^\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
+  const re = /^(-)?\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?$/;
 
   const ar = re.exec(sQty);
 
@@ -91,19 +95,19 @@ function numericQuantity(qty: string) {
 
   // Store the capture groups so we don't have to access the array
   // elements over and over
-  const [, captureGroup1, captureGroup2] = ar;
+  const [, dash, numberGroup1, numberGroup2] = ar;
 
   // The regex can pass and still capture nothing in the relevant groups,
   // which means it failed for our purposes
-  if (!captureGroup1 && !captureGroup2) {
+  if (!numberGroup1 && !numberGroup2) {
     return badResult;
   }
 
   // Numerify capture group 1
-  if (!captureGroup1 && captureGroup2 && captureGroup2.search(/^\./) !== -1) {
+  if (!numberGroup1 && numberGroup2 && numberGroup2.search(/^\./) !== -1) {
     finalResult = 0;
   } else {
-    finalResult = parseInt(captureGroup1);
+    finalResult = parseInt(numberGroup1);
   }
 
   if (isNaN(finalResult)) {
@@ -112,27 +116,27 @@ function numericQuantity(qty: string) {
 
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
-  if (!captureGroup2) {
-    return finalResult;
+  if (!numberGroup2) {
+    return finalResult * (dash === '-' ? -1 : 1);
   }
 
-  if (captureGroup2.search(/^\./) !== -1) {
+  if (numberGroup2.search(/^\./) !== -1) {
     // If first char is "." it's a decimal so just trim to 3 decimal places
-    const numerator = parseFloat(captureGroup2);
+    const numerator = parseFloat(numberGroup2);
     finalResult += Math.round(numerator * 1000) / 1000;
-  } else if (captureGroup2.search(/^\s*\//) !== -1) {
+  } else if (numberGroup2.search(/^\s*\//) !== -1) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
-    const numerator = parseInt(captureGroup1);
-    const denominator = parseInt(captureGroup2.replace('/', ''));
+    const numerator = parseInt(numberGroup1);
+    const denominator = parseInt(numberGroup2.replace('/', ''));
     finalResult = Math.round((numerator * 1000) / denominator) / 1000;
   } else {
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
-    const fractionArray = captureGroup2.split('/');
+    const fractionArray = numberGroup2.split('/');
     const [numerator, denominator] = fractionArray.map(v => parseInt(v));
     finalResult += Math.round((numerator * 1000) / denominator) / 1000;
   }
 
-  return finalResult;
+  return finalResult * (dash === '-' ? -1 : 1);
 }
 
 export default numericQuantity;

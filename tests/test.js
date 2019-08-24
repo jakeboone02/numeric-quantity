@@ -14,12 +14,15 @@ class Tester {
   }
 
   is(test) {
-    const passes = this.attempt === test;
+    const passes =
+      this.attempt === test || (isNaN(this.attempt) && isNaN(test));
     if (passes) {
       passCount++;
     }
     console.log(
-      passes ? 'pass' : "FAIL: '" + this.attempt + "' is not '" + test + "'"
+      passes
+        ? 'pass - ' + this.attempt
+        : "FAIL: '" + this.attempt + "' is not '" + test + "'"
     );
   }
 }
@@ -29,7 +32,7 @@ function assert(attempt) {
   return new Tester(attempt);
 }
 
-const badResult = -1;
+const badResult = NaN;
 
 // Text
 assert(nq('NaN')).is(badResult);
@@ -43,15 +46,18 @@ assert(nq('/0.5')).is(badResult);
 assert(nq('0.0.0')).is(badResult);
 // Whole numbers
 assert(nq('1')).is(1);
+assert(nq('-1')).is(-1);
 // TODO?: don't allow leading zeroes on whole numbers
 // assert(nq("010")).is(badResult);
 assert(nq('100')).is(100);
 // Decimals
 assert(nq('.9')).is(0.9);
 assert(nq('1.1')).is(1.1);
+assert(nq('-1.1')).is(-1.1);
 // Halves
 assert(nq('1.51')).is(1.51);
 assert(nq('1 1/2')).is(1.5);
+assert(nq('-1 1/2')).is(-1.5);
 assert(nq('1.52')).is(1.52);
 // Thirds
 assert(nq('1.32')).is(1.32);
@@ -73,6 +79,7 @@ assert(nq('4/5')).is(0.8);
 assert(nq('1 4/5')).is(1.8);
 // Unicode vulgar fractions
 assert(nq('\u00BC')).is(0.25); // 1/4
+assert(nq('-\u00BC')).is(-0.25); // -1/4
 assert(nq('\u00BD')).is(0.5); // 1/2
 assert(nq('\u00BE')).is(0.75); // 3/4
 assert(nq('\u2150')).is(0.143); // 1/7
