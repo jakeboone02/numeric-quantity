@@ -12,7 +12,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "node ./tests/test.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,12 @@
   },
   "homepage": "https://github.com/jakeboone02/numeric-quantity",
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.18",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "rollup": "^1.20.0",
     "rollup-plugin-typescript2": "^0.23.0",
     "typescript": "^3.5.3"
