@@ -20,8 +20,8 @@ class Tester {
     }
     console.log(
       passes
-        ? 'pass - ' + this.attempt
-        : "FAIL: '" + this.attempt + "' is not '" + test + "'"
+        ? `pass - ${this.attempt}`
+        : `FAIL: '${this.attempt}' is not '${test}'`
     );
   }
 
@@ -31,9 +31,7 @@ class Tester {
       passCount++;
     }
     console.log(
-      passes
-        ? 'pass - ' + this.attempt
-        : "FAIL: '" + this.attempt + "' is not NaN"
+      passes ? `pass - ${this.attempt}` : `FAIL: '${this.attempt}' is not NaN`
     );
   }
 }
@@ -112,7 +110,7 @@ assert(nq('2 \u2155')).is(2.2); // 2 1/5
 assert(nq('2\u2155')).is(2.2); // 2 1/5
 
 // Report results
-console.log(passCount + ' of ' + testCount + ' tests passed.');
+console.log(`${passCount} of ${testCount} tests passed.`);
 
 if (typeof process !== 'undefined') {
   process.exit(testCount - passCount ? 1 : 0);
