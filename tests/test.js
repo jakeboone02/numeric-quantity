@@ -14,8 +14,7 @@ class Tester {
   }
 
   is(test) {
-    const passes =
-      this.attempt === test || (isNaN(this.attempt) && isNaN(test));
+    const passes = this.attempt === test;
     if (passes) {
       passCount++;
     }
@@ -25,6 +24,18 @@ class Tester {
         : "FAIL: '" + this.attempt + "' is not '" + test + "'"
     );
   }
+
+  isNaN() {
+    const passes = isNaN(this.attempt);
+    if (passes) {
+      passCount++;
+    }
+    console.log(
+      passes
+        ? 'pass - ' + this.attempt
+        : "FAIL: '" + this.attempt + "' is not NaN"
+    );
+  }
 }
 
 function assert(attempt) {
@@ -32,23 +43,21 @@ function assert(attempt) {
   return new Tester(attempt);
 }
 
-const badResult = NaN;
-
 // Text
-assert(nq('NaN')).is(badResult);
-assert(nq('NaN.25')).is(badResult);
-assert(nq('NaN 1/4')).is(badResult);
-assert(nq('')).is(badResult);
+assert(nq('NaN')).isNaN();
+assert(nq('NaN.25')).isNaN();
+assert(nq('NaN 1/4')).isNaN();
+assert(nq('')).isNaN();
 // Invalid numbers
-assert(nq('/1')).is(badResult);
-assert(nq('/0')).is(badResult);
-assert(nq('/0.5')).is(badResult);
-assert(nq('0.0.0')).is(badResult);
+assert(nq('/1')).isNaN();
+assert(nq('/0')).isNaN();
+assert(nq('/0.5')).isNaN();
+assert(nq('0.0.0')).isNaN();
 // Whole numbers
 assert(nq('1')).is(1);
 assert(nq('-1')).is(-1);
 // TODO?: don't allow leading zeroes on whole numbers
-// assert(nq("010")).is(badResult);
+// assert(nq("010")).isNaN();
 assert(nq('100')).is(100);
 // Decimals
 assert(nq('.9')).is(0.9);
