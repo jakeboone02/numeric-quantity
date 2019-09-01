@@ -12,7 +12,8 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "jest"
+    "test": "jest",
+    "publish:npm": "np"
   },
   "repository": {
     "type": "git",
