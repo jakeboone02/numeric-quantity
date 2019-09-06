@@ -1,22 +1,23 @@
-type VulgarFraction =
-  | '¼'
-  | '½'
-  | '¾'
-  | '⅐'
-  | '⅑'
-  | '⅒'
-  | '⅓'
-  | '⅔'
-  | '⅕'
-  | '⅖'
-  | '⅗'
-  | '⅘'
-  | '⅙'
-  | '⅚'
-  | '⅛'
-  | '⅜'
-  | '⅝'
-  | '⅞';
+enum VulgarFraction {
+  '¼' = ' 1/4',
+  '½' = ' 1/2',
+  '¾' = ' 3/4',
+  '⅐' = ' 1/7',
+  '⅑' = ' 1/9',
+  '⅒' = ' 1/10',
+  '⅓' = ' 1/3',
+  '⅔' = ' 2/3',
+  '⅕' = ' 1/5',
+  '⅖' = ' 2/5',
+  '⅗' = ' 3/5',
+  '⅘' = ' 4/5',
+  '⅙' = ' 1/6',
+  '⅚' = ' 5/6',
+  '⅛' = ' 1/8',
+  '⅜' = ' 3/8',
+  '⅝' = ' 5/8',
+  '⅞' = ' 7/8',
+}
 
 /**
  * Converts a string to a number.  The string can include mixed numbers
@@ -27,33 +28,12 @@ function numericQuantity(qty: string) {
   let finalResult = badResult;
 
   // Resolve any unicode vulgar fractions
-  const vulgarFractionsRegex = /(\u00BC|\u00BD|\u00BE|\u2150|\u2151|\u2152|\u2153|\u2154|\u2155|\u2156|\u2157|\u2158|\u2159|\u215A|\u215B|\u215C|\u215D|\u215E)/;
-
-  const vulgarFractionsCharMap: { [k in VulgarFraction]: string } = {
-    '¼': ' 1/4',
-    '½': ' 1/2',
-    '¾': ' 3/4',
-    '⅐': ' 1/7',
-    '⅑': ' 1/9',
-    '⅒': ' 1/10',
-    '⅓': ' 1/3',
-    '⅔': ' 2/3',
-    '⅕': ' 1/5',
-    '⅖': ' 2/5',
-    '⅗': ' 3/5',
-    '⅘': ' 4/5',
-    '⅙': ' 1/6',
-    '⅚': ' 5/6',
-    '⅛': ' 1/8',
-    '⅜': ' 3/8',
-    '⅝': ' 5/8',
-    '⅞': ' 7/8',
-  };
+  const vulgarFractionsRegex = /(¼|½|¾|⅐|⅑|⅒|⅓|⅔|⅕|⅖|⅗|⅘|⅙|⅚|⅛|⅜|⅝|⅞)/;
 
   const sQty = `${qty}`
     .replace(
       vulgarFractionsRegex,
-      (m, vf: VulgarFraction) => vulgarFractionsCharMap[vf]
+      (m, vf: keyof typeof VulgarFraction) => VulgarFraction[vf]
     )
     .trim();
 
