@@ -3,8 +3,8 @@
     "declaration": true,
     "declarationDir": ".",
     "module": "es6",
-    "noImplicitAny": true,
     "outDir": ".",
+    "strict": true,
     "target": "es5"
   },
   "include": ["src/**/*"],
