@@ -12,8 +12,9 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "jest",
-    "publish:npm": "np"
+    "pretty-print": "npx prettier --write ./src/**/*",
+    "publish:npm": "np",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "babel-jest": "^26.0.1",
     "jest": "^26.0.1",
     "np": "^7.0.0",
+    "prettier": "2.1.2",
     "rollup": "^2.13.1",
     "rollup-plugin-typescript2": "^0.29.0",
     "typescript": "^4.0.5"
