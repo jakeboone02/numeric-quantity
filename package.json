@@ -14,7 +14,7 @@
     "dev": "rollup -c -w",
     "pretty-print": "npx prettier --write ./src/**/*",
     "publish:npm": "np",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",

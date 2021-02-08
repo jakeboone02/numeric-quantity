@@ -1,8 +1,0 @@
-language: node_js
-node_js:
-  - node
-script:
-  - npm install codecov -g
-  - npm run test -- --coverage
-after_success:
-  - codecov -f coverage/*.json
