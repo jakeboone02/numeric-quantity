@@ -1,0 +1,40 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+          # This is important to fetch the changes to the previous commit
+          fetch-depth: 0
+      - name: Prettify code
+        uses: creyD/prettier_action@v3.1
+        with:
+          prettier_options: --write ./src/**/*
+          prettier_version: 2.2.1
+          commit_message: 'Prettified code'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: yarn test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
