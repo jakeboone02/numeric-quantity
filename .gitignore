@@ -1,5 +1,5 @@
-coverage
-dist
-node_modules
-.rpt2_cache
 *.log
+.DS_Store
+node_modules
+dist
+coverage

@@ -1,40 +1,39 @@
 name: Continuous Integration
-
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+on: [push]
 
 jobs:
-  prettier:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          # Make sure the actual branch is checked out when running on pull requests
-          ref: ${{ github.head_ref }}
-          # This is important to fetch the changes to the previous commit
-          fetch-depth: 0
-      - name: Prettify code
-        uses: creyD/prettier_action@v3.1
-        with:
-          prettier_options: --write ./src/**/*
-          prettier_version: 2.2.1
-          commit_message: 'Prettified code'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
-    name: Build and test
-    runs-on: ubuntu-latest
+    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # node: ['10.x', '12.x', '14.x']
+        node: ['14.x']
+        # os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v1
         with:
-          node-version: '14'
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - run: yarn test
+          node-version: ${{ matrix.node }}
+
+      - name: Install deps and build (with cache)
+        uses: bahmutov/npm-install@v1
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test --ci --coverage --maxWorkers=2
+
+      - name: Build
+        run: yarn build
+
       - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '14.x'
         uses: codecov/codecov-action@v1

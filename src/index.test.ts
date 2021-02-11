@@ -1,4 +1,4 @@
-import numericQuantity from './numeric-quantity';
+import numericQuantity from '.';
 
 it('works', () => {
   // Text
