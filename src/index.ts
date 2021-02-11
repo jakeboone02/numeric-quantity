@@ -33,7 +33,7 @@ function numericQuantity(qty: string) {
   const sQty = `${qty}`
     .replace(
       vulgarFractionsRegex,
-      (m, vf: keyof typeof VulgarFraction) => ` ${VulgarFraction[vf]}`
+      (_m, vf: keyof typeof VulgarFraction) => ` ${VulgarFraction[vf]}`
     )
     .trim();
 

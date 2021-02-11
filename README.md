@@ -14,13 +14,11 @@ For the inverse operation, converting a number to an imperial measurement, check
 
 ### npm
 
-```
+```shell
+# npm
 npm i numeric-quantity
-```
 
-or
-
-```
+# yarn
 yarn add numeric-quantity
 ```
 
@@ -29,7 +27,7 @@ yarn add numeric-quantity
 In the browser, available as a global function `numericQuantity`.
 
 ```html
-<script src="path/to/numeric-quantity.umd.js"></script>
+<script src="https://unpkg.com/numeric-quantity"></script>
 <script>
   console.log(numericQuantity('10 1/2')); // 10.5
 </script>
