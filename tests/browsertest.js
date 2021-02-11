@@ -2,8 +2,7 @@
  * Crude test suite
  */
 
-const nq =
-  this.numericQuantity !== undefined ? this.numericQuantity : require('..');
+const nq = this.numericQuantity || require('..');
 
 let testCount = 0;
 let passCount = 0;
