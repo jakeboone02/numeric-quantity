@@ -1,3 +1,7 @@
+## 1.0.1 (2021-02-15)
+
+- Added description to package.json
+
 ## 1.0.0 (2021-02-11)
 
 - New build system ([tsdx](https://tsdx.io/))
