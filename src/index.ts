@@ -35,6 +35,7 @@ function numericQuantity(qty: string) {
       vulgarFractionsRegex,
       (_m, vf: keyof typeof VulgarFraction) => ` ${VulgarFraction[vf]}`
     )
+    .replace(/⁄/g, '/')
     .trim();
 
   /**
