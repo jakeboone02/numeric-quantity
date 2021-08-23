@@ -68,4 +68,7 @@ it('works', () => {
   expect(numericQuantity('2 \u2155')).toBe(2.2); // 2 1/5
   // Mixed unicode vulgar fraction - no space
   expect(numericQuantity('2\u2155')).toBe(2.2); // 2 1/5
+  // Unicode fraction slash
+  expect(numericQuantity('1⁄2')).toBe(0.5);
+  expect(numericQuantity('2 1⁄2')).toBe(2.5);
 });
