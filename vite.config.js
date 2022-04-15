@@ -11,4 +11,7 @@ export default defineConfig({
     },
     sourcemap: true,
   },
+  server: {
+    open: '/main.html',
+  },
 });
