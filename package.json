@@ -7,9 +7,9 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/format-quantity.cjs.js",
-  "module": "./dist/format-quantity.es.js",
-  "unpkg": "./dist/format-quantity.umd.js",
+  "main": "./dist/numeric-quantity.cjs.js",
+  "module": "./dist/numeric-quantity.es.js",
+  "unpkg": "./dist/numeric-quantity.umd.js",
   "typings": "dist/index.d.ts",
   "bugs": {
     "url": "https://github.com/jakeboone02/numeric-quantity/issues"
