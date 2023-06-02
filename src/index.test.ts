@@ -1,74 +1,154 @@
-import numericQuantity from '.';
+import { numericQuantity } from '.';
 
-it('works', () => {
-  // Text
-  expect(numericQuantity('NaN')).toBeNaN();
-  expect(numericQuantity('NaN.25')).toBeNaN();
-  expect(numericQuantity('NaN 1/4')).toBeNaN();
-  expect(numericQuantity('')).toBeNaN();
-  // Invalid numbers
-  expect(numericQuantity('/1')).toBeNaN();
-  expect(numericQuantity('/0')).toBeNaN();
-  expect(numericQuantity('/0.5')).toBeNaN();
-  expect(numericQuantity('0.0.0')).toBeNaN();
-  // Whole numbers
-  expect(numericQuantity('1')).toBe(1);
-  expect(numericQuantity('-1')).toBe(-1);
-  // TODO?: don't allow leading zeroes on whole numbers
-  // expect(numericQuantity("010")).toBeNaN();
-  expect(numericQuantity('100')).toBe(100);
-  // Decimals
-  expect(numericQuantity('.9')).toBe(0.9);
-  expect(numericQuantity('1.1')).toBe(1.1);
-  expect(numericQuantity('-1.1')).toBe(-1.1);
-  // Halves
-  expect(numericQuantity('1.51')).toBe(1.51);
-  expect(numericQuantity('1 1/2')).toBe(1.5);
-  expect(numericQuantity('-1 1/2')).toBe(-1.5);
-  expect(numericQuantity('1.52')).toBe(1.52);
-  // Thirds
-  expect(numericQuantity('1.32')).toBe(1.32);
-  expect(numericQuantity('1 1/3')).toBe(1.333);
-  expect(numericQuantity('1.34')).toBe(1.34);
-  expect(numericQuantity('1 2/3')).toBe(1.667);
-  expect(numericQuantity('1.67')).toBe(1.67);
-  // Quarters
-  expect(numericQuantity('1 1/4')).toBe(1.25);
-  expect(numericQuantity('1 3/4')).toBe(1.75);
-  // Fifths
-  expect(numericQuantity('1/5')).toBe(0.2);
-  expect(numericQuantity('1 1/5')).toBe(1.2);
-  expect(numericQuantity('2/5')).toBe(0.4);
-  expect(numericQuantity('1 2/5')).toBe(1.4);
-  expect(numericQuantity('3/5')).toBe(0.6);
-  expect(numericQuantity('1 3/5')).toBe(1.6);
-  expect(numericQuantity('4/5')).toBe(0.8);
-  expect(numericQuantity('1 4/5')).toBe(1.8);
-  // Unicode vulgar fractions
-  expect(numericQuantity('\u00BC')).toBe(0.25); // 1/4
-  expect(numericQuantity('-\u00BC')).toBe(-0.25); // -1/4
-  expect(numericQuantity('\u00BD')).toBe(0.5); // 1/2
-  expect(numericQuantity('\u00BE')).toBe(0.75); // 3/4
-  expect(numericQuantity('\u2150')).toBe(0.143); // 1/7
-  expect(numericQuantity('\u2151')).toBe(0.111); // 1/9
-  expect(numericQuantity('\u2152')).toBe(0.1); // 1/10
-  expect(numericQuantity('\u2153')).toBe(0.333); // 1/3
-  expect(numericQuantity('\u2154')).toBe(0.667); // 2/3
-  expect(numericQuantity('\u2155')).toBe(0.2); // 1/5
-  expect(numericQuantity('\u2156')).toBe(0.4); // 2/5
-  expect(numericQuantity('\u2157')).toBe(0.6); // 3/5
-  expect(numericQuantity('\u2158')).toBe(0.8); // 4/5
-  expect(numericQuantity('\u2159')).toBe(0.167); // 1/6
-  expect(numericQuantity('\u215A')).toBe(0.833); // 5/6
-  expect(numericQuantity('\u215B')).toBe(0.125); // 1/8
-  expect(numericQuantity('\u215C')).toBe(0.375); // 3/8
-  expect(numericQuantity('\u215D')).toBe(0.625); // 5/8
-  expect(numericQuantity('\u215E')).toBe(0.875); // 7/8
-  // Mixed unicode vulgar fraction
-  expect(numericQuantity('2 \u2155')).toBe(2.2); // 2 1/5
-  // Mixed unicode vulgar fraction - no space
-  expect(numericQuantity('2\u2155')).toBe(2.2); // 2 1/5
-  // Unicode fraction slash
-  expect(numericQuantity('1⁄2')).toBe(0.5);
-  expect(numericQuantity('2 1⁄2')).toBe(2.5);
-});
+const allTests: { title: string; tests: [string, number][] }[] = [
+  {
+    title: 'Non-numeric text',
+    tests: [
+      ['NaN', NaN],
+      ['NaN.25', NaN],
+      ['NaN 1/4', NaN],
+      ['', NaN],
+      ['   ', NaN],
+    ],
+  },
+  {
+    title: 'Invalid numbers',
+    tests: [
+      ['/1', NaN],
+      ['/0', NaN],
+      ['/0.5', NaN],
+      ['0 . 0', NaN],
+      ['0.0.0', NaN],
+    ],
+  },
+  {
+    title: 'Whole numbers',
+    tests: [
+      ['1', 1],
+      ['-1', -1],
+      ['010', 10],
+      ['100', 100],
+    ],
+  },
+  {
+    title: 'Decimals',
+    tests: [
+      ['.9', 0.9],
+      ['1.1', 1.1],
+      ['01.1', 1.1],
+      ['-1.1', -1.1],
+    ],
+  },
+  {
+    title: 'Acceptable white space',
+    tests: [
+      ['1 1/ 2', 1.5],
+      ['1 1 /2', 1.5],
+      ['1 1 / 2', 1.5],
+      [' 1 1 / 2 ', 1.5],
+      [' 1.5 ', 1.5],
+    ],
+  },
+  {
+    title: 'Leading zeroes',
+    tests: [
+      ['01', 1],
+      ['01.010', 1.01],
+      ['01 01/02', 1.5],
+    ],
+  },
+  {
+    title: 'Halves',
+    tests: [
+      ['1.51', 1.51],
+      ['1 1/2', 1.5],
+      ['-1 1/2', -1.5],
+      ['1.52', 1.52],
+    ],
+  },
+  {
+    title: 'Thirds',
+    tests: [
+      ['1.32', 1.32],
+      ['1 1/3', 1.333],
+      ['1.34', 1.34],
+      ['1 2/3', 1.667],
+      ['1.67', 1.67],
+    ],
+  },
+  {
+    title: 'Quarters',
+    tests: [
+      ['1 1/4', 1.25],
+      ['1 3/4', 1.75],
+    ],
+  },
+  {
+    title: 'Fifths',
+    tests: [
+      ['1/5', 0.2],
+      ['1 1/5', 1.2],
+      ['2/5', 0.4],
+      ['1 2/5', 1.4],
+      ['3/5', 0.6],
+      ['1 3/5', 1.6],
+      ['4/5', 0.8],
+      ['1 4/5', 1.8],
+    ],
+  },
+  {
+    title: 'Unicode vulgar fractions',
+    tests: [
+      ['\u00BC', 0.25], // 1/4
+      ['-\u00BC', -0.25], // -1/4
+      ['\u00BD', 0.5], // 1/2
+      ['\u00BE', 0.75], // 3/4
+      ['\u2150', 0.143], // 1/7
+      ['\u2151', 0.111], // 1/9
+      ['\u2152', 0.1], // 1/10
+      ['\u2153', 0.333], // 1/3
+      ['\u2154', 0.667], // 2/3
+      ['\u2155', 0.2], // 1/5
+      ['\u2156', 0.4], // 2/5
+      ['\u2157', 0.6], // 3/5
+      ['\u2158', 0.8], // 4/5
+      ['\u2159', 0.167], // 1/6
+      ['\u215A', 0.833], // 5/6
+      ['\u215B', 0.125], // 1/8
+      ['\u215C', 0.375], // 3/8
+      ['\u215D', 0.625], // 5/8
+      ['\u215E', 0.875], // 7/8
+    ],
+  },
+  {
+    title: 'Mixed unicode vulgar fraction',
+    tests: [
+      ['2 \u2155', 2.2], // 2 1/5
+    ],
+  },
+  {
+    title: 'Mixed unicode vulgar fraction - no space',
+    tests: [
+      ['2\u2155', 2.2], // 2 1/5
+    ],
+  },
+  {
+    title: 'Unicode fraction slash',
+    tests: [
+      ['1⁄2', 0.5],
+      ['2 1⁄2', 2.5],
+    ],
+  },
+];
+
+for (const { title, tests } of allTests) {
+  it(title, () => {
+    for (const [arg, expected] of tests) {
+      if (isNaN(expected)) {
+        expect(numericQuantity(arg)).toBeNaN();
+      } else {
+        expect(numericQuantity(arg)).toBe(expected);
+      }
+    }
+  });
+}

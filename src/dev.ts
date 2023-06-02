@@ -1,4 +1,4 @@
-import numericQuantity from '.';
+import { numericQuantity } from '.';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
