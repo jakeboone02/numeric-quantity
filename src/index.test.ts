@@ -17,6 +17,8 @@ const allTests: { title: string; tests: [string, number][] }[] = [
       ['/1', NaN],
       ['/0', NaN],
       ['/0.5', NaN],
+      ['1/', NaN],
+      ['\u215F', NaN],
       ['0 . 0', NaN],
       ['0.0.0', NaN],
     ],
@@ -118,18 +120,21 @@ const allTests: { title: string; tests: [string, number][] }[] = [
       ['\u215C', 0.375], // 3/8
       ['\u215D', 0.625], // 5/8
       ['\u215E', 0.875], // 7/8
+      ['\u215F2', 0.5], // 1/2
     ],
   },
   {
     title: 'Mixed unicode vulgar fraction',
     tests: [
       ['2 \u2155', 2.2], // 2 1/5
+      ['1 \u215F2', 1.5], // 1 1/2
     ],
   },
   {
-    title: 'Mixed unicode vulgar fraction - no space',
+    title: 'Mixed unicode vulgar fraction without space',
     tests: [
       ['2\u2155', 2.2], // 2 1/5
+      ['1\u215F2', 1.5], // 1 1/2
     ],
   },
   {

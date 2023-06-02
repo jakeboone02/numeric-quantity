@@ -16,7 +16,8 @@ export type VulgarFraction =
   | '⅛'
   | '⅜'
   | '⅝'
-  | '⅞';
+  | '⅞'
+  | '⅟';
 
 export const vulgarFractionToAsciiMap = {
   '¼': '1/4',
@@ -37,6 +38,7 @@ export const vulgarFractionToAsciiMap = {
   '⅜': '3/8',
   '⅝': '5/8',
   '⅞': '7/8',
+  '⅟': '1/',
 } as const;
 
 /**
@@ -74,7 +76,7 @@ export const numericRegex = /^(-)?\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
 /**
  * Captures any unicode vulgar fractions
  */
-export const vulgarFractionsRegex = /(¼|½|¾|⅐|⅑|⅒|⅓|⅔|⅕|⅖|⅗|⅘|⅙|⅚|⅛|⅜|⅝|⅞)/;
+export const vulgarFractionsRegex = /(¼|½|¾|⅐|⅑|⅒|⅓|⅔|⅕|⅖|⅗|⅘|⅙|⅚|⅛|⅜|⅝|⅞|⅟)/;
 
 const spaceThenSlashRegex = /^\s*\//;
 

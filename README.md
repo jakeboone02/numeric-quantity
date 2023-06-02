@@ -10,7 +10,7 @@ Converts a string to a number, like an enhanced version of `parseFloat`.
 
 In addition to plain integers and decimals, `numeric-quantity` can process mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), and the fraction slash character (`'1 2⁄3'`). The return value will be `NaN` if the provided string does not resemble a number.
 
-> _For the inverse operation (converting a number to an imperial measurement), check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
+> _For the inverse operation—converting a number to an imperial measurement—check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
 >
 > _For a more complete solution to parsing recipe ingredients, try [parse-ingredient](https://www.npmjs.com/package/parse-ingredient)._
 
