@@ -31,8 +31,8 @@
   "scripts": {
     "start": "vite",
     "build": "vite build && tsc",
-    "test": "jest --coverage",
-    "watch": "jest --coverage --watch",
+    "test": "jest",
+    "watch": "jest --watch",
     "publish:npm": "np"
   },
   "devDependencies": {
