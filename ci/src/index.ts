@@ -133,9 +133,9 @@ app.innerHTML = `<h1>numeric-quantity CI</h1>
 
 const tbody = document.querySelector('tbody');
 
-for (const s in strings) {
+for (const s of strings) {
   const tr = document.createElement('tr');
-  const result = JSON.stringify(numericQuantity(s));
+  const result = numericQuantity(s);
   tr.innerHTML = `<td>numericQuantity("${s}")</td><td>${result}</td>`;
   tbody?.appendChild(tr);
 }
