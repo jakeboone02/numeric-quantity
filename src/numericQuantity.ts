@@ -49,10 +49,6 @@ export const numericQuantity = (quantity: string) => {
     finalResult = parseInt(numberGroup1);
   }
 
-  if (isNaN(finalResult)) {
-    return NaN;
-  }
-
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
   if (!numberGroup2) {

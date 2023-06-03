@@ -1,5 +1,4 @@
 import type {
-  RomanNumeral,
   RomanNumeralAscii,
   RomanNumeralUnicode,
   VulgarFraction,
@@ -61,7 +60,8 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
  *     numericRegex.exec("2/3")   // [ "2/3",   "2", "/3",   null ]
  *     numericRegex.exec("2 / 3") // [ "2 / 3", "2", "/ 3",  null ]
  */
-export const numericRegex = /^(-)?\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?\s*$/;
+export const numericRegex =
+  /^(?=-?\s*\.\d|-?\s*\d+)(-)?\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?$/;
 
 /**
  * Captures any Unicode vulgar fractions
@@ -99,8 +99,10 @@ export const romanNumeralValues = {
   XL: 40,
   XXX: 30,
   XX: 20,
-  XII: 12, // only here for tests; not used in practice
-  XI: 11, // only here for tests; not used in practice
+  // Twelve is only here for tests; not used in practice
+  XII: 12,
+  // Eleven is only here for tests; not used in practice
+  XI: 11,
   X: 10,
   IX: 9,
   VIII: 8,
@@ -120,38 +122,70 @@ export const romanNumeralUnicodeToAsciiMap: Record<
   RomanNumeralUnicode,
   string
 > = {
-  Ⅰ: 'I', // Roman Numeral One (U+2160)
-  Ⅱ: 'II', // Roman Numeral Two (U+2161)
-  Ⅲ: 'III', // Roman Numeral Three (U+2162)
-  Ⅳ: 'IV', // Roman Numeral Four (U+2163)
-  Ⅴ: 'V', // Roman Numeral Five (U+2164)
-  Ⅵ: 'VI', // Roman Numeral Six (U+2165)
-  Ⅶ: 'VII', // Roman Numeral Seven (U+2166)
-  Ⅷ: 'VIII', // Roman Numeral Eight (U+2167)
-  Ⅸ: 'IX', // Roman Numeral Nine (U+2168)
-  Ⅹ: 'X', // Roman Numeral Ten (U+2169)
-  Ⅺ: 'XI', // Roman Numeral Eleven (U+216A)
-  Ⅻ: 'XII', // Roman Numeral Twelve (U+216B)
-  Ⅼ: 'L', // Roman Numeral Fifty (U+216C)
-  Ⅽ: 'C', // Roman Numeral One Hundred (U+216D)
-  Ⅾ: 'D', // Roman Numeral Five Hundred (U+216E)
-  Ⅿ: 'M', // Roman Numeral One Thousand (U+216F)
-  ⅰ: 'I', // Small Roman Numeral One (U+2170)
-  ⅱ: 'II', // Small Roman Numeral Two (U+2171)
-  ⅲ: 'III', // Small Roman Numeral Three (U+2172)
-  ⅳ: 'IV', // Small Roman Numeral Four (U+2173)
-  ⅴ: 'V', // Small Roman Numeral Five (U+2174)
-  ⅵ: 'VI', // Small Roman Numeral Six (U+2175)
-  ⅶ: 'VII', // Small Roman Numeral Seven (U+2176)
-  ⅷ: 'VIII', // Small Roman Numeral Eight (U+2177)
-  ⅸ: 'IX', // Small Roman Numeral Nine (U+2178)
-  ⅹ: 'X', // Small Roman Numeral Ten (U+2179)
-  ⅺ: 'XI', // Small Roman Numeral Eleven (U+217A)
-  ⅻ: 'XII', // Small Roman Numeral Twelve (U+217B)
-  ⅼ: 'L', // Small Roman Numeral Fifty (U+217C)
-  ⅽ: 'C', // Small Roman Numeral One Hundred (U+217D)
-  ⅾ: 'D', // Small Roman Numeral Five Hundred (U+217E)
-  ⅿ: 'M', // Small Roman Numeral One Thousand (U+217F)
+  // Roman Numeral One (U+2160)
+  Ⅰ: 'I',
+  // Roman Numeral Two (U+2161)
+  Ⅱ: 'II',
+  // Roman Numeral Three (U+2162)
+  Ⅲ: 'III',
+  // Roman Numeral Four (U+2163)
+  Ⅳ: 'IV',
+  // Roman Numeral Five (U+2164)
+  Ⅴ: 'V',
+  // Roman Numeral Six (U+2165)
+  Ⅵ: 'VI',
+  // Roman Numeral Seven (U+2166)
+  Ⅶ: 'VII',
+  // Roman Numeral Eight (U+2167)
+  Ⅷ: 'VIII',
+  // Roman Numeral Nine (U+2168)
+  Ⅸ: 'IX',
+  // Roman Numeral Ten (U+2169)
+  Ⅹ: 'X',
+  // Roman Numeral Eleven (U+216A)
+  Ⅺ: 'XI',
+  // Roman Numeral Twelve (U+216B)
+  Ⅻ: 'XII',
+  // Roman Numeral Fifty (U+216C)
+  Ⅼ: 'L',
+  // Roman Numeral One Hundred (U+216D)
+  Ⅽ: 'C',
+  // Roman Numeral Five Hundred (U+216E)
+  Ⅾ: 'D',
+  // Roman Numeral One Thousand (U+216F)
+  Ⅿ: 'M',
+  // Small Roman Numeral One (U+2170)
+  ⅰ: 'I',
+  // Small Roman Numeral Two (U+2171)
+  ⅱ: 'II',
+  // Small Roman Numeral Three (U+2172)
+  ⅲ: 'III',
+  // Small Roman Numeral Four (U+2173)
+  ⅳ: 'IV',
+  // Small Roman Numeral Five (U+2174)
+  ⅴ: 'V',
+  // Small Roman Numeral Six (U+2175)
+  ⅵ: 'VI',
+  // Small Roman Numeral Seven (U+2176)
+  ⅶ: 'VII',
+  // Small Roman Numeral Eight (U+2177)
+  ⅷ: 'VIII',
+  // Small Roman Numeral Nine (U+2178)
+  ⅸ: 'IX',
+  // Small Roman Numeral Ten (U+2179)
+  ⅹ: 'X',
+  // Small Roman Numeral Eleven (U+217A)
+  ⅺ: 'XI',
+  // Small Roman Numeral Twelve (U+217B)
+  ⅻ: 'XII',
+  // Small Roman Numeral Fifty (U+217C)
+  ⅼ: 'L',
+  // Small Roman Numeral One Hundred (U+217D)
+  ⅽ: 'C',
+  // Small Roman Numeral Five Hundred (U+217E)
+  ⅾ: 'D',
+  // Small Roman Numeral One Thousand (U+217F)
+  ⅿ: 'M',
 };
 
 /**
