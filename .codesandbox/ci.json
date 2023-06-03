@@ -1,4 +1,4 @@
 {
-  "sandboxes": ["numeric-quantity-ci-p97jb"],
+  "sandboxes": ["/ci"],
   "node": "18"
 }

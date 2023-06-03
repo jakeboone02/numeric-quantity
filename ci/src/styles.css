@@ -1,0 +1,10 @@
+th,
+td {
+  border-bottom: 1px solid lightgray;
+  padding: 4px;
+}
+
+th:first-child,
+td:first-child {
+  border-right: 1px solid lightgray;
+}
