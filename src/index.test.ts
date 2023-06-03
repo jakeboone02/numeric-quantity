@@ -1,4 +1,6 @@
-import { numericQuantity } from '.';
+import { numericQuantity } from './numericQuantity';
+import { romanNumeralUnicodeToAsciiMap, romanNumeralValues } from './constants';
+import { RomanNumeralUnicode } from './types';
 
 const allTests: { title: string; tests: [string, number][] }[] = [
   {
@@ -128,11 +130,6 @@ const allTests: { title: string; tests: [string, number][] }[] = [
     tests: [
       ['2 \u2155', 2.2], // 2 1/5
       ['1 \u215F2', 1.5], // 1 1/2
-    ],
-  },
-  {
-    title: 'Mixed unicode vulgar fraction without space',
-    tests: [
       ['2\u2155', 2.2], // 2 1/5
       ['1\u215F2', 1.5], // 1 1/2
     ],
@@ -142,6 +139,113 @@ const allTests: { title: string; tests: [string, number][] }[] = [
     tests: [
       ['1⁄2', 0.5],
       ['2 1⁄2', 2.5],
+    ],
+  },
+  {
+    title: 'Roman numerals',
+    tests: [
+      // Invalid
+      ['-I', NaN],
+      ['M M', NaN],
+      ['MMMM', NaN],
+      ['DD', NaN],
+      ['CCCC', NaN],
+      ['LL', NaN],
+      ['XXXX', NaN],
+      ['VV', NaN],
+      ['IIII', NaN],
+      ['IIV', NaN],
+      ['IIX', NaN],
+      ['XXL', NaN],
+      ['XXC', NaN],
+      ['CCD', NaN],
+      ['CCM', NaN],
+      // Miscellaneous
+      ['MCM', 1900],
+      ['MCMXCIX', 1999],
+      [' MCCXIV ', 1214],
+      ['MMII', 2002],
+      // Unicode
+      ['Ⅰ', 1],
+      ['Ⅱ', 2],
+      ['Ⅲ', 3],
+      ['Ⅳ', 4],
+      ['Ⅴ', 5],
+      ['Ⅵ', 6],
+      ['Ⅶ', 7],
+      ['Ⅷ', 8],
+      ['Ⅸ', 9],
+      ['Ⅹ', 10],
+      ['Ⅺ', 11],
+      ['Ⅻ', 12],
+      ['Ⅼ', 50],
+      ['Ⅽ', 100],
+      ['Ⅾ', 500],
+      ['Ⅿ', 1000],
+      ['ⅰ', 1],
+      ['ⅱ', 2],
+      ['ⅲ', 3],
+      ['ⅳ', 4],
+      ['ⅴ', 5],
+      ['ⅵ', 6],
+      ['ⅶ', 7],
+      ['ⅷ', 8],
+      ['ⅸ', 9],
+      ['ⅹ', 10],
+      ['ⅺ', 11],
+      ['ⅻ', 12],
+      ['ⅼ', 50],
+      ['ⅽ', 100],
+      ['ⅾ', 500],
+      ['ⅿ', 1000],
+      // ASCII
+      ['I', 1],
+      ['II', 2],
+      ['III', 3],
+      ['IV', 4],
+      ['V', 5],
+      ['VI', 6],
+      ['VII', 7],
+      ['VIII', 8],
+      ['IX', 9],
+      ['X', 10],
+      ['XI', 11],
+      ['XII', 12],
+      ['L', 50],
+      ['C', 100],
+      ['D', 500],
+      ['M', 1000],
+      ['i', 1],
+      ['ii', 2],
+      ['iii', 3],
+      ['iv', 4],
+      ['v', 5],
+      ['vi', 6],
+      ['vii', 7],
+      ['viii', 8],
+      ['ix', 9],
+      ['x', 10],
+      ['xi', 11],
+      ['xii', 12],
+      ['l', 50],
+      ['c', 100],
+      ['d', 500],
+      ['m', 1000],
+      // Mixed case, mixed ASCII/Unicode
+      ['MmⅪⅰ', 2012],
+      // Automated ASCII tests
+      ...Object.entries(romanNumeralValues),
+      // Automated Unicode tests
+      ...Object.entries(romanNumeralUnicodeToAsciiMap)
+        // If XI and XII aren't in the romanNumeralValues map, filter them out:
+        // .filter(entry => !['Ⅺ', 'Ⅻ', 'ⅺ', 'ⅻ'].includes(entry[0]))
+        .map(
+          entry =>
+            [
+              entry[0] as RomanNumeralUnicode,
+              romanNumeralValues[entry[1]],
+            ] satisfies [RomanNumeralUnicode, number]
+        ),
     ],
   },
 ];

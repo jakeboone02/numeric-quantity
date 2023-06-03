@@ -1,17 +1,6 @@
 import { numericQuantity } from 'numeric-quantity';
 import './styles.css';
 
-const app = document.getElementById('app')!;
-
-app.innerHTML = `
-<h1>numeric-quantity CI</h1>
-<table>
-  <thead><tr><th>Expression</th><th>Result</th></tr></thead>
-  <tbody></tbody>
-</table>`;
-
-const tbody = document.querySelector('tbody');
-
 const strings = [
   'NaN',
   'NaN.25',
@@ -68,12 +57,85 @@ const strings = [
   '2 \u2155',
   '2\u2155',
   '1⁄2',
+  'Ⅰ',
+  'Ⅱ',
+  'Ⅲ',
+  'Ⅳ',
+  'Ⅴ',
+  'Ⅵ',
+  'Ⅶ',
+  'Ⅷ',
+  'Ⅸ',
+  'Ⅹ',
+  'Ⅺ',
+  'Ⅻ',
+  'Ⅼ',
+  'Ⅽ',
+  'Ⅾ',
+  'Ⅿ',
+  'ⅰ',
+  'ⅱ',
+  'ⅲ',
+  'ⅳ',
+  'ⅴ',
+  'ⅵ',
+  'ⅶ',
+  'ⅷ',
+  'ⅸ',
+  'ⅹ',
+  'ⅺ',
+  'ⅻ',
+  'ⅼ',
+  'ⅽ',
+  'ⅾ',
+  'ⅿ',
+  'MMM',
+  'MM',
+  'M',
+  'CM',
+  'DCCC',
+  'DCC',
+  'DC',
+  'D',
+  'CD',
+  'CCC',
+  'CC',
+  'C',
+  'XC',
+  'LXXX',
+  'LXX',
+  'LX',
+  'L',
+  'XL',
+  'XXX',
+  'XX',
+  'XII',
+  'XI',
+  'X',
+  'IX',
+  'VIII',
+  'VII',
+  'VI',
+  'V',
+  'IV',
+  'III',
+  'II',
+  'I',
 ];
 
-strings.forEach(s => {
+const app = document.getElementById('app')!;
+
+app.innerHTML = `<h1>numeric-quantity CI</h1>
+<table>
+  <thead><tr><th>Expression</th><th>Result</th></tr></thead>
+  <tbody></tbody>
+</table>`;
+
+const tbody = document.querySelector('tbody');
+
+for (const s in strings) {
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td>numericQuantity("${s}")</td><td>${numericQuantity(
-    s
-  )}</td>`;
+  const result = JSON.stringify(numericQuantity(s));
+  tr.innerHTML = `<td>numericQuantity("${s}")</td><td>${result}</td>`;
   tbody?.appendChild(tr);
-});
+}
