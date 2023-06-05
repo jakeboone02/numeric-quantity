@@ -1,7 +1,7 @@
 import { numericQuantity } from './numericQuantity';
 import { numericQuantityTests } from './numericQuantityTests';
 
-for (const { title, tests } of numericQuantityTests) {
+for (const [title, tests] of Object.entries(numericQuantityTests)) {
   it(title, () => {
     for (const [arg, expected] of tests) {
       if (isNaN(expected)) {

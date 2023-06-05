@@ -10,15 +10,15 @@ const trCaptions = document.createElement('tr');
 trCaptions.innerHTML = '<td>Call</td><td>Expected</td><td>Pass</td>';
 table.appendChild(trCaptions);
 
-for (const testGroup of numericQuantityTests) {
+for (const [title, tests] of Object.entries(numericQuantityTests)) {
   const tr = document.createElement('tr');
   const th = document.createElement('th');
   th.setAttribute('colspan', '3');
-  th.innerText = testGroup.title;
+  th.innerText = title;
   tr.append(th);
   table.appendChild(tr);
 
-  for (const test of testGroup.tests) {
+  for (const test of tests) {
     const result = numericQuantity(test[0]);
     const pass = isNaN(test[1]) ? isNaN(result) : test[1] === result;
     const testTR = document.createElement('tr');
