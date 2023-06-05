@@ -40,7 +40,8 @@ export const numericQuantity = (quantity: string) => {
     return parseRomanNumerals(quantityAsString);
   }
 
-  const [, dash, numberGroup1, numberGroup2] = regexResult;
+  const [, dash, ng1temp, numberGroup2] = regexResult;
+  const numberGroup1 = ng1temp.replace(/[,_]/g, '');
 
   // Numerify capture group 1
   if (!numberGroup1 && numberGroup2 && numberGroup2.startsWith('.')) {

@@ -45,6 +45,8 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
  *     |  2  |  the whole number  |  "2" from "2 1/3"      |
  *     |     |  - OR -            |                        |
  *     |     |  the numerator     |  "1" from "1/3"        |
+ *     |     +                    +                        |
+ *     | (This may include comma/underscore separators)    |
  *     +-----+--------------------+------------------------+
  *     |  3  |  entire fraction   |  "1/3" from "2 1/3"    |
  *     |     |  - OR -            |                        |
@@ -61,7 +63,7 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
  *     numericRegex.exec("2 / 3") // [ "2 / 3", "2", "/ 3",  null ]
  */
 export const numericRegex =
-  /^(?=-?\s*\.\d|-?\s*\d+)(-)?\s*(\d*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?$/;
+  /^(?=-?\s*\.\d|-?\s*\d+)(-)?\s*((?:\d+[\d,_]*)*)(\.\d+|(\s+\d*\s*)?\s*\/\s*\d+)?$/;
 
 /**
  * Captures any Unicode vulgar fractions

@@ -8,7 +8,7 @@
 
 Converts a string to a number, like an enhanced version of `parseFloat`.
 
-In addition to plain integers and decimals, `numeric-quantity` can process mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), the fraction slash character (`'1 2⁄3'`), and Roman numerals (`'MCCXIV'` or `'Ⅻ'`). The return value will be `NaN` if the provided string does not resemble a number.
+In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), the fraction slash character (`'1 2⁄3'`), and Roman numerals (`'MCCXIV'` or `'Ⅻ'`). The return value will be `NaN` if the provided string does not resemble a number.
 
 > _For the inverse operation—converting a number to an imperial measurement—check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
 >
