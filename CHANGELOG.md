@@ -1,37 +1,147 @@
-## 1.0.1 (2021-02-15)
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Changed
+
+- `numericQuantity` is now a named export; there is no default export
+- Parsing logic now accepts/ignores any trailing non-numeric characters, to more closely resemble the behavior of `parseFloat`
+
+### Added
+
+- Support for comma (`','`) and underscore (`'_'`) separators within the whole number or numerator segments
+- Support for Roman numerals (modern/strict rules), including Unicode code points `U+2160` through `U+217F`
+- Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a string of pure digit characters (the denominator) to be valid
+- Named exports of regular expressions, character maps, types, and other internal tools
+- Build with ([tsup](https://tsup.egoist.dev/))
+
+## [v1.0.4] - 2022-04-16
+
+### Fixed
+
+- Corrected filenames in [package.json](./package.json)
+
+## [v1.0.3] - 2022-04-16
+
+### Added
+
+- Build with Vite
+
+## [v1.0.2] - 2021-08-23
+
+### Added
+
+- Support for Unicode fraction slash
+
+## [v1.0.1] - 2021-02-15
+
+### Fixed
 
 - Added description to package.json
 
-## 1.0.0 (2021-02-11)
+## [v1.0.0] - 2021-02-11
+
+### Added
 
 - New build system ([tsdx](https://tsdx.io/))
 
-## 0.5.1 (2019-08-24)
+## [v0.5.1] - 2019-08-24
 
-- Fixed README.md note about return values
+### Fixed
 
-## 0.5.0 (2019-08-24)
+- [README.md](./README.md) note about return values
 
-### Breaking change
+## [v0.5.0] - 2019-08-24
+
+### Changed
 
 - Returns `NaN` for invalid inputs instead of `-1`
 
-### Bug fixes
+### Fixed
 
-- Handles negative numbers properly (fixes [#3](https://github.com/jakeboone02/numeric-quantity/issues/3))
+- [#3] Handles negative numbers
 
-## 0.4.2 (2019-08-23)
+## [v0.4.2] - 2019-08-23
 
-- Rewritten with TypeScript
+### Fixed
 
-## 0.3.2 (2018-09-21)
+- Publish `dist` directory only
 
-## 0.3.1 (2015-07-16)
+## [v0.4.1] - 2019-08-23
 
-## 0.3.0 (2015-07-16)
+### Changed
 
-## 0.1.2 (2015-03-20)
+- Rewritten in TypeScript
 
-## 0.1.1 (2015-03-19)
+### Added
 
-## 0.1.0 (2015-03-18)
+- ESM and CJS builds
+- Build with Rollup
+
+## [v0.3.2] - 2018-09-21
+
+### Added
+
+- TypeScript types
+
+## [v0.3.1] - 2015-07-16
+
+### Fixed
+
+- Documentation update
+
+## [v0.3.0] - 2015-07-16
+
+### Added
+
+- UMD support
+
+### Fixed
+
+- Minor bug fixes
+
+## [v0.1.2] - 2015-03-20
+
+### Fixed
+
+- Minor performance improvement
+
+## [v0.1.1] - 2015-03-19
+
+### Changed
+
+- Algorithm uses `parseInt`/`parseFloat` instead of `str - 0` to parse numbers from strings
+
+## [v0.1.0] - 2015-03-18
+
+### Added
+
+- Initial release
+
+<!-- Issue/PR links -->
+
+[#3]: https://github.com/jakeboone02/numeric-quantity/issues/3
+
+<!-- Release comparison links -->
+
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.4...HEAD
+[v1.0.4]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.3...v1.0.4
+[v1.0.3]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.2...v1.0.3
+[v1.0.2]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.1...v1.0.2
+[v1.0.1]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.0...v1.0.1
+[v1.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.5.1...v1.0.0
+[v0.5.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.5.0...v0.5.1
+[v0.5.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.4.2...v0.5.0
+[v0.4.2]: https://github.com/jakeboone02/numeric-quantity/compare/v0.4.1...v0.4.2
+[v0.4.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.2...v0.4.1
+[v0.3.2]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.1...v0.3.2
+[v0.3.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.0...v0.3.1
+[v0.3.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.1.2...v0.3.0
+[v0.1.2]: https://github.com/jakeboone02/numeric-quantity/compare/v0.1.1...v0.1.2
+[v0.1.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.1.0...v0.1.1
+[v0.1.0]: https://github.com/jakeboone02/numeric-quantity/tree/v0.1.0
