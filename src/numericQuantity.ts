@@ -53,7 +53,7 @@ export const numericQuantity = (quantity: string) => {
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
   if (!numberGroup2) {
-    return finalResult * (dash === '-' ? -1 : 1);
+    return dash ? finalResult * -1 : finalResult;
   }
 
   if (numberGroup2.startsWith('.')) {
@@ -72,5 +72,5 @@ export const numericQuantity = (quantity: string) => {
     finalResult += Math.round((numerator * 1000) / denominator) / 1000;
   }
 
-  return finalResult * (dash === '-' ? -1 : 1);
+  return dash ? finalResult * -1 : finalResult;
 };
