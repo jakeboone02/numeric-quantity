@@ -237,10 +237,10 @@ export const numericQuantityTests: Record<string, [string, number][]> = {
       // If XI and XII aren't in the romanNumeralValues map, filter them out:
       // .filter(entry => !['Ⅺ', 'Ⅻ', 'ⅺ', 'ⅻ'].includes(entry[0]))
       .map(
-        entry =>
+        ([unicodeChar, asciiSequence]) =>
           [
-            entry[0] as RomanNumeralUnicode,
-            romanNumeralValues[entry[1]],
+            unicodeChar as RomanNumeralUnicode,
+            romanNumeralValues[asciiSequence],
           ] satisfies [RomanNumeralUnicode, number]
       ),
   ],

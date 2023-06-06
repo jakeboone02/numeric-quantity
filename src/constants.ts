@@ -122,7 +122,7 @@ export const romanNumeralValues = {
  */
 export const romanNumeralUnicodeToAsciiMap: Record<
   RomanNumeralUnicode,
-  string
+  keyof typeof romanNumeralValues
 > = {
   // Roman Numeral One (U+2160)
   Ⅰ: 'I',
