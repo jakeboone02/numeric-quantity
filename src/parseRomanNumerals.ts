@@ -1,7 +1,7 @@
 import {
+  romanNumeralRegex,
   romanNumeralUnicodeRegex,
   romanNumeralUnicodeToAsciiMap,
-  romanNumeralRegex,
   romanNumeralValues,
 } from './constants';
 

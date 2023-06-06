@@ -1,4 +1,4 @@
-import { romanNumeralValues, romanNumeralUnicodeToAsciiMap } from './constants';
+import { romanNumeralUnicodeToAsciiMap, romanNumeralValues } from './constants';
 import { RomanNumeralUnicode } from './types';
 
 export const numericQuantityTests: Record<string, [string, number][]> = {

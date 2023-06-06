@@ -27,11 +27,22 @@ console.log(numericQuantity('2 2/3')); // 2.667
 
 ### CDN
 
+As an ES module:
+
 ```html
 <script type="module">
   import { numericQuantity } from 'https://cdn.jsdelivr.net/npm/numeric-quantity/+esm';
 
   console.log(numericQuantity('10½')); // 10.5
+</script>
+```
+
+As UMD (all exports are properties of the global object `NumericQuantity`):
+
+```html
+<script src="https://unpkg.com/numeric-quantity"></script>
+<script>
+  console.log(NumericQuantity.numericQuantity('xii')); // 12
 </script>
 ```
 

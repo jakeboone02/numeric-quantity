@@ -8,6 +8,7 @@ export default defineConfig(options => {
       'numeric-quantity': 'src/index.ts',
     },
     sourcemap: true,
+    format: 'esm',
     ...options,
   };
 
@@ -20,7 +21,6 @@ export default defineConfig(options => {
     // ESM, standard bundler dev, embedded `process` references
     {
       ...commonOptions,
-      format: ['esm'],
       dts: true,
       clean: true,
     },
@@ -33,7 +33,6 @@ export default defineConfig(options => {
       // ESBuild outputs `'.mjs'` by default for the 'esm' format. Force '.js'
       outExtension: () => ({ js: '.js' }),
       target: 'es2017',
-      format: ['esm'],
     },
     // ESM for use in browsers. Minified, with `process` compiled away
     {
@@ -42,7 +41,6 @@ export default defineConfig(options => {
       entry: {
         'numeric-quantity.production': 'src/index.ts',
       },
-      format: ['esm'],
       outExtension: () => ({ js: '.mjs' }),
     },
     // CJS development
@@ -76,6 +74,13 @@ if (process.env.NODE_ENV === 'production') {
 `
         );
       },
+    },
+    // UMD (ish)
+    {
+      ...commonOptions,
+      ...productionOptions,
+      format: 'iife',
+      globalName: 'NumericQuantity',
     },
   ];
 

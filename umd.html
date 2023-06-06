@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>numericQuantity UMD Test Page</title>
+    <style>
+      #app {
+        font-family: 'Courier New', Courier, monospace;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div data-input="1/2"></div>
+      <div data-input="1 1/2"></div>
+      <div data-input="1.5"></div>
+      <div data-input="XII"></div>
+    </div>
+    <script src="./dist/numeric-quantity.global.js"></script>
+    <script>
+      document.querySelectorAll('#app>div').forEach(div => {
+        const input = div.attributes.getNamedItem('data-input').value;
+        div.innerText = `NumericQuantity.numericQuantity('${input}') === ${NumericQuantity.numericQuantity(
+          input
+        )}`;
+      });
+    </script>
+  </body>
+</html>
