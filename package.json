@@ -18,7 +18,7 @@
     }
   },
   "types": "./dist/numeric-quantity.d.ts",
-  "unpkg": "./dist/numeric-quantity.global.js",
+  "unpkg": "./dist/numeric-quantity.umd.min.js",
   "bugs": {
     "url": "https://github.com/jakeboone02/numeric-quantity/issues"
   },

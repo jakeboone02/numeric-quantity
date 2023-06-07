@@ -81,6 +81,7 @@ if (process.env.NODE_ENV === 'production') {
       ...productionOptions,
       format: 'iife',
       globalName: 'NumericQuantity',
+      outExtension: () => ({ js: '.umd.min.js' }),
     },
   ];
 
