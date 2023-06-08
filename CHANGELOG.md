@@ -31,25 +31,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Build with Vite.
+- Build with [Vite](https://vitejs.dev/).
 
 ## [v1.0.2] - 2021-08-23
 
 ### Added
 
-- [#21] Support for Unicode fraction slash.
+- [#21] Support for Unicode fraction slash (`⁄`, `U+2044`).
 
 ## [v1.0.1] - 2021-02-15
 
 ### Fixed
 
-- Added description to package.json.
+- Added description to [package.json](./package.json).
 
 ## [v1.0.0] - 2021-02-11
 
 ### Added
 
 - [#12] New build system ([tsdx](https://tsdx.io/)).
+
+## [v0.5.2] - 2021-02-08
+
+### Fixed
+
+- Updated CI badges on [README.md](./README.md).
 
 ## [v0.5.1] - 2019-08-24
 
@@ -81,8 +87,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Build with [Rollup](https://rollupjs.org/).
+
+## [v0.4.0] - 2019-08-22
+
+### Added
+
 - ESM and CJS builds.
-- Build with Rollup.
+
+## [v0.3.3] - 2019-07-21
+
+### Added
+
+- JSDoc comments for tooltips
 
 ## [v0.3.2] - 2018-09-21
 
@@ -122,7 +139,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Algorithm uses `parseInt`/`parseFloat` instead of `str - 0` to parse numbers from strings.
+- Use `parseInt`/`parseFloat` instead of `str - 0` to parse numbers from strings.
 
 ## [v0.1.0] - 2015-03-18
 
@@ -144,11 +161,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [v1.0.3]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.0...v1.0.1
-[v1.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.5.1...v1.0.0
+[v1.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.5.2...v1.0.0
+[v0.5.2]: https://github.com/jakeboone02/numeric-quantity/compare/v0.5.1...v0.5.2
 [v0.5.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.4.2...v0.5.0
 [v0.4.2]: https://github.com/jakeboone02/numeric-quantity/compare/v0.4.1...v0.4.2
-[v0.4.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.2...v0.4.1
+[v0.4.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.4.0...v0.4.1
+[v0.4.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.3...v0.4.0
+[v0.3.3]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/jakeboone02/numeric-quantity/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/jakeboone02/numeric-quantity/compare/v0.2.0...v0.3.0
