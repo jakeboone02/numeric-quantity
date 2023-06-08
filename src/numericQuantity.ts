@@ -12,7 +12,11 @@ const spaceThenSlashRegex = /^\s*\//;
  *
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
  */
-export const numericQuantity = (quantity: string) => {
+export const numericQuantity = (quantity: string | number) => {
+  if (typeof quantity === 'number' || typeof quantity === 'bigint') {
+    return quantity;
+  }
+
   let finalResult = NaN;
 
   // Coerce to string in case qty is a number

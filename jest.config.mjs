@@ -2,6 +2,7 @@
 export default {
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  coveragePathIgnorePatterns: ['numericQuantityTests.ts'],
   coverageThreshold: {
     global: {
       branches: 100,
