@@ -44,8 +44,9 @@ export const numericQuantity = (quantity: string | number) => {
     return parseRomanNumerals(quantityAsString);
   }
 
-  const [, dash, ng1temp, numberGroup2] = regexResult;
+  const [, dash, ng1temp, ng2temp] = regexResult;
   const numberGroup1 = ng1temp.replace(/[,_]/g, '');
+  const numberGroup2 = ng2temp?.replace(/[,_]/g, '');
 
   // Numerify capture group 1
   if (!numberGroup1 && numberGroup2 && numberGroup2.startsWith('.')) {

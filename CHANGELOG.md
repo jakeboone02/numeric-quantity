@@ -10,14 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - `numericQuantity` is now a named export; there is no default export.
-- Parsing logic now accepts/ignores any trailing non-numeric characters, to more closely resemble the behavior of `parseFloat`.
+- Parsing logic now accepts/ignores any trailing non-numeric characters, more closely resembling the behavior of `parseFloat`.
 - UMD build assigns all exports, including `numericQuantity`, to the global object `NumericQuantity`. Previously, it assigned the main function to the global namespace as `numericQuantity`.
 
 ### Added
 
-- Support for comma (`','`) and underscore (`'_'`) separators within the whole number or numerator segments.
-- Support for Roman numerals (modern/strict rules), including Unicode code points `U+2160` through `U+217F`.
-- Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a string of pure digit characters (the denominator) to be valid.
+- Support for comma (`','`) and underscore (`'_'`) separators within Arabic numeral sequences. If a numeric sequence has a leading or trailing separator, that sequence and everything after it will be ignored.
+- Support for Roman numerals with modern, strict rules, including the Unicode code points `U+2160` through `U+217F`.
+- Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a valid numeric sequence (the denominator) to be included in the conversion.
 - Named exports of regular expressions, character maps, types, and other internal tools.
 - Build with ([tsup](https://tsup.egoist.dev/)).
 
