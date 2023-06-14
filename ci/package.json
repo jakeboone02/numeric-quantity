@@ -1,7 +1,7 @@
 {
   "name": "numeric-quantity-ci",
   "version": "1.0.0",
-  "description": "CI Test Page for numeric-quantity",
+  "description": "numeric-quantity Test Page",
   "main": "index.html",
   "scripts": {
     "start": "parcel index.html --open",

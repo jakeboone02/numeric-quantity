@@ -128,14 +128,16 @@ const app = document.getElementById('app')!;
 app.innerHTML = `<h1>numeric-quantity CI</h1>
 <table>
   <thead><tr><th>Expression</th><th>Result</th></tr></thead>
-  <tbody></tbody>
 </table>`;
 
-const tbody = document.querySelector('tbody');
+const table = document.querySelector('table')!;
+const tbody = document.createElement('tbody')!;
 
 for (const s of strings) {
   const tr = document.createElement('tr');
   const result = numericQuantity(s);
   tr.innerHTML = `<td>numericQuantity("${s}")</td><td>${result}</td>`;
-  tbody?.appendChild(tr);
+  tbody.appendChild(tr);
 }
+
+table.appendChild(tbody);

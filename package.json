@@ -3,7 +3,7 @@
   "license": "MIT",
   "name": "numeric-quantity",
   "author": "Jake Boone <jakeboone02@gmail.com>",
-  "description": "Number parser with support for mixed numbers and vulgar fractions",
+  "description": "Number parser with support for mixed numbers, vulgar fractions, and Roman numerals",
   "files": [
     "dist"
   ],
@@ -28,10 +28,13 @@
     "url": "https://github.com/jakeboone02/numeric-quantity.git"
   },
   "keywords": [
-    "convert",
+    "parse",
     "number",
+    "convert",
     "fraction",
-    "decimal"
+    "decimal",
+    "roman",
+    "numerals"
   ],
   "scripts": {
     "start": "vite",
