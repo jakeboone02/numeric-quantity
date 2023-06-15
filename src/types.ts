@@ -1,5 +1,12 @@
 export interface NumericQuantityOptions {
   /**
+   * Round the result to this many decimal places. Defaults to 3; must
+   * be greater than or equal to zero.
+   *
+   * @default 3
+   */
+  round?: number | false;
+  /**
    * Allow and ignore trailing invalid characters _à la_ `parseFloat`.
    *
    * @default false

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Options object as optional second parameter. Accepts the following options:
   - `allowTrailingInvalid` (`boolean`, default `false`): Allows `numericQuantity` to more closely resemble the behavior of `parseFloat` by accepting and ignoring everything from the first invalid character to the end of the string.
   - `romanNumerals` (`boolean`, default `false`): Enables support for Roman numerals with modern, strict rules, including the Unicode code points `U+2160` through `U+217F`. Roman numerals will only be parsed if an attempt to parse the string based on Arabic numerals fails. To parse Roman numerals unconditionally, call `parseRomanNumerals` directly.
+  - `round` (`number | false`, default `3`): Rounds the result to the specified number of decimal places. Use `round: false` to avoid rounding.
 - Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a numeric sequence (the denominator) to be considered part of a valid fraction representation.
 - Named exports of internal utilities like regular expressions, character maps, types, etc.
 - Build with ([tsup](https://tsup.egoist.dev/)).

@@ -49,7 +49,7 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
  *     |     +                    +                        |
  *     | (This may include comma/underscore separators)    |
  *     +-----+--------------------+------------------------+
- *     |  3  |  entire fraction   |  "1/3" from "2 1/3"    |
+ *     |  3  |  entire fraction   |  " 1/3" from "2 1/3"   |
  *     |     |  - OR -            |                        |
  *     |     |  decimal portion   |  ".33" from "2.33"     |
  *     |     |  - OR -            |                        |
@@ -64,12 +64,12 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
  *     numericRegex.exec("2 / 3") // [ "2 / 3", "2", "/ 3",  null ]
  */
 export const numericRegex =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(\.\d(?:[\d,_]*\d)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?$/;
+  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?$/;
 /**
  * Same as `numericRegex`, but allows/ignores trailing invalid characters.
  */
 export const numericRegexWithTrailingInvalid =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(\.\d(?:[\d,_]*\d)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?(?:\s*[^\.\d\/].*)?/;
+  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?(?:\s*[^\.\d\/].*)?/;
 
 /**
  * Captures any Unicode vulgar fractions
@@ -233,6 +233,7 @@ export const romanNumeralRegex =
 // #endregion
 
 export const defaultOptions = {
+  round: 3,
   allowTrailingInvalid: false,
   romanNumerals: false,
 } satisfies Required<NumericQuantityOptions>;

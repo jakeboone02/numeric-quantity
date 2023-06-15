@@ -6,13 +6,14 @@
 [![downloads](https://img.shields.io/npm/dm/numeric-quantity.svg)](http://npm-stat.com/charts.html?package=numeric-quantity&from=2015-08-01)
 [![MIT License](https://img.shields.io/npm/l/numeric-quantity.svg)](http://opensource.org/licenses/MIT)
 
-Converts a string to a number, like an enhanced version of `parseFloat`.
+Converts a string to a number, like an enhanced version of `parseFloat`. The return value will be `NaN` if the provided string does not resemble a number.
 
-In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), the fraction slash character (`'1 2⁄3'`). The return value will be `NaN` if the provided string does not resemble a number.
+Features:
 
-To allow and ignore trailing invalid characters _à la_ `parseFloat`, pass `{ allowTrailingInvalid: true }` as the second argument.
-
-To parse Roman numerals (`'MCCXIV'` or `'Ⅻ'`), pass `{ romanNumerals: true }` as the second argument or use `parseRomanNumerals` directly.
+- In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), and the fraction slash character (`'1 2⁄3'`).
+- To allow and ignore trailing invalid characters _à la_ `parseFloat`, pass `{ allowTrailingInvalid: true }` as the second argument.
+- To parse Roman numerals like `'MCCXIV'` or `'Ⅻ'`, pass `{ romanNumerals: true }` as the second argument or call `parseRomanNumerals` directly.
+- Results will be rounded to three decimal places by default. To avoid rounding, pass `{ round: false }` as the second argument. To round to a different number of decimal places, assign that number to the `round` option (`{ round: 5 }` will round to five decimal places).
 
 > _For the inverse operation—converting a number to an imperial measurement—check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
 >

@@ -43,15 +43,18 @@ export const numericQuantity = (
     return NaN;
   }
 
+  const opts: Required<NumericQuantityOptions> = {
+    ...defaultOptions,
+    ...options,
+  };
+
   const regexResult = (
-    options?.allowTrailingInvalid
-      ? numericRegexWithTrailingInvalid
-      : numericRegex
+    opts.allowTrailingInvalid ? numericRegexWithTrailingInvalid : numericRegex
   ).exec(quantityAsString);
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
-    return options?.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN;
+    return opts.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN;
   }
 
   const [, dash, ng1temp, ng2temp] = regexResult;
@@ -71,20 +74,35 @@ export const numericQuantity = (
     return dash ? finalResult * -1 : finalResult;
   }
 
-  if (numberGroup2.startsWith('.')) {
-    // If first char is "." it's a decimal so just trim to 3 decimal places
-    const numerator = parseFloat(numberGroup2);
-    finalResult += Math.round(numerator * 1000) / 1000;
+  const roundingFactor =
+    opts.round === false
+      ? NaN
+      : parseFloat(`1e${Math.floor(Math.max(0, opts.round))}`);
+
+  if (
+    numberGroup2.startsWith('.') ||
+    numberGroup2.startsWith('e') ||
+    numberGroup2.startsWith('E')
+  ) {
+    // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal
+    const decimalValue = parseFloat(`${finalResult}${numberGroup2}`);
+    finalResult = isNaN(roundingFactor)
+      ? decimalValue
+      : Math.round(decimalValue * roundingFactor) / roundingFactor;
   } else if (spaceThenSlashRegex.test(numberGroup2)) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
     const numerator = parseInt(numberGroup1);
     const denominator = parseInt(numberGroup2.replace('/', ''));
-    finalResult = Math.round((numerator * 1000) / denominator) / 1000;
+    finalResult = isNaN(roundingFactor)
+      ? numerator / denominator
+      : Math.round((numerator * roundingFactor) / denominator) / roundingFactor;
   } else {
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
     const fractionArray = numberGroup2.split('/');
     const [numerator, denominator] = fractionArray.map(v => parseInt(v));
-    finalResult += Math.round((numerator * 1000) / denominator) / 1000;
+    finalResult += isNaN(roundingFactor)
+      ? numerator / denominator
+      : Math.round((numerator * roundingFactor) / denominator) / roundingFactor;
   }
 
   return dash ? finalResult * -1 : finalResult;
