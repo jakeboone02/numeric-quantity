@@ -1,11 +1,12 @@
 import {
+  defaultOptions,
   numericRegex,
   numericRegexWithTrailingInvalid,
   vulgarFractionToAsciiMap,
   vulgarFractionsRegex,
 } from './constants';
 import { parseRomanNumerals } from './parseRomanNumerals';
-import { NumericQuantityOptions } from './types';
+import type { NumericQuantityOptions } from './types';
 
 const spaceThenSlashRegex = /^\s*\//;
 
@@ -16,7 +17,7 @@ const spaceThenSlashRegex = /^\s*\//;
  */
 export const numericQuantity = (
   quantity: string | number,
-  options: NumericQuantityOptions = { allowTrailingInvalid: false }
+  options: NumericQuantityOptions = defaultOptions
 ) => {
   if (typeof quantity === 'number' || typeof quantity === 'bigint') {
     return quantity;
@@ -50,7 +51,7 @@ export const numericQuantity = (
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
-    return parseRomanNumerals(quantityAsString);
+    return options?.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN;
   }
 
   const [, dash, ng1temp, ng2temp] = regexResult;

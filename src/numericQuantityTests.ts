@@ -2,6 +2,7 @@ import { romanNumeralUnicodeToAsciiMap, romanNumeralValues } from './constants';
 import type { NumericQuantityOptions, RomanNumeralUnicode } from './types';
 
 const allowTrailingInvalid = true;
+const romanNumerals = true;
 
 export const numericQuantityTests: Record<
   string,
@@ -21,6 +22,7 @@ export const numericQuantityTests: Record<
     [[], NaN],
     [true, NaN],
     [undefined, NaN],
+    [undefined, NaN, null],
   ] as any,
   'Actual numbers': [
     [12, 12],
@@ -191,45 +193,64 @@ export const numericQuantityTests: Record<
     ['1⁄2', 0.5],
     ['2 1⁄2', 2.5],
   ],
-  'Roman numerals': [
-    // Invalid
-    ['-I', NaN],
-    ['M M', NaN],
-    ['MMMM', NaN],
-    ['DD', NaN],
-    ['CCCC', NaN],
-    ['LL', NaN],
-    ['XXXX', NaN],
-    ['VV', NaN],
-    ['IIII', NaN],
-    ['IIV', NaN],
-    ['IIX', NaN],
-    ['XXL', NaN],
-    ['XXC', NaN],
-    ['CCD', NaN],
-    ['CCM', NaN],
-    // Miscellaneous
-    ['MMII', 2002],
-    ['MCMXCIX', 1999],
-    ['MCMXCVIII', 1998],
-    ['MCM', 1900],
-    [' MCCXIV ', 1214],
-    ['CMV', 905],
-    ['XCV', 95],
-    // Mixed case, mixed ASCII/Unicode
-    ['MmⅪⅰ', 2012],
-  ],
-  'Automated Roman numeral tests (ASCII)': Object.entries(romanNumeralValues),
+  'Roman numerals': (
+    [
+      // Invalid
+      ['-I', NaN],
+      ['M M', NaN],
+      ['MMMM', NaN],
+      ['DD', NaN],
+      ['CCCC', NaN],
+      ['LL', NaN],
+      ['XXXX', NaN],
+      ['VV', NaN],
+      ['IIII', NaN],
+      ['IIV', NaN],
+      ['IIX', NaN],
+      ['XXL', NaN],
+      ['XXC', NaN],
+      ['CCD', NaN],
+      ['CCM', NaN],
+      // Miscellaneous
+      ['MMII', 2002],
+      ['MCMXCIX', 1999],
+      ['MCMXCVIII', 1998],
+      ['MCM', 1900],
+      [' MCCXIV ', 1214],
+      ['CMV', 905],
+      ['XCV', 95],
+      // Mixed case, mixed ASCII/Unicode
+      ['MmⅪⅰ', 2012],
+    ] as const
+  ).map(t => [t[0], t[1], { romanNumerals }]),
+  'Automated Roman numeral tests (ASCII)': Object.entries(
+    romanNumeralValues
+  ).map(t => [t[0], t[1], { romanNumerals }]),
+  'Automated invalid Roman numeral tests (ASCII)': Object.entries(
+    romanNumeralValues
+  ).map(t => [t[0], NaN, { romanNumerals: false }]),
   'Automated Roman numeral tests (Unicode)': Object.entries(
     romanNumeralUnicodeToAsciiMap
   )
-    // If XI and XII aren't in the romanNumeralValues map, filter them out:
+    // If 'XI' and 'XII' were not in `romanNumeralValues`, we would need to
+    // filter out their Unicode counterparts like this:
     // .filter(entry => !['Ⅺ', 'Ⅻ', 'ⅺ', 'ⅻ'].includes(entry[0]))
     .map(
       ([unicodeChar, asciiSequence]) =>
         [
           unicodeChar as RomanNumeralUnicode,
           romanNumeralValues[asciiSequence],
-        ] satisfies [RomanNumeralUnicode, number]
+          { romanNumerals },
+        ] satisfies [RomanNumeralUnicode, number, NumericQuantityOptions]
     ),
+  'Automated invalid Roman numeral tests (Unicode)': Object.entries(
+    romanNumeralUnicodeToAsciiMap
+  ).map(
+    ([unicodeChar]) =>
+      [
+        unicodeChar as RomanNumeralUnicode,
+        NaN,
+        { romanNumerals: false },
+      ] satisfies [RomanNumeralUnicode, number, NumericQuantityOptions]
+  ),
 };

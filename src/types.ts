@@ -1,8 +1,16 @@
 export interface NumericQuantityOptions {
   /**
    * Allow and ignore trailing invalid characters _à la_ `parseFloat`.
+   *
+   * @default false
    */
   allowTrailingInvalid?: boolean;
+  /**
+   * Attempt to parse Roman numerals if Arabic numeral parsing fails.
+   *
+   * @default false
+   */
+  romanNumerals?: boolean;
 }
 
 /**

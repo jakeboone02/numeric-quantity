@@ -1,4 +1,5 @@
 import type {
+  NumericQuantityOptions,
   RomanNumeralAscii,
   RomanNumeralUnicode,
   VulgarFraction,
@@ -230,3 +231,8 @@ export const romanNumeralUnicodeRegex = new RegExp(
 export const romanNumeralRegex =
   /^(?=[MDCLXVI])(M{0,3})(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/i;
 // #endregion
+
+export const defaultOptions = {
+  allowTrailingInvalid: false,
+  romanNumerals: false,
+} satisfies Required<NumericQuantityOptions>;

@@ -14,11 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- `allowTrailingInvalid` option which allows `numericQuantity` to accept and ignore trailing non-numeric characters, more closely resembling the behavior of `parseFloat`.
-- Support for comma (`','`) and underscore (`'_'`) separators within Arabic numeral sequences. If a numeric sequence has a leading or trailing separator, that sequence will be considered invalid. This will cause `numericQuantity` to return `NaN` unless `allowTrailingInvalid` is `true`, in which case the sequence in question and everything after it will be ignored.
-- Support for Roman numerals with modern, strict rules, including the Unicode code points `U+2160` through `U+217F`.
+- Support for comma (`','`) and underscore (`'_'`) separators within Arabic numeral sequences. If a numeric sequence has a leading or trailing separator, that sequence will be considered invalid. This will cause `numericQuantity` to return `NaN` unless `allowTrailingInvalid` is `true` (see next item), in which case the sequence in question and everything after it will be ignored.
+- Options object as optional second parameter. Accepts the following options:
+  - `allowTrailingInvalid` (`boolean`, default `false`): Allows `numericQuantity` to more closely resemble the behavior of `parseFloat` by accepting and ignoring everything from the first invalid character to the end of the string.
+  - `romanNumerals` (`boolean`, default `false`): Enables support for Roman numerals with modern, strict rules, including the Unicode code points `U+2160` through `U+217F`. Roman numerals will only be parsed if an attempt to parse the string based on Arabic numerals fails. To parse Roman numerals unconditionally, call `parseRomanNumerals` directly.
 - Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a numeric sequence (the denominator) to be considered part of a valid fraction representation.
-- Named exports of regular expressions, character maps, types, and other internal tools.
+- Named exports of internal utilities like regular expressions, character maps, types, etc.
 - Build with ([tsup](https://tsup.egoist.dev/)).
 
 ## [v1.0.4] - 2022-04-16

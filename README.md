@@ -8,9 +8,11 @@
 
 Converts a string to a number, like an enhanced version of `parseFloat`.
 
-In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), the fraction slash character (`'1 2⁄3'`), and Roman numerals (`'MCCXIV'` or `'Ⅻ'`). The return value will be `NaN` if the provided string does not resemble a number.
+In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), the fraction slash character (`'1 2⁄3'`). The return value will be `NaN` if the provided string does not resemble a number.
 
 To allow and ignore trailing invalid characters _à la_ `parseFloat`, pass `{ allowTrailingInvalid: true }` as the second argument.
+
+To parse Roman numerals (`'MCCXIV'` or `'Ⅻ'`), pass `{ romanNumerals: true }` as the second argument or use `parseRomanNumerals` directly.
 
 > _For the inverse operation—converting a number to an imperial measurement—check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
 >
@@ -66,5 +68,6 @@ As UMD (all exports are properties of the global object `NumericQuantity`):
 | `RomanNumeralAscii`               | `type`      | Union type of allowable Roman numeral characters (uppercase only)                                    |
 | `RomanNumeralUnicode`             | `type`      | Union type of all Unicode Roman numeral characters (representing 1-12, 50, 100, 500, and 1000)       |
 | `RomanNumeral`                    | `type`      | Union type of `RomanNumeralAscii` and `RomanNumeralUnicode`                                          |
+| `defaultOptions`                  | `object`    | Object representing the default options                                                              |
 
 [badge-npm]: https://img.shields.io/npm/v/numeric-quantity.svg?cacheSeconds=3600&logo=npm
