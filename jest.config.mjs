@@ -1,5 +1,6 @@
 /** @type {import('@jest/types').Config.InitialOptions} */
 export default {
+  preset: 'ts-jest',
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['numericQuantityTests.ts'],
