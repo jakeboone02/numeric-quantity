@@ -1,3 +1,10 @@
+export interface NumericQuantityOptions {
+  /**
+   * Allow and ignore trailing invalid characters _à la_ `parseFloat`.
+   */
+  allowTrailingInvalid?: boolean;
+}
+
 /**
  * Unicode vulgar fraction code points
  */

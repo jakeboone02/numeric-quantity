@@ -1,9 +1,11 @@
 import {
   numericRegex,
+  numericRegexWithTrailingInvalid,
   vulgarFractionToAsciiMap,
   vulgarFractionsRegex,
 } from './constants';
 import { parseRomanNumerals } from './parseRomanNumerals';
+import { NumericQuantityOptions } from './types';
 
 const spaceThenSlashRegex = /^\s*\//;
 
@@ -12,7 +14,10 @@ const spaceThenSlashRegex = /^\s*\//;
  *
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
  */
-export const numericQuantity = (quantity: string | number) => {
+export const numericQuantity = (
+  quantity: string | number,
+  options: NumericQuantityOptions = { allowTrailingInvalid: false }
+) => {
   if (typeof quantity === 'number' || typeof quantity === 'bigint') {
     return quantity;
   }
@@ -37,7 +42,11 @@ export const numericQuantity = (quantity: string | number) => {
     return NaN;
   }
 
-  const regexResult = numericRegex.exec(quantityAsString);
+  const regexResult = (
+    options?.allowTrailingInvalid
+      ? numericRegexWithTrailingInvalid
+      : numericRegex
+  ).exec(quantityAsString);
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
