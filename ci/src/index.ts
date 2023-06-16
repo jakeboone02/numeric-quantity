@@ -135,7 +135,10 @@ const tbody = document.createElement('tbody')!;
 
 for (const s of strings) {
   const tr = document.createElement('tr');
-  const result = numericQuantity(s);
+  const result = numericQuantity(s, {
+    romanNumerals: true,
+    allowTrailingInvalid: true,
+  });
   tr.innerHTML = `<td>numericQuantity("${s}")</td><td>${result}</td>`;
   tbody.appendChild(tr);
 }
