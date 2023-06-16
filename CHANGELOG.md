@@ -7,21 +7,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- N/A
+
+## [v2.0.0] - 2023-06-16
+
 ### Changed
 
-- `numericQuantity` is now a named export; there is no default export.
-- UMD build assigns all exports, including `numericQuantity`, to the global object `NumericQuantity`. Previously, it assigned the main function to the global namespace as `numericQuantity`.
+- [#26] `numericQuantity` is now a named export; there is no default export.
+- [#26] UMD build assigns all exports, including `numericQuantity`, to the global object `NumericQuantity`. Previously, it assigned the main function to the global namespace as `numericQuantity`.
 
 ### Added
 
-- Support for comma (`','`) and underscore (`'_'`) separators within Arabic numeral sequences. If a numeric sequence has a leading or trailing separator, that sequence will be considered invalid. This will cause `numericQuantity` to return `NaN` unless `allowTrailingInvalid` is `true` (see next item), in which case the sequence in question and everything after it will be ignored.
-- Options object as optional second parameter. Accepts the following options:
+- [#26] Support for comma (`','`) and underscore (`'_'`) separators within Arabic numeral sequences. If a numeric sequence has a leading or trailing separator, that sequence will be considered invalid. This will cause `numericQuantity` to return `NaN` unless `allowTrailingInvalid` is `true` (see next item), in which case the sequence in question and everything after it will be ignored.
+- [#26] Options object as optional second parameter. Accepts the following options:
   - `allowTrailingInvalid` (`boolean`, default `false`): Allows `numericQuantity` to more closely resemble the behavior of `parseFloat` by accepting and ignoring everything from the first invalid character to the end of the string.
   - `romanNumerals` (`boolean`, default `false`): Enables support for Roman numerals with modern, strict rules, including the Unicode code points `U+2160` through `U+217F`. Roman numerals will only be parsed if an attempt to parse the string based on Arabic numerals fails. To parse Roman numerals unconditionally, call `parseRomanNumerals` directly.
   - `round` (`number | false`, default `3`): Rounds the result to the specified number of decimal places. Use `round: false` to avoid rounding.
-- Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a numeric sequence (the denominator) to be considered part of a valid fraction representation.
-- Named exports of internal utilities like regular expressions, character maps, types, etc.
-- Build with ([tsup](https://tsup.egoist.dev/)).
+- [#26] Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a numeric sequence (the denominator) to be considered part of a valid fraction representation.
+- [#26] Named exports of internal utilities like regular expressions, character maps, types, etc.
+- [#26] Build with ([tsup](https://tsup.egoist.dev/)).
 
 ## [v1.0.4] - 2022-04-16
 
@@ -155,10 +159,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [#3]: https://github.com/jakeboone02/numeric-quantity/issues/3
 [#21]: https://github.com/jakeboone02/numeric-quantity/pull/21
 [#12]: https://github.com/jakeboone02/numeric-quantity/pull/12
+[#26]: https://github.com/jakeboone02/numeric-quantity/pull/26
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.4...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v2.0.0...HEAD
+[v2.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.4...v2.0.0
 [v1.0.4]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.1...v1.0.2
