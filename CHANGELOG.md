@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - `round` (`number | false`, default `3`): Rounds the result to the specified number of decimal places. Use `round: false` to avoid rounding.
 - [#26] Support for Unicode "Fraction Numerator One" code point (`'⅟'`, `U+215F`), which must be followed by a numeric sequence (the denominator) to be considered part of a valid fraction representation.
 - [#26] Named exports of internal utilities like regular expressions, character maps, types, etc.
-- [#26] Build with ([tsup](https://tsup.egoist.dev/)).
+- [#26] Build with [tsup](https://tsup.egoist.dev/).
 
 ## [v1.0.4] - 2022-04-16
 
@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- [#12] New build system ([tsdx](https://tsdx.io/)).
+- [#12] Build with [tsdx](https://tsdx.io/).
 
 ## [v0.5.2] - 2021-02-08
 
