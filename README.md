@@ -47,7 +47,7 @@ As UMD (all exports are properties of the global object `NumericQuantity`):
 ```html
 <script src="https://unpkg.com/numeric-quantity"></script>
 <script>
-  console.log(NumericQuantity.numericQuantity('xii')); // 12
+  console.log(NumericQuantity.numericQuantity('xii', { romanNumerals: true })); // 12
 </script>
 ```
 
