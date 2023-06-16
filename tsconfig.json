@@ -3,16 +3,15 @@
     "isolatedModules": true,
     "declaration": true,
     "sourceMap": true,
-    "strictNullChecks": true,
     "strict": true,
     "module": "es6",
     "moduleResolution": "node",
-    "target": "esnext",
+    "target": "ES2015",
     "esModuleInterop": true,
     "baseUrl": ".",
     "outDir": "dist",
-    "emitDeclarationOnly": true,
-    "lib": ["ESNext"]
+    "noEmit": true,
+    "lib": ["ES2015", "DOM"]
   },
-  "include": ["./src/index.ts"]
+  "include": ["./src"]
 }
