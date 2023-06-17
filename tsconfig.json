@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
+    "types": ["bun-types", "jest"],
     "isolatedModules": true,
     "declaration": true,
     "sourceMap": true,
     "strict": true,
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
-    "target": "ES2015",
+    "target": "es2017",
     "esModuleInterop": true,
     "baseUrl": ".",
     "outDir": "dist",
     "noEmit": true,
     "lib": ["ES2015", "DOM"]
   },
-  "include": ["./src"]
+  "include": [".", "./src"]
 }
