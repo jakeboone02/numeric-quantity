@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>numericQuantity UMD Test Page</title>
+    <title>numericQuantity UMD Example</title>
     <style>
       #app {
         font-family: 'Courier New', Courier, monospace;
@@ -22,14 +22,15 @@
       <div data-input="1.5"></div>
       <div data-input="XII"></div>
     </div>
-    <script src="./dist/numeric-quantity.umd.min.js"></script>
+    <script src="https://unpkg.com/numeric-quantity"></script>
     <script>
-      document.querySelectorAll('#app>div').forEach(div => {
+      for (const div of document.querySelectorAll('#app>div')) {
         const input = div.attributes.getNamedItem('data-input').value;
-        div.innerText = `NumericQuantity.numericQuantity('${input}') === ${NumericQuantity.numericQuantity(
-          input
+        div.innerText = `NumericQuantity.numericQuantity('${input}', { allowTrailingInvalid: true, romanNumerals: true }) === ${NumericQuantity.numericQuantity(
+          input,
+          { allowTrailingInvalid: true, romanNumerals: true }
         )}`;
-      });
+      }
     </script>
   </body>
 </html>
