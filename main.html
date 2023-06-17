@@ -10,14 +10,37 @@
         border-bottom: 1px solid gray;
       }
       h1,
+      h2,
+      h3,
       td {
         font-family: 'Courier New', Courier, monospace;
+      }
+      #input {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
       }
     </style>
   </head>
   <body>
     <h1>numeric-quantity</h1>
+    <h3>Input</h3>
+    <div id="input">
+      <input type="text" autofocus /><span>=></span>
+      <div id="result"></div>
+    </div>
+    <h3>Tests</h3>
     <div id="app"></div>
     <script type="module" src="/src/dev.ts"></script>
+    <script>
+      const eventListener = e =>
+        (document.getElementById('result').innerText = numericQuantity(
+          e.target.value,
+          { allowTrailingInvalid: true, romanNumerals: true }
+        ));
+      for (const event of ['keyup', 'change']) {
+        document.querySelector('input').addEventListener(event, eventListener);
+      }
+    </script>
   </body>
 </html>

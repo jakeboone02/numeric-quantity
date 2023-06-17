@@ -8,7 +8,7 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "numeric-quantity": "1.0.2",
+    "numeric-quantity": "^2.0.0",
     "parcel-bundler": "^1.12.5"
   },
   "devDependencies": {
