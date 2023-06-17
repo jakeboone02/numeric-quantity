@@ -1,9 +1,11 @@
 import type { Serve } from 'bun';
 import open from 'open';
 
+const port = process.env.PORT ?? 3000;
+
 const dev = (await Bun.build({ entrypoints: ['./src/dev.ts'] })).outputs[0];
 
-setTimeout(() => open('http://localhost:3000'), 500);
+setTimeout(() => open(`http://localhost:${port}`), 500);
 
 export default {
   fetch(req: Request) {
@@ -13,4 +15,5 @@ export default {
     }
     return new Response(Bun.file('./main.html'));
   },
+  port,
 } satisfies Serve;
