@@ -42,7 +42,7 @@
     "test": "jest",
     "watch": "jest --watch",
     "publish:npm": "np",
-    "pretty-print": "prettier --write *.{mjs,js,ts,json} src/*.*"
+    "pretty-print": "bunx prettier --write *.{mjs,ts,json} src/*.*"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
