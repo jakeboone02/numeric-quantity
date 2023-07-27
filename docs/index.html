@@ -3,7 +3,7 @@
 <div class="table-cell" id="tsd-search" data-base=".">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
 <div class="field">
-<div id="tsd-toolbar-links"></div></div>
+<div id="tsd-toolbar-links"><a href="https://jakeboone02.github.io/numeric-quantity/">Docs</a><a href="https://github.com/jakeboone02/numeric-quantity/">GitHub</a><a href="https://github.com/sponsors/jakeboone02">Support</a></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
 <li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">numeric-quantity</a></div>
@@ -12,18 +12,20 @@
 <div class="col-content">
 <div class="tsd-page-title">
 <h2>numeric-quantity</h2></div>
-<div class="tsd-panel tsd-typography"><a id="md:numeric-quantity" class="tsd-anchor"></a><h1><a href="#md:numeric-quantity">numeric-quantity</a></h1><p><a href="https://www.npmjs.com/package/numeric-quantity"><img src="https://img.shields.io/npm/v/numeric-quantity.svg?cacheSeconds=3600&logo=npm" alt="npm"></a>
+<div class="tsd-panel tsd-typography"><p><a href="https://www.npmjs.com/package/numeric-quantity"><img src="https://img.shields.io/npm/v/numeric-quantity.svg?cacheSeconds=3600&logo=npm" alt="npm"></a>
 <img src="https://github.com/jakeboone02/numeric-quantity/actions/workflows/main.yml/badge.svg" alt="workflow status">
 <a href="https://codecov.io/github/jakeboone02/numeric-quantity?branch=main"><img src="https://codecov.io/github/jakeboone02/numeric-quantity/coverage.svg?branch=main" alt="codecov.io"></a>
 <a href="http://npm-stat.com/charts.html?package=numeric-quantity&from=2015-08-01"><img src="https://img.shields.io/npm/dm/numeric-quantity.svg" alt="downloads"></a>
 <a href="http://opensource.org/licenses/MIT"><img src="https://img.shields.io/npm/l/numeric-quantity.svg" alt="MIT License"></a></p>
-<p>Converts a string to a number, like an enhanced version of <code>parseFloat</code>. The return value will be <code>NaN</code> if the provided string does not resemble a number.</p>
+<p>Converts a string to a number, like an enhanced version of <code>parseFloat</code>.</p>
+<p><strong><a href="https://jakeboone02.github.io/numeric-quantity/">Full documentation</a></strong></p>
 <p>Features:</p>
 <ul>
 <li>In addition to plain integers and decimals, <code>numeric-quantity</code> can parse numbers with comma or underscore separators (<code>&#39;1,000&#39;</code> or <code>&#39;1_000&#39;</code>), mixed numbers (<code>&#39;1 2/3&#39;</code>), vulgar fractions (<code>&#39;1⅖&#39;</code>), and the fraction slash character (<code>&#39;1 2⁄3&#39;</code>).</li>
 <li>To allow and ignore trailing invalid characters <em>à la</em> <code>parseFloat</code>, pass <code>{ allowTrailingInvalid: true }</code> as the second argument.</li>
 <li>To parse Roman numerals like <code>&#39;MCCXIV&#39;</code> or <code>&#39;Ⅻ&#39;</code>, pass <code>{ romanNumerals: true }</code> as the second argument or call <code>parseRomanNumerals</code> directly.</li>
 <li>Results will be rounded to three decimal places by default. To avoid rounding, pass <code>{ round: false }</code> as the second argument. To round to a different number of decimal places, assign that number to the <code>round</code> option (<code>{ round: 5 }</code> will round to five decimal places).</li>
+<li>Returns <code>NaN</code> if the provided string does not resemble a number.</li>
 </ul>
 <blockquote>
 <p><em>For the inverse operation—converting a number to an imperial measurement—check out <a href="https://www.npmjs.com/package/format-quantity">format-quantity</a>.</em></p>
@@ -37,90 +39,6 @@
 <p>As UMD (all exports are properties of the global object <code>NumericQuantity</code>):</p>
 <pre><code class="language-html"><span class="hl-6">&lt;</span><span class="hl-7">script</span><span class="hl-8"> </span><span class="hl-9">src</span><span class="hl-8">=</span><span class="hl-10">&quot;https://unpkg.com/numeric-quantity&quot;</span><span class="hl-6">&gt;&lt;/</span><span class="hl-7">script</span><span class="hl-6">&gt;</span><br/><span class="hl-6">&lt;</span><span class="hl-7">script</span><span class="hl-6">&gt;</span><br/><span class="hl-8">  </span><span class="hl-2">console</span><span class="hl-8">.</span><span class="hl-4">log</span><span class="hl-8">(</span><span class="hl-2">NumericQuantity</span><span class="hl-8">.</span><span class="hl-4">numericQuantity</span><span class="hl-8">(</span><span class="hl-3">&#39;xii&#39;</span><span class="hl-8">, { </span><span class="hl-2">romanNumerals:</span><span class="hl-8"> </span><span class="hl-11">true</span><span class="hl-8"> })); </span><span class="hl-5">// 12</span><br/><span class="hl-6">&lt;/</span><span class="hl-7">script</span><span class="hl-6">&gt;</span>
 </code><button>Copy</button></pre>
-<a id="md:other-exports" class="tsd-anchor"></a><h2><a href="#md:other-exports">Other exports</a></h2><table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>numericRegex</code></td>
-<td><code>RegExp</code></td>
-<td>Regular expression matching a string that resembles a number (using Arabic numerals) in its entirety</td>
-</tr>
-<tr>
-<td><code>numericRegexWithTrailingInvalid</code></td>
-<td><code>RegExp</code></td>
-<td>Same as <code>numericRegex</code>, but allows/ignores trailing invalid characters.</td>
-</tr>
-<tr>
-<td><code>VulgarFraction</code></td>
-<td><code>type</code></td>
-<td>Union type of all unicode vulgar fraction code points</td>
-</tr>
-<tr>
-<td><code>vulgarFractionsRegex</code></td>
-<td><code>RegExp</code></td>
-<td>Regular expression matching the first unicode vulgar fraction code point</td>
-</tr>
-<tr>
-<td><code>vulgarFractionToAsciiMap</code></td>
-<td><code>object</code></td>
-<td>Mapping of each vulgar fraction to its traditional ASCII representation (e.g., <code>&#39;½&#39;</code> to <code>&#39;1/2&#39;</code>)</td>
-</tr>
-<tr>
-<td><code>parseRomanNumerals</code></td>
-<td><code>function</code></td>
-<td>Same function signature as <code>numericQuantity</code>, but only for Roman numerals (used internally)</td>
-</tr>
-<tr>
-<td><code>romanNumeralRegex</code></td>
-<td><code>RegExp</code></td>
-<td>Regular expression matching valid Roman numeral sequences (uses modern, strict rules)</td>
-</tr>
-<tr>
-<td><code>romanNumeralUnicodeRegex</code></td>
-<td><code>RegExp</code></td>
-<td>Regular expression matching any unicode Roman numeral code point</td>
-</tr>
-<tr>
-<td><code>romanNumeralUnicodeToAsciiMap</code></td>
-<td><code>object</code></td>
-<td>Mapping of each Roman numeral to its traditional ASCII representation (e.g., <code>&#39;Ⅻ&#39;</code> to <code>&#39;XII&#39;</code>)</td>
-</tr>
-<tr>
-<td><code>romanNumeralValues</code></td>
-<td><code>object</code></td>
-<td>Mapping of each valid Roman numeral sequence fragment to its numeric value</td>
-</tr>
-<tr>
-<td><code>NumericQuantityOptions</code></td>
-<td><code>interface</code></td>
-<td>Shape of the (optional) second argument to <code>numericQuantity</code></td>
-</tr>
-<tr>
-<td><code>RomanNumeralAscii</code></td>
-<td><code>type</code></td>
-<td>Union type of allowable Roman numeral characters (uppercase only)</td>
-</tr>
-<tr>
-<td><code>RomanNumeralUnicode</code></td>
-<td><code>type</code></td>
-<td>Union type of all Unicode Roman numeral characters (representing 1-12, 50, 100, 500, and 1000)</td>
-</tr>
-<tr>
-<td><code>RomanNumeral</code></td>
-<td><code>type</code></td>
-<td>Union type of <code>RomanNumeralAscii</code> and <code>RomanNumeralUnicode</code></td>
-</tr>
-<tr>
-<td><code>defaultOptions</code></td>
-<td><code>object</code></td>
-<td>Object representing the default options</td>
-</tr>
-</tbody></table>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -143,15 +61,13 @@
 <ul>
 <li>
 <ul>
-<li><a href="#md:numeric-quantity"><span>numeric-<wbr/>quantity</span></a></li>
-<li>
-<ul>
 <li><a href="#md:usage"><span>Usage</span></a></li>
 <li>
 <ul>
 <li><a href="#md:installed"><span>Installed</span></a></li>
-<li><a href="#md:cdn"><span>CDN</span></a></li></ul></li>
-<li><a href="#md:other-exports"><span>Other exports</span></a></li></ul></li></ul></li></ul></div></details></div>
+<li>
+<ul>
+<li><a href="#md:cdn"><span>CDN</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="modules.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>numeric-<wbr/>quantity</span></a>
 <ul class="tsd-small-nested-navigation">

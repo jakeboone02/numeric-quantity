@@ -1,4 +1,9 @@
 {
   "entryPoints": ["src/index.ts"],
-  "out": "docs"
+  "out": "docs",
+  "navigationLinks": {
+    "Docs": "https://jakeboone02.github.io/numeric-quantity/",
+    "GitHub": "https://github.com/jakeboone02/numeric-quantity/",
+    "Support": "https://github.com/sponsors/jakeboone02"
+  }
 }

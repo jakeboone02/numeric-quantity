@@ -7,7 +7,7 @@ import type {
 
 // #region Arabic numerals
 /**
- * Map of Unicode fraction code points to their ASCII equivalents
+ * Map of Unicode fraction code points to their ASCII equivalents.
  */
 export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
   '¼': '1/4',
@@ -66,13 +66,13 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
 export const numericRegex =
   /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?$/;
 /**
- * Same as `numericRegex`, but allows/ignores trailing invalid characters.
+ * Same as {@link numericRegex}, but allows/ignores trailing invalid characters.
  */
 export const numericRegexWithTrailingInvalid =
   /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?(?:\s*[^\.\d\/].*)?/;
 
 /**
- * Captures any Unicode vulgar fractions
+ * Captures any Unicode vulgar fractions.
  */
 export const vulgarFractionsRegex = new RegExp(
   `(${Object.keys(vulgarFractionToAsciiMap).join('|')})`
@@ -124,7 +124,7 @@ export const romanNumeralValues = {
 } satisfies { [k in RomanNumeralSequenceFragment]?: number };
 
 /**
- * Map of Unicode Roman numeral code points to their ASCII equivalents
+ * Map of Unicode Roman numeral code points to their ASCII equivalents.
  */
 export const romanNumeralUnicodeToAsciiMap: Record<
   RomanNumeralUnicode,
@@ -197,7 +197,7 @@ export const romanNumeralUnicodeToAsciiMap: Record<
 };
 
 /**
- * Captures all Unicode Roman numeral code points
+ * Captures all Unicode Roman numeral code points.
  */
 export const romanNumeralUnicodeRegex = new RegExp(
   `(${Object.keys(romanNumeralUnicodeToAsciiMap).join('|')})`,
@@ -205,7 +205,7 @@ export const romanNumeralUnicodeRegex = new RegExp(
 );
 
 /**
- * Captures a valid Roman numeral sequence
+ * Captures a valid Roman numeral sequence.
  *
  * Capture groups:
  *
