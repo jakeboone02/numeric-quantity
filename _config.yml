@@ -1,6 +1,0 @@
-remote_theme: pages-themes/hacker@v0.2.0
-plugins:
-  - jekyll-remote-theme
-title: numeric-quantity
-description: Number parser with support for mixed numbers, vulgar fractions, separators, and Roman numerals
-show_downloads: false
