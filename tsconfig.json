@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["bun-types", "jest"],
+    "types": ["bun-types", "jest", "web"],
     "isolatedModules": true,
     "declaration": true,
     "sourceMap": true,
