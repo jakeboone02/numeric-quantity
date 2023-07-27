@@ -37,7 +37,7 @@
     "numerals"
   ],
   "scripts": {
-    "start": "bun ./server.ts",
+    "start": "bun --hot ./server.ts",
     "build": "tsup",
     "test": "jest",
     "watch": "jest --watch",

@@ -27,9 +27,9 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
     const tdCall = document.createElement('td');
     const tdResult = document.createElement('td');
     const tdPassFail = document.createElement('td');
-    tdCall.innerText = `numericQuantity(${JSON.stringify(test)}${
-      opts ? `, ${JSON.stringify(opts)}` : ''
-    })`;
+    tdCall.innerText = `numericQuantity(${
+      ['string', 'object'].includes(typeof test) ? JSON.stringify(test) : test
+    }${typeof opts !== 'undefined' ? `, ${JSON.stringify(opts)}` : ''})`;
     tdResult.innerText = `${result}`;
     tdPassFail.innerText = pass ? '✅' : '❌';
     testTR.appendChild(tdCall);
