@@ -1,6 +1,14 @@
 import { numericQuantity } from './index';
 import { numericQuantityTests } from './numericQuantityTests';
 
+// TODO: When bun-types is included, TS can't find the DOM lib
+// even though it's included in ../tsconfig.json.
+type HTMLDivElement = any;
+declare const document: {
+  querySelector: <T>(...args: any[]) => any;
+  [k: string]: any;
+};
+
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
 (globalThis as any).numericQuantity = numericQuantity;
