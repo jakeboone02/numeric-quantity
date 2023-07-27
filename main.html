@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -19,28 +19,58 @@
         display: flex;
         flex-direction: row;
         gap: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      #round {
+        width: 3rem;
       }
     </style>
   </head>
   <body>
     <h1>numeric-quantity</h1>
-    <h3>Input</h3>
+    <h3>Demo</h3>
     <div id="input">
-      <input type="text" autofocus /><span>=></span>
+      <input type="text" autofocus value="12.14" /><span>=></span>
       <div id="result"></div>
+    </div>
+    <div id="options">
+      <div>
+        <label
+          ><input type="checkbox" id="allowTrailingInvalid" checked /><code
+            >allowTrailingInvalid</code
+          ></label
+        >
+      </div>
+      <div>
+        <label
+          ><input type="checkbox" id="romanNumerals" checked /><code
+            >romanNumerals</code
+          ></label
+        >
+      </div>
+      <div><code>round</code> <input type="number" id="round" value="3" /></div>
     </div>
     <h3>Tests</h3>
     <div id="app"></div>
     <script type="module" src="/src/dev.ts"></script>
     <script>
-      const eventListener = e =>
-        (document.getElementById('result').innerText = numericQuantity(
-          e.target.value,
-          { allowTrailingInvalid: true, romanNumerals: true }
-        ));
+      const updateResult = () => {
+        const allowTrailingInvalid = document.getElementById(
+          'allowTrailingInvalid'
+        ).checked;
+        const romanNumerals = document.getElementById('romanNumerals').checked;
+        const round = document.getElementById('round').valueAsNumber;
+        document.getElementById('result').innerText = numericQuantity(
+          document.querySelector('#input>input').value,
+          { allowTrailingInvalid, romanNumerals, round }
+        );
+      };
       for (const event of ['keyup', 'change']) {
-        document.querySelector('input').addEventListener(event, eventListener);
+        document
+          .querySelectorAll('input')
+          .forEach(el => el.addEventListener(event, updateResult));
       }
+      setTimeout(updateResult, 500);
     </script>
   </body>
 </html>

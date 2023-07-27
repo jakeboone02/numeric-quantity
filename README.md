@@ -1,12 +1,12 @@
-# numeric-quantity
-
 [![npm][badge-npm]](https://www.npmjs.com/package/numeric-quantity)
 ![workflow status](https://github.com/jakeboone02/numeric-quantity/actions/workflows/main.yml/badge.svg)
 [![codecov.io](https://codecov.io/github/jakeboone02/numeric-quantity/coverage.svg?branch=main)](https://codecov.io/github/jakeboone02/numeric-quantity?branch=main)
 [![downloads](https://img.shields.io/npm/dm/numeric-quantity.svg)](http://npm-stat.com/charts.html?package=numeric-quantity&from=2015-08-01)
 [![MIT License](https://img.shields.io/npm/l/numeric-quantity.svg)](http://opensource.org/licenses/MIT)
 
-Converts a string to a number, like an enhanced version of `parseFloat`. The return value will be `NaN` if the provided string does not resemble a number.
+Converts a string to a number, like an enhanced version of `parseFloat`.
+
+**[Full documentation](https://jakeboone02.github.io/numeric-quantity/)**
 
 Features:
 
@@ -14,6 +14,7 @@ Features:
 - To allow and ignore trailing invalid characters _à la_ `parseFloat`, pass `{ allowTrailingInvalid: true }` as the second argument.
 - To parse Roman numerals like `'MCCXIV'` or `'Ⅻ'`, pass `{ romanNumerals: true }` as the second argument or call `parseRomanNumerals` directly.
 - Results will be rounded to three decimal places by default. To avoid rounding, pass `{ round: false }` as the second argument. To round to a different number of decimal places, assign that number to the `round` option (`{ round: 5 }` will round to five decimal places).
+- Returns `NaN` if the provided string does not resemble a number.
 
 > _For the inverse operation—converting a number to an imperial measurement—check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
 >
@@ -50,25 +51,5 @@ As UMD (all exports are properties of the global object `NumericQuantity`):
   console.log(NumericQuantity.numericQuantity('xii', { romanNumerals: true })); // 12
 </script>
 ```
-
-## Other exports
-
-| Name                              | Type        | Description                                                                                          |
-| --------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------- |
-| `numericRegex`                    | `RegExp`    | Regular expression matching a string that resembles a number (using Arabic numerals) in its entirety |
-| `numericRegexWithTrailingInvalid` | `RegExp`    | Same as `numericRegex`, but allows/ignores trailing invalid characters.                              |
-| `VulgarFraction`                  | `type`      | Union type of all unicode vulgar fraction code points                                                |
-| `vulgarFractionsRegex`            | `RegExp`    | Regular expression matching the first unicode vulgar fraction code point                             |
-| `vulgarFractionToAsciiMap`        | `object`    | Mapping of each vulgar fraction to its traditional ASCII representation (e.g., `'½'` to `'1/2'`)     |
-| `parseRomanNumerals`              | `function`  | Same function signature as `numericQuantity`, but only for Roman numerals (used internally)          |
-| `romanNumeralRegex`               | `RegExp`    | Regular expression matching valid Roman numeral sequences (uses modern, strict rules)                |
-| `romanNumeralUnicodeRegex`        | `RegExp`    | Regular expression matching any unicode Roman numeral code point                                     |
-| `romanNumeralUnicodeToAsciiMap`   | `object`    | Mapping of each Roman numeral to its traditional ASCII representation (e.g., `'Ⅻ'` to `'XII'`)       |
-| `romanNumeralValues`              | `object`    | Mapping of each valid Roman numeral sequence fragment to its numeric value                           |
-| `NumericQuantityOptions`          | `interface` | Shape of the (optional) second argument to `numericQuantity`                                         |
-| `RomanNumeralAscii`               | `type`      | Union type of allowable Roman numeral characters (uppercase only)                                    |
-| `RomanNumeralUnicode`             | `type`      | Union type of all Unicode Roman numeral characters (representing 1-12, 50, 100, 500, and 1000)       |
-| `RomanNumeral`                    | `type`      | Union type of `RomanNumeralAscii` and `RomanNumeralUnicode`                                          |
-| `defaultOptions`                  | `object`    | Object representing the default options                                                              |
 
 [badge-npm]: https://img.shields.io/npm/v/numeric-quantity.svg?cacheSeconds=3600&logo=npm
