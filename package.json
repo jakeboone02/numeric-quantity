@@ -39,6 +39,7 @@
   "scripts": {
     "start": "bun --hot ./server.ts",
     "build": "tsup",
+    "docs": "bunx typedoc",
     "test": "jest",
     "watch": "jest --watch",
     "publish:npm": "np",
