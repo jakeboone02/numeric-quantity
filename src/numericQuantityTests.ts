@@ -4,6 +4,11 @@ import type { NumericQuantityOptions, RomanNumeralUnicode } from './types';
 const allowTrailingInvalid = true;
 const romanNumerals = true;
 
+const noop = () => {};
+// This is only executed to meet test coverage requirements until
+// https://github.com/oven-sh/bun/issues/4021 is implemented.
+noop();
+
 export const numericQuantityTests: Record<
   string,
   (
@@ -17,13 +22,13 @@ export const numericQuantityTests: Record<
     ['NaN 1/4', NaN],
     ['', NaN],
     ['   ', NaN],
-    [{}, NaN],
-    [() => {}, NaN],
-    [[], NaN],
-    [true, NaN],
-    [undefined, NaN],
-    [undefined, NaN, null],
-  ] as any,
+    [{} as any, NaN],
+    [noop as any, NaN],
+    [[] as any, NaN],
+    [true as any, NaN],
+    [undefined as any, NaN],
+    [undefined as any, NaN, null as any],
+  ],
   'Actual numbers': [
     [12, 12],
     [1.2, 1.2],
