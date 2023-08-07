@@ -1,10 +1,11 @@
+import { describe, expect, test } from 'bun:test';
 import { numericQuantity } from './numericQuantity';
 import { numericQuantityTests } from './numericQuantityTests';
 
 for (const [title, tests] of Object.entries(numericQuantityTests)) {
   describe(title, () => {
     for (const [arg, expected, options] of tests) {
-      it(`${
+      test(`${
         ['string', 'object'].includes(typeof arg) ? JSON.stringify(arg) : arg
       }${
         typeof options !== 'undefined'
