@@ -40,8 +40,8 @@
     "start": "bun --hot ./server.ts",
     "build": "tsup",
     "docs": "bunx typedoc",
-    "test": "jest",
-    "watch": "jest --watch",
+    "test": "bun test",
+    "watch": "bun test --watch",
     "publish:npm": "np",
     "pretty-print": "bunx prettier --write *.{mjs,ts,json} src/*.*"
   },
