@@ -6,7 +6,9 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
   describe(title, () => {
     for (const [arg, expected, options] of tests) {
       test(`${
-        ['string', 'object'].includes(typeof arg) ? JSON.stringify(arg) : arg
+        ['string', 'object'].includes(typeof arg)
+          ? JSON.stringify(arg)
+          : `${arg}`.replaceAll(/(?:\r?\n)/g, ' ')
       }${
         typeof options !== 'undefined'
           ? ` with option ${JSON.stringify(options)}`
