@@ -66,10 +66,11 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
 export const numericRegex =
   /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?$/;
 /**
- * Same as {@link numericRegex}, but allows/ignores trailing invalid characters.
+ * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
  */
-export const numericRegexWithTrailingInvalid =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?(?:\s*[^\.\d\/].*)?/;
+export const numericRegexWithTrailingInvalid = new RegExp(
+  numericRegex.source.replace(/\$$/, '(?:\\s*[^\\.\\d\\/].*)?')
+);
 
 /**
  * Captures any Unicode vulgar fractions.
@@ -86,6 +87,9 @@ type RomanNumeralSequenceFragment =
   | `${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}`
   | `${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}`;
 
+/**
+ * Map of Roman numeral sequences to their decimal equivalents.
+ */
 export const romanNumeralValues = {
   MMM: 3000,
   MM: 2000,
@@ -107,10 +111,8 @@ export const romanNumeralValues = {
   XL: 40,
   XXX: 30,
   XX: 20,
-  // Twelve is only here for tests; not used in practice
-  XII: 12,
-  // Eleven is only here for tests; not used in practice
-  XI: 11,
+  XII: 12, // only here for tests; not used in practice
+  XI: 11, // only here for tests; not used in practice
   X: 10,
   IX: 9,
   VIII: 8,
@@ -232,6 +234,9 @@ export const romanNumeralRegex =
   /^(?=[MDCLXVI])(M{0,3})(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/i;
 // #endregion
 
+/**
+ * Default options for {@link numericQuantity}.
+ */
 export const defaultOptions = {
   round: 3,
   allowTrailingInvalid: false,
