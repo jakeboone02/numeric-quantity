@@ -9,7 +9,7 @@ import type {
 /**
  * Map of Unicode fraction code points to their ASCII equivalents.
  */
-export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
+export const vulgarFractionToAsciiMap = {
   '¼': '1/4',
   '½': '1/2',
   '¾': '3/4',
@@ -29,39 +29,31 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, string> = {
   '⅝': '5/8',
   '⅞': '7/8',
   '⅟': '1/',
-};
+} as const satisfies Record<VulgarFraction, string>;
 
 /**
  * Captures the individual elements of a numeric string.
  *
  * Capture groups:
  *
- *     +=====+====================+========================+
- *     |  #  |    Description     |        Example         |
- *     +=====+====================+========================+
- *     |  0  |  entire string     |  "2 1/3" from "2 1/3"  |
- *     +-----+--------------------+------------------------+
- *     |  1  |  "negative" dash   |  "-" from "-2 1/3"     |
- *     +-----+--------------------+------------------------+
- *     |  2  |  the whole number  |  "2" from "2 1/3"      |
- *     |     |  - OR -            |                        |
- *     |     |  the numerator     |  "1" from "1/3"        |
- *     |     +                    +                        |
- *     | (This may include comma/underscore separators)    |
- *     +-----+--------------------+------------------------+
- *     |  3  |  entire fraction   |  " 1/3" from "2 1/3"   |
- *     |     |  - OR -            |                        |
- *     |     |  decimal portion   |  ".33" from "2.33"     |
- *     |     |  - OR -            |                        |
- *     |     |  denominator       |  "/3" from "1/3"       |
- *     +=====+====================+========================+
+ * |  #  |    Description                                   |        Example(s)                                                   |
+ * | --- | ------------------------------------------------ | ------------------------------------------------------------------- |
+ * | `0` | entire string                                    | `"2 1/3"` from `"2 1/3"`                                            |
+ * | `1` | "negative" dash                                  | `"-"` from `"-2 1/3"`                                               |
+ * | `2` | whole number or numerator                        | `"2"` from `"2 1/3"`; `"1"` from `"1/3"`                            |
+ * | `3` | entire fraction, decimal portion, or denominator | `" 1/3"` from `"2 1/3"`; `".33"` from `"2.33"`; `"/3"` from `"1/3"` |
+ *
+ * _Capture group 2 may include comma/underscore separators._
  *
  * @example
- *     numericRegex.exec("1")     // [ "1",     "1", null,   null ]
- *     numericRegex.exec("1.23")  // [ "1.23",  "1", ".23",  null ]
- *     numericRegex.exec("1 2/3") // [ "1 2/3", "1", " 2/3", " 2" ]
- *     numericRegex.exec("2/3")   // [ "2/3",   "2", "/3",   null ]
- *     numericRegex.exec("2 / 3") // [ "2 / 3", "2", "/ 3",  null ]
+ *
+ * ```ts
+ * numericRegex.exec("1")     // [ "1",     "1", null,   null ]
+ * numericRegex.exec("1.23")  // [ "1.23",  "1", ".23",  null ]
+ * numericRegex.exec("1 2/3") // [ "1 2/3", "1", " 2/3", " 2" ]
+ * numericRegex.exec("2/3")   // [ "2/3",   "2", "/3",   null ]
+ * numericRegex.exec("2 / 3") // [ "2 / 3", "2", "/ 3",  null ]
+ * ```
  */
 export const numericRegex =
   /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?$/;
@@ -123,15 +115,12 @@ export const romanNumeralValues = {
   III: 3,
   II: 2,
   I: 1,
-} satisfies { [k in RomanNumeralSequenceFragment]?: number };
+} as const satisfies { [k in RomanNumeralSequenceFragment]?: number };
 
 /**
  * Map of Unicode Roman numeral code points to their ASCII equivalents.
  */
-export const romanNumeralUnicodeToAsciiMap: Record<
-  RomanNumeralUnicode,
-  keyof typeof romanNumeralValues
-> = {
+export const romanNumeralUnicodeToAsciiMap = {
   // Roman Numeral One (U+2160)
   Ⅰ: 'I',
   // Roman Numeral Two (U+2161)
@@ -196,7 +185,10 @@ export const romanNumeralUnicodeToAsciiMap: Record<
   ⅾ: 'D',
   // Small Roman Numeral One Thousand (U+217F)
   ⅿ: 'M',
-};
+} as const satisfies Record<
+  RomanNumeralUnicode,
+  keyof typeof romanNumeralValues
+>;
 
 /**
  * Captures all Unicode Roman numeral code points.
@@ -211,24 +203,21 @@ export const romanNumeralUnicodeRegex = new RegExp(
  *
  * Capture groups:
  *
- *     +=====+=================+==========================+
- *     |  #  |   Description   |         Example          |
- *     +=====+=================+==========================+
- *     |  0  |  Entire string  |  "MCCXIV" from "MCCXIV"  |
- *     +-----+-----------------+--------------------------+
- *     |  1  |  Thousands      |  "M" from "MCCXIV"       |
- *     +-----+-----------------+--------------------------+
- *     |  2  |  Hundreds       |  "CC" from "MCCXIV"      |
- *     +-----+-----------------+--------------------------+
- *     |  3  |  Tens           |  "X" from "MCCXIV"       |
- *     +-----+-----------------+--------------------------+
- *     |  4  |  Ones           |  "IV" from "MCCXIV"      |
- *     +=====+=================+==========================+
+ * |  #  |  Description    |         Example          |
+ * | --- | --------------- | ------------------------ |
+ * | `0` |  Entire string  |  "MCCXIV" from "MCCXIV"  |
+ * | `1` |  Thousands      |  "M" from "MCCXIV"       |
+ * | `2` |  Hundreds       |  "CC" from "MCCXIV"      |
+ * | `3` |  Tens           |  "X" from "MCCXIV"       |
+ * | `4` |  Ones           |  "IV" from "MCCXIV"      |
  *
  * @example
- *     romanNumeralRegex.exec("M")      // [      "M", "M",   "",  "",   "" ]
- *     romanNumeralRegex.exec("XII")    // [    "XII",  "",   "", "X", "II" ]
- *     romanNumeralRegex.exec("MCCXIV") // [ "MCCXIV", "M", "CC", "X", "IV" ]
+ *
+ * ```ts
+ * romanNumeralRegex.exec("M")      // [      "M", "M",   "",  "",   "" ]
+ * romanNumeralRegex.exec("XII")    // [    "XII",  "",   "", "X", "II" ]
+ * romanNumeralRegex.exec("MCCXIV") // [ "MCCXIV", "M", "CC", "X", "IV" ]
+ * ```
  */
 export const romanNumeralRegex =
   /^(?=[MDCLXVI])(M{0,3})(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/i;
