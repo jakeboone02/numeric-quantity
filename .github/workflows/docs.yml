@@ -1,0 +1,46 @@
+name: Documentation
+on:
+  push:
+    branches: [main]
+
+jobs:
+  generate:
+    name: Generate documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - run: bun install
+      - run: bun run docs
+
+      # TODO: Remove if unnecessary
+      # - name: Fix permissions
+      #   run: |
+      #     chmod -c -R +rX "docs/" | while read line; do
+      #       echo "::warning title=Invalid file permissions automatically fixed::$line"
+      #     done
+
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'docs/'
+
+  deploy:
+    name: Deploy documentation site
+    needs: generate
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
