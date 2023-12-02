@@ -15,14 +15,6 @@ jobs:
           bun-version: latest
       - run: bun install
       - run: bun run docs
-
-      # TODO: Remove if unnecessary
-      # - name: Fix permissions
-      #   run: |
-      #     chmod -c -R +rX "docs/" | while read line; do
-      #       echo "::warning title=Invalid file permissions automatically fixed::$line"
-      #     done
-
       - uses: actions/upload-pages-artifact@v2
         with:
           path: 'docs/'
@@ -30,6 +22,7 @@ jobs:
   deploy:
     name: Deploy documentation site
     needs: generate
+    runs-on: ubuntu-latest
 
     permissions:
       pages: write
@@ -39,7 +32,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
