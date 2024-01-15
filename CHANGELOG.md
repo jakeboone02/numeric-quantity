@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - N/A
 
+## [v2.0.1] - 2024-01-15
+
+### Fixed
+
+- Corrected links in `package.json` to distributed type definition files.
+
 ## [v2.0.0] - 2023-06-16
 
 ### Changed
