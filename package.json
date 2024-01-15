@@ -12,12 +12,17 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/numeric-quantity.d.ts",
-      "import": "./dist/numeric-quantity.mjs",
-      "require": "./dist/cjs/index.js"
+      "import": {
+        "types": "./dist/numeric-quantity.d.mts",
+        "default": "./dist/numeric-quantity.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/numeric-quantity.cjs.development.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
-  "types": "./dist/numeric-quantity.d.ts",
+  "types": "./dist/cjs/numeric-quantity.cjs.production.d.ts",
   "unpkg": "./dist/numeric-quantity.umd.min.js",
   "bugs": {
     "url": "https://github.com/jakeboone02/numeric-quantity/issues"
