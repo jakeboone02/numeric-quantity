@@ -51,16 +51,16 @@
     "pretty-print": "bunx prettier --write *.{mjs,ts,json} src/*.*"
   },
   "devDependencies": {
-    "@types/node": "^20.10.1",
-    "@types/web": "^0.0.123",
-    "bun-types": "^1.0.14",
-    "np": "^9.0.0",
-    "open": "^9.1.0",
-    "prettier": "^3.1.0",
+    "@types/node": "^20.11.2",
+    "@types/web": "^0.0.135",
+    "bun-types": "^1.0.22",
+    "np": "^9.2.0",
+    "open": "^10.0.3",
+    "prettier": "^3.2.2",
     "prettier-plugin-organize-imports": "^3.2.4",
     "tsup": "^8.0.1",
-    "typedoc": "^0.25.4",
-    "typescript": "^5.3.2"
+    "typedoc": "^0.25.7",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=16"
