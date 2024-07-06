@@ -1,16 +1,16 @@
 name: Continuous Integration
-on: [push]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       - run: bun install --frozen-lockfile
       - run: bun run build
       - run: bun run test
-      # TODO: Upload to Codecov once Bun outputs lcov (https://github.com/oven-sh/bun/issues/4015)
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
