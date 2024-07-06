@@ -7,5 +7,6 @@
     "GitHub": "https://github.com/jakeboone02/numeric-quantity/",
     "Support": "https://github.com/sponsors/jakeboone02"
   },
+  "plugin": ["./typedoc-plugin-ga.mjs"],
   "gaID": "G-X98SBNC2CJ"
 }
