@@ -13,16 +13,16 @@
     "./package.json": "./package.json",
     ".": {
       "import": {
-        "types": "./dist/numeric-quantity.d.mts",
+        "types": "./dist/types-esm/index.d.mts",
         "default": "./dist/numeric-quantity.mjs"
       },
       "require": {
-        "types": "./dist/cjs/numeric-quantity.cjs.development.d.ts",
+        "types": "./dist/types/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
     }
   },
-  "types": "./dist/cjs/numeric-quantity.cjs.production.d.ts",
+  "types": "./dist/types/index.d.ts",
   "unpkg": "./dist/numeric-quantity.umd.min.js",
   "bugs": {
     "url": "https://github.com/jakeboone02/numeric-quantity/issues"
@@ -42,25 +42,26 @@
     "numerals"
   ],
   "scripts": {
-    "start": "bun --hot ./server.ts",
-    "build": "tsup",
+    "start": "bun --hot ./main.html",
+    "build": "bunx --bun tsup",
     "docs": "typedoc",
     "test": "bun test",
     "watch": "bun test --watch",
+    "lint": "bunx oxlint@latest",
     "publish:npm": "np",
     "pretty-print": "prettier --write '*.{html,json,ts}' 'src/*.*'"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
-    "@types/web": "^0.0.151",
-    "@types/bun": "^1.1.6",
-    "np": "^10.0.6",
-    "open": "^10.1.0",
-    "prettier": "3.3.2",
-    "prettier-plugin-organize-imports": "4.0.0",
-    "tsup": "^8.1.0",
-    "typedoc": "^0.26.3",
-    "typescript": "^5.5.3"
+    "@jakeboone02/generate-dts": "0.1.1",
+    "@types/bun": "^1.2.8",
+    "@types/node": "^22.13.14",
+    "@types/web": "^0.0.214",
+    "np": "^10.2.0",
+    "prettier": "3.5.3",
+    "prettier-plugin-organize-imports": "4.1.0",
+    "tsup": "^8.4.0",
+    "typedoc": "^0.28.1",
+    "typescript": "^5.8.2"
   },
   "engines": {
     "node": ">=16"

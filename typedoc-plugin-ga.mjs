@@ -1,7 +1,7 @@
 // @ts-check
 // Adapted from https://github.com/TypeStrong/typedoc/issues/2600#issuecomment-2184995074
 
-import td from 'typedoc';
+import * as td from 'typedoc';
 
 /** @param {td.Application} app */
 export function load(app) {

@@ -15,7 +15,7 @@ type RNV = keyof typeof romanNumeralValues;
  * The string can include ASCII representations of Roman numerals
  * or Unicode Roman numeral code points (`U+2160` through `U+217F`).
  */
-export const parseRomanNumerals = (romanNumerals: string) => {
+export const parseRomanNumerals = (romanNumerals: string): number => {
   const normalized = `${romanNumerals}`
     // Convert Unicode Roman numerals to ASCII
     .replace(

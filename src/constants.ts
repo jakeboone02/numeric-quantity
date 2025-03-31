@@ -9,7 +9,10 @@ import type {
 /**
  * Map of Unicode fraction code points to their ASCII equivalents.
  */
-export const vulgarFractionToAsciiMap = {
+export const vulgarFractionToAsciiMap: Record<
+  VulgarFraction,
+  `${number}/${number | ''}`
+> = {
   '¼': '1/4',
   '½': '1/2',
   '¾': '3/4',
@@ -29,7 +32,7 @@ export const vulgarFractionToAsciiMap = {
   '⅝': '5/8',
   '⅞': '7/8',
   '⅟': '1/',
-} as const satisfies Record<VulgarFraction, string>;
+} as const;
 
 /**
  * Captures the individual elements of a numeric string.
@@ -55,19 +58,19 @@ export const vulgarFractionToAsciiMap = {
  * numericRegex.exec("2 / 3") // [ "2 / 3", "2", "/ 3",  null ]
  * ```
  */
-export const numericRegex =
+export const numericRegex: RegExp =
   /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
  */
-export const numericRegexWithTrailingInvalid = new RegExp(
+export const numericRegexWithTrailingInvalid: RegExp = new RegExp(
   numericRegex.source.replace(/\$$/, '(?:\\s*[^\\.\\d\\/].*)?')
 );
 
 /**
  * Captures any Unicode vulgar fractions.
  */
-export const vulgarFractionsRegex = new RegExp(
+export const vulgarFractionsRegex: RegExp = new RegExp(
   `(${Object.keys(vulgarFractionToAsciiMap).join('|')})`
 );
 // #endregion
@@ -82,7 +85,9 @@ type RomanNumeralSequenceFragment =
 /**
  * Map of Roman numeral sequences to their decimal equivalents.
  */
-export const romanNumeralValues = {
+export const romanNumeralValues: {
+  [k in RomanNumeralSequenceFragment]?: number;
+} = {
   MMM: 3000,
   MM: 2000,
   M: 1000,
@@ -115,12 +120,15 @@ export const romanNumeralValues = {
   III: 3,
   II: 2,
   I: 1,
-} as const satisfies { [k in RomanNumeralSequenceFragment]?: number };
+} as const;
 
 /**
  * Map of Unicode Roman numeral code points to their ASCII equivalents.
  */
-export const romanNumeralUnicodeToAsciiMap = {
+export const romanNumeralUnicodeToAsciiMap: Record<
+  RomanNumeralUnicode,
+  keyof typeof romanNumeralValues
+> = {
   // Roman Numeral One (U+2160)
   Ⅰ: 'I',
   // Roman Numeral Two (U+2161)
@@ -185,15 +193,12 @@ export const romanNumeralUnicodeToAsciiMap = {
   ⅾ: 'D',
   // Small Roman Numeral One Thousand (U+217F)
   ⅿ: 'M',
-} as const satisfies Record<
-  RomanNumeralUnicode,
-  keyof typeof romanNumeralValues
->;
+} as const;
 
 /**
  * Captures all Unicode Roman numeral code points.
  */
-export const romanNumeralUnicodeRegex = new RegExp(
+export const romanNumeralUnicodeRegex: RegExp = new RegExp(
   `(${Object.keys(romanNumeralUnicodeToAsciiMap).join('|')})`,
   'gi'
 );
@@ -219,15 +224,15 @@ export const romanNumeralUnicodeRegex = new RegExp(
  * romanNumeralRegex.exec("MCCXIV") // [ "MCCXIV", "M", "CC", "X", "IV" ]
  * ```
  */
-export const romanNumeralRegex =
+export const romanNumeralRegex: RegExp =
   /^(?=[MDCLXVI])(M{0,3})(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/i;
 // #endregion
 
 /**
  * Default options for {@link numericQuantity}.
  */
-export const defaultOptions = {
+export const defaultOptions: Required<NumericQuantityOptions> = {
   round: 3,
   allowTrailingInvalid: false,
   romanNumerals: false,
-} satisfies Required<NumericQuantityOptions>;
+} as const;
