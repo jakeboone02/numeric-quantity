@@ -47,7 +47,7 @@
     "docs": "typedoc",
     "test": "bun test",
     "watch": "bun test --watch",
-    "lint": "bunx oxlint@latest",
+    "lint": "bunx oxlint@latest --format=github",
     "publish:npm": "np",
     "codesandbox-ci": "bash .codesandbox/ci.sh",
     "pretty-print": "prettier --write '*.{html,json,ts}' 'src/*.*'"
