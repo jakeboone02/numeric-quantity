@@ -4,13 +4,14 @@
   "description": "numeric-quantity Test Page",
   "main": "index.html",
   "scripts": {
-    "start": "bun index.html",
-    "build": "bun build index.html"
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
   },
   "dependencies": {
     "numeric-quantity": "^2.0.1"
   },
   "devDependencies": {
+    "parcel-bundler": "^1.12.5",
     "typescript": "^5.8.3"
   }
 }
