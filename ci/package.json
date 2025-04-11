@@ -8,14 +8,10 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "numeric-quantity": "^2.0.0",
-    "parcel-bundler": "^1.12.5"
+    "numeric-quantity": "^2.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.1.3"
-  },
-  "resolutions": {
-    "@babel/preset-env": "7.13.8"
-  },
-  "keywords": []
+    "parcel-bundler": "^1.12.5",
+    "typescript": "^5.8.3"
+  }
 }

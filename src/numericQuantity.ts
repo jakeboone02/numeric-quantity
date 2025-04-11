@@ -18,7 +18,7 @@ const spaceThenSlashRegex = /^\s*\//;
 export const numericQuantity = (
   quantity: string | number,
   options: NumericQuantityOptions = defaultOptions
-) => {
+): number => {
   if (typeof quantity === 'number' || typeof quantity === 'bigint') {
     return quantity;
   }

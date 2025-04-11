@@ -262,7 +262,7 @@ export const numericQuantityTests: Record<
       ([unicodeChar, asciiSequence]) =>
         [
           unicodeChar as RomanNumeralUnicode,
-          romanNumeralValues[asciiSequence],
+          romanNumeralValues[asciiSequence]!,
           { romanNumerals },
         ] satisfies [RomanNumeralUnicode, number, NumericQuantityOptions]
     ),

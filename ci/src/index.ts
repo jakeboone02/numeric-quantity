@@ -123,24 +123,21 @@ const strings = [
   'I',
 ];
 
-const app = document.getElementById('app')!;
+const tbodyInnerHTML = strings
+  .map(str => {
+    const nq = `${numericQuantity(str)}`;
+    const nqa = `${numericQuantity(str, { allowTrailingInvalid: true })}`;
+    const nqr = `${numericQuantity(str, { romanNumerals: true })}`;
+    return `<tr><td>numericQuantity("${str}")</td><td>${nq}</td><td${nqa !== nq ? ' class="diff"' : ''}>${nqa}</td><td${nqr !== nq ? ' class="diff"' : ''}>${nqr}</td></tr>`;
+  })
+  .join('');
 
-app.innerHTML = `<h1>numeric-quantity CI</h1>
+document.getElementById('app')!.innerHTML = `<h1>numeric-quantity CI</h1>
 <table>
-  <thead><tr><th>Expression</th><th>Result</th></tr></thead>
+  <thead><tr><th>Expression</th><th>Default</th><th>allowTrailingInvalid</th><th>romanNumerals</th></tr></thead>
+  <tbody>${tbodyInnerHTML}</tbody>
 </table>`;
 
-const table = document.querySelector('table')!;
-const tbody = document.createElement('tbody')!;
-
-for (const s of strings) {
-  const tr = document.createElement('tr');
-  const result = numericQuantity(s, {
-    romanNumerals: true,
-    allowTrailingInvalid: true,
-  });
-  tr.innerHTML = `<td>numericQuantity("${s}")</td><td>${result}</td>`;
-  tbody.appendChild(tr);
-}
-
-table.appendChild(tbody);
+Object.defineProperty(globalThis, 'numericQuantity', {
+  value: numericQuantity,
+});

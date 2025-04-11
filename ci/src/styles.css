@@ -8,7 +8,11 @@ td {
   padding: 4px;
 }
 
-th:first-child,
-td:first-child {
+th:not(:last-child),
+td:not(:last-child) {
   border-right: 1px solid lightgray;
+}
+
+.diff {
+  background-color: color-mix(in srgb, rebeccapurple, transparent 90%);
 }

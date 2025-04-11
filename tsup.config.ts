@@ -1,14 +1,14 @@
 import { writeFile } from 'fs/promises';
 import type { Options } from 'tsup';
 import { defineConfig } from 'tsup';
+import { defaultIgnore, generateDTS } from '@jakeboone02/generate-dts';
 
-export default defineConfig(options => {
+const config: ReturnType<typeof defineConfig> = defineConfig(options => {
   const commonOptions: Options = {
     entry: {
       'numeric-quantity': 'src/index.ts',
     },
     sourcemap: true,
-    dts: true,
     ...options,
   };
 
@@ -23,6 +23,13 @@ export default defineConfig(options => {
       ...commonOptions,
       clean: true,
       format: 'esm',
+      onSuccess: () =>
+        generateDTS({
+          ignore: filePath =>
+            defaultIgnore(filePath) ||
+            filePath.endsWith('Tests.ts') ||
+            filePath.endsWith('/dev.ts'),
+        }),
     },
     // ESM, Webpack 4 support. Target ES2017 syntax to compile away optional chaining and spreads
     {
@@ -90,3 +97,5 @@ if (process.env.NODE_ENV === 'production') {
 
   return opts;
 });
+
+export default config;

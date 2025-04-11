@@ -8,7 +8,7 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
       test(`${
         ['string', 'object'].includes(typeof arg)
           ? JSON.stringify(arg)
-          : `${arg}`.replaceAll(/(?:\r?\n)/g, ' ')
+          : `${arg}`.replace(/(?:\r?\n)/g, ' ')
       }${
         typeof options !== 'undefined'
           ? ` with option ${JSON.stringify(options)}`
