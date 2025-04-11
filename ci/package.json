@@ -4,13 +4,16 @@
   "description": "numeric-quantity Test Page",
   "main": "index.html",
   "scripts": {
-    "start": "bun index.html",
-    "build": "bun build index.html"
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "preview": "vite preview"
   },
   "dependencies": {
     "numeric-quantity": "^2.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.8.3"
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.8.3",
+    "vite": "^6"
   }
 }

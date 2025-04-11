@@ -7,6 +7,7 @@
     "sourceMap": true,
     "allowJs": true,
     "lib": ["ES2015", "DOM"],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noEmit": true
   }
 }
