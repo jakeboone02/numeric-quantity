@@ -16,10 +16,10 @@
     },
     "dev": {
       "name": "dev",
-      "command": "bun run dev",
+      "command": "bun start",
       "runAtStart": true,
       "preview": {
-        "port": 5173
+        "port": 3000
       }
     }
   }
