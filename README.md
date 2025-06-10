@@ -13,6 +13,7 @@ Features:
 - In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), and the fraction slash character (`'1 2⁄3'`).
 - To allow and ignore trailing invalid characters _à la_ `parseFloat`, pass `{ allowTrailingInvalid: true }` as the second argument.
 - To parse Roman numerals like `'MCCXIV'` or `'Ⅻ'`, pass `{ romanNumerals: true }` as the second argument or call `parseRomanNumerals` directly.
+- To produce `bigint` values when the input represents an integer that would exceeds the boundaries of `number`, pass `{ bigIntOnOverflow: true }` as the second argument.
 - Results will be rounded to three decimal places by default. To avoid rounding, pass `{ round: false }` as the second argument. To round to a different number of decimal places, assign that number to the `round` option (`{ round: 5 }` will round to five decimal places).
 - Returns `NaN` if the provided string does not resemble a number.
 

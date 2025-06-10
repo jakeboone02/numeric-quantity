@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - N/A
 
+## [v2.1.0] - 2025-06-09
+
+### Added
+
+- `bigIntOnOverflow` option will produce a `bigint` value if the input represents a valid integer greater than `Number.MAX_SAFE_INTEGER` or less than `Number.MIN_SAFE_INTEGER`.
+
 ## [v2.0.1] - 2024-01-15
 
 ### Fixed
@@ -169,7 +175,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v2.1.0...HEAD
+[v2.1.0]: https://github.com/jakeboone02/numeric-quantity/compare/v2.0.1...v2.1.0
+[v2.0.1]: https://github.com/jakeboone02/numeric-quantity/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.4...v2.0.0
 [v1.0.4]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/jakeboone02/numeric-quantity/compare/v1.0.2...v1.0.3

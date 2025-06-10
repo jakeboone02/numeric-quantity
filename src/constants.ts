@@ -235,4 +235,5 @@ export const defaultOptions: Required<NumericQuantityOptions> = {
   round: 3,
   allowTrailingInvalid: false,
   romanNumerals: false,
+  bigIntOnOverflow: false,
 } as const;

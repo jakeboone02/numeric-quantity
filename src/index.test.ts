@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, Matchers, test } from 'bun:test';
 import { numericQuantity } from './numericQuantity';
 import { numericQuantityTests } from './numericQuantityTests';
 
@@ -15,7 +15,9 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
           : ''
       } should evaluate to ${expected}`, () => {
         const expectation = expect(numericQuantity(arg, options));
-        if (isNaN(expected)) {
+        if (typeof expected === 'bigint') {
+          (expectation as unknown as Matchers<bigint>).toBe(expected);
+        } else if (isNaN(expected)) {
           expectation.toBeNaN();
         } else {
           expectation.toBe(expected);
