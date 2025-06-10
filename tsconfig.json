@@ -11,7 +11,8 @@
     "esModuleInterop": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "lib": ["ES2015", "DOM"]
+    "lib": ["ES2015", "DOM"],
+    "target": "es2020"
   },
   "include": ["./*.ts", "./src"]
 }

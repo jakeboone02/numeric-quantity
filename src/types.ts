@@ -18,6 +18,11 @@ export interface NumericQuantityOptions {
    * @default false
    */
   romanNumerals?: boolean;
+  /**
+   * Generates a `bigint` value if the string represents
+   * a valid integer too large for the `number` type.
+   */
+  bigIntOnOverflow?: boolean;
 }
 
 /**

@@ -14,6 +14,11 @@ export const numericQuantityTests: Record<
   (
     | [string | number, number]
     | [string | number, number, NumericQuantityOptions]
+    | [
+        string | number,
+        number | bigint,
+        NumericQuantityOptions & { bigIntOnOverflow: true },
+      ]
   )[]
 > = {
   'Non-numeric stuff': [
@@ -215,6 +220,12 @@ export const numericQuantityTests: Record<
   'Unicode fraction slash': [
     ['1⁄2', 0.5],
     ['2 1⁄2', 2.5],
+  ],
+  BigInts: [
+    ['9007199254740992', 9007199254740992n, { bigIntOnOverflow: true }],
+    ['-9007199254740992', -9007199254740992n, { bigIntOnOverflow: true }],
+    ['123', 123, { bigIntOnOverflow: true }],
+    ['-123', -123, { bigIntOnOverflow: true }],
   ],
   'Roman numerals': (
     [

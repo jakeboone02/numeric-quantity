@@ -15,10 +15,20 @@ const spaceThenSlashRegex = /^\s*\//;
  *
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
  */
-export const numericQuantity = (
+function numericQuantity(quantity: string | number): number;
+function numericQuantity(quantity: string | number): number;
+function numericQuantity(
+  quantity: string | number,
+  options: NumericQuantityOptions & { bigIntOnOverflow: true }
+): number | bigint;
+function numericQuantity(
+  quantity: string | number,
+  options?: NumericQuantityOptions
+): number;
+function numericQuantity(
   quantity: string | number,
   options: NumericQuantityOptions = defaultOptions
-): number => {
+) {
   if (typeof quantity === 'number' || typeof quantity === 'bigint') {
     return quantity;
   }
@@ -65,6 +75,16 @@ export const numericQuantity = (
   if (!numberGroup1 && numberGroup2 && numberGroup2.startsWith('.')) {
     finalResult = 0;
   } else {
+    if (opts.bigIntOnOverflow) {
+      const asBigInt = dash ? BigInt(`-${numberGroup1}`) : BigInt(numberGroup1);
+      if (
+        asBigInt > BigInt(Number.MAX_SAFE_INTEGER) ||
+        asBigInt < BigInt(Number.MIN_SAFE_INTEGER)
+      ) {
+        return asBigInt;
+      }
+    }
+
     finalResult = parseInt(numberGroup1);
   }
 
@@ -106,4 +126,6 @@ export const numericQuantity = (
   }
 
   return dash ? finalResult * -1 : finalResult;
-};
+}
+
+export { numericQuantity };

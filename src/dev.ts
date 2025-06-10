@@ -22,7 +22,12 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
 
   for (const [test, expect, opts] of tests) {
     const result = numericQuantity(test, opts);
-    const pass = isNaN(expect) ? isNaN(result) : expect === result;
+    const pass =
+      typeof expect === 'bigint'
+        ? expect === (result as unknown as bigint)
+        : isNaN(expect)
+          ? isNaN(result)
+          : expect === result;
     const testTR = document.createElement('tr');
     const tdCall = document.createElement('td');
     const tdResult = document.createElement('td');
