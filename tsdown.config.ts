@@ -1,6 +1,6 @@
 import { writeFile } from 'fs/promises';
-import type { Options } from 'tsup';
-import { defineConfig } from 'tsup';
+import type { Options } from 'tsdown';
+import { defineConfig } from 'tsdown';
 import { defaultIgnore, generateDTS } from '@jakeboone02/generate-dts';
 
 const config: ReturnType<typeof defineConfig> = defineConfig(options => {
@@ -9,6 +9,7 @@ const config: ReturnType<typeof defineConfig> = defineConfig(options => {
       'numeric-quantity': 'src/index.ts',
     },
     sourcemap: true,
+    dts: false,
     ...options,
   };
 
