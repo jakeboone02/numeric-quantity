@@ -1,3 +1,4 @@
+// @ts-ignore
 import { numericQuantity } from 'numeric-quantity';
 import './styles.css';
 
