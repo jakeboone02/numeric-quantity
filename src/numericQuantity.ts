@@ -16,7 +16,6 @@ const spaceThenSlashRegex = /^\s*\//;
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
  */
 function numericQuantity(quantity: string | number): number;
-function numericQuantity(quantity: string | number): number;
 function numericQuantity(
   quantity: string | number,
   options: NumericQuantityOptions & { bigIntOnOverflow: true }
