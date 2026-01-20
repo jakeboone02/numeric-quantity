@@ -5,9 +5,6 @@ const allowTrailingInvalid = true;
 const romanNumerals = true;
 
 const noop = () => {};
-// This is only executed to meet test coverage requirements until
-// https://github.com/oven-sh/bun/issues/4021 is implemented.
-noop();
 
 export const numericQuantityTests: Record<
   string,
@@ -81,7 +78,46 @@ export const numericQuantityTests: Record<
     ['1 2/3,4', 1.059],
     ['1 2/3_4', 1.059],
   ],
-  'Invalid/ignored separators': [
+  // TODO: Add support for automatic decimal separator detection
+  // 'Auto-detected decimal separator': [
+  //   ['1.0,00', 10, { decimalSeparator: 'auto' }],
+  //   ['1,00.0', 100, { decimalSeparator: 'auto' }],
+  //   ['10.0,00.1', NaN, { decimalSeparator: 'auto' }],
+  //   ['10,00.00,1', 1000.001, { decimalSeparator: 'auto' }],
+  //   ['100,100', 100.1, { decimalSeparator: 'auto' }],
+  //   ['100,1000', 100.1, { decimalSeparator: 'auto' }],
+  //   ['1000,100', 1000.1, { decimalSeparator: 'auto' }],
+  //   ['1000,1', 1000.1, { decimalSeparator: 'auto' }],
+  // ],
+  'Comma as decimal separator': [
+    ['1.0,00', 10, { decimalSeparator: ',' }],
+    ['1,00.0', 1, { decimalSeparator: ',' }],
+    ['1.00.0', 1000, { decimalSeparator: ',' }],
+    ['1,000,001', NaN, { decimalSeparator: ',' }],
+    ['1,000,001', 1, { decimalSeparator: ',', allowTrailingInvalid }],
+    ['1,00.1', 1.001, { decimalSeparator: ',', allowTrailingInvalid }],
+    ['10.0,00.0', 100, { decimalSeparator: ',' }],
+    ['10,00.00,0', NaN, { decimalSeparator: ',' }],
+    ['10,00.00,0', 10, { decimalSeparator: ',', allowTrailingInvalid }],
+    ['100,100', 100.1, { decimalSeparator: ',' }],
+    ['100,1000', 100.1, { decimalSeparator: ',' }],
+    ['1000,100', 1000.1, { decimalSeparator: ',' }],
+    ['1000,1', 1000.1, { decimalSeparator: ',' }],
+    ['1_.0,00', NaN, { decimalSeparator: ',' }],
+    ['1_,00.0', NaN, { decimalSeparator: ',' }],
+    ['1_.00.0', NaN, { decimalSeparator: ',' }],
+    ['1_,000,001', NaN, { decimalSeparator: ',' }],
+    ['1_,000,001', 1, { decimalSeparator: ',', allowTrailingInvalid }],
+    ['1_,00.1', 1, { decimalSeparator: ',', allowTrailingInvalid }],
+    ['1_0.0,00.0', 100, { decimalSeparator: ',' }],
+    ['1_0,00.00,0', NaN, { decimalSeparator: ',' }],
+    ['1_0,00.00,0', 10, { decimalSeparator: ',', allowTrailingInvalid }],
+    ['1_00,100', 100.1, { decimalSeparator: ',' }],
+    ['1_00,1000', 100.1, { decimalSeparator: ',' }],
+    ['1_000,100', 1000.1, { decimalSeparator: ',' }],
+    ['1_000,1', 1000.1, { decimalSeparator: ',' }],
+  ],
+  'Invalid/repeated/ignored separators': [
     ['_11 11/22', NaN],
     [',11 11/22', NaN],
     ['11 _11/22', NaN],
@@ -94,6 +130,10 @@ export const numericQuantityTests: Record<
     ['11 11,/22', NaN],
     ['11 11/22_', NaN],
     ['11 11/22,', NaN],
+    ['11__22', NaN],
+    ['11,,22', NaN],
+    ['11,_22', NaN],
+    ['11,_22', NaN],
     ['11 _11/22', 11, { allowTrailingInvalid }],
     ['11 ,11/22', 11, { allowTrailingInvalid }],
     ['11 11/_22', 11, { allowTrailingInvalid }],
@@ -104,6 +144,10 @@ export const numericQuantityTests: Record<
     ['11 11,/22', 11, { allowTrailingInvalid }],
     ['11 11/22_', 11.5, { allowTrailingInvalid }],
     ['11 11/22,', 11.5, { allowTrailingInvalid }],
+    ['11__22', 11, { allowTrailingInvalid }],
+    ['11,,22', 11, { allowTrailingInvalid }],
+    ['11,_22', 11, { allowTrailingInvalid }],
+    ['11,_22', 11, { allowTrailingInvalid }],
   ],
   'Trailing invalid characters': [
     ['1 2 3', 1, { allowTrailingInvalid }],

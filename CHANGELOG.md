@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- N/A
+### Changed
+
+- Now requires ES2021+ (uses `String.prototype.replaceAll`).
+- In line with the rules of modern JavaScript syntax, repeated separators (e.g. `"1__0"` or `"1,,0"`) are considered invalid. The `allowTrailingInvalid` option will still permit evaluation of characters before any duplicate separators.
+
+### Added
+
+- Option `decimalSeparator`, accepting values `"."` (default) and `","`. When set to `","`, numbers will be evaluated with European-style decimal _comma_ (e.g. `1,0` is equivalent to `1`, not `10`).
 
 ## [v2.1.0] - 2025-06-09
 
