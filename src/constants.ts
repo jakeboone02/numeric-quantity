@@ -35,7 +35,8 @@ export const vulgarFractionToAsciiMap: Record<
 } as const;
 
 /**
- * Captures the individual elements of a numeric string.
+ * Captures the individual elements of a numeric string. Commas and underscores are allowed
+ * as separators, as long as they appear between digits and are not consecutive.
  *
  * Capture groups:
  *
@@ -59,20 +60,17 @@ export const vulgarFractionToAsciiMap: Record<
  * ```
  */
 export const numericRegex: RegExp =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[\d,_]*\d)?)*)(([eE][+-]?\d(?:[\d,_]*\d)?)?|\.\d(?:[\d,_]*\d)?([eE][+-]?\d(?:[\d,_]*\d)?)?|(\s+\d(?:[\d,_]*\d)?\s*)?\s*\/\s*\d(?:[\d,_]*\d)?)?$/;
+  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
  */
-export const numericRegexWithTrailingInvalid: RegExp = new RegExp(
-  numericRegex.source.replace(/\$$/, '(?:\\s*[^\\.\\d\\/].*)?')
-);
+export const numericRegexWithTrailingInvalid: RegExp =
+  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(?:\s*[^.\d/].*)?/;
 
 /**
  * Captures any Unicode vulgar fractions.
  */
-export const vulgarFractionsRegex: RegExp = new RegExp(
-  `(${Object.keys(vulgarFractionToAsciiMap).join('|')})`
-);
+export const vulgarFractionsRegex: RegExp = /([¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞⅟}])/g;
 // #endregion
 
 // #region Roman numerals
@@ -198,10 +196,8 @@ export const romanNumeralUnicodeToAsciiMap: Record<
 /**
  * Captures all Unicode Roman numeral code points.
  */
-export const romanNumeralUnicodeRegex: RegExp = new RegExp(
-  `(${Object.keys(romanNumeralUnicodeToAsciiMap).join('|')})`,
-  'gi'
-);
+export const romanNumeralUnicodeRegex: RegExp =
+  /([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ])/gi;
 
 /**
  * Captures a valid Roman numeral sequence.
@@ -236,4 +232,5 @@ export const defaultOptions: Required<NumericQuantityOptions> = {
   allowTrailingInvalid: false,
   romanNumerals: false,
   bigIntOnOverflow: false,
+  decimalSeparator: '.',
 } as const;

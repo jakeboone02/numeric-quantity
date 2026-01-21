@@ -23,6 +23,14 @@ export interface NumericQuantityOptions {
    * a valid integer too large for the `number` type.
    */
   bigIntOnOverflow?: boolean;
+  /**
+   * Specifies which character ("." or ",") to treat as the decimal separator.
+   *
+   * @default "."
+   */
+  // TODO: Add support for automatic decimal separator detection
+  // decimalSeparator?: ',' | '.' | 'auto';
+  decimalSeparator?: ',' | '.';
 }
 
 /**

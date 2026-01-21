@@ -57,9 +57,46 @@ function numericQuantity(
     ...options,
   };
 
+  let normalizedString = quantityAsString;
+
+  if (opts.decimalSeparator === ',') {
+    const commaCount = (quantityAsString.match(/,/g) || []).length;
+    if (commaCount === 1) {
+      // Treat lone comma as decimal separator; remove all "." since they represent
+      // thousands/whatever separators
+      normalizedString = quantityAsString
+        .replaceAll('.', '_')
+        .replace(',', '.');
+    } else if (commaCount > 1) {
+      // The second comma and everything after is "trailing invalid"
+      if (!opts.allowTrailingInvalid) {
+        // Bail out if trailing invalid is not allowed
+        return NaN;
+      }
+
+      const firstCommaIndex = quantityAsString.indexOf(',');
+      const secondCommaIndex = quantityAsString.indexOf(
+        ',',
+        firstCommaIndex + 1
+      );
+      const beforeSecondComma = quantityAsString
+        .substring(0, secondCommaIndex)
+        .replaceAll('.', '_')
+        .replace(',', '.');
+      const afterSecondComma = quantityAsString.substring(secondCommaIndex + 1);
+      normalizedString = opts.allowTrailingInvalid
+        ? beforeSecondComma + '&' + afterSecondComma
+        : beforeSecondComma;
+    } else {
+      // No comma as decimal separator, so remove all "." since they represent
+      // thousands/whatever separators
+      normalizedString = quantityAsString.replaceAll('.', '_');
+    }
+  }
+
   const regexResult = (
     opts.allowTrailingInvalid ? numericRegexWithTrailingInvalid : numericRegex
-  ).exec(quantityAsString);
+  ).exec(normalizedString);
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
@@ -67,8 +104,8 @@ function numericQuantity(
   }
 
   const [, dash, ng1temp, ng2temp] = regexResult;
-  const numberGroup1 = ng1temp.replace(/[,_]/g, '');
-  const numberGroup2 = ng2temp?.replace(/[,_]/g, '');
+  const numberGroup1 = ng1temp.replaceAll(',', '').replaceAll('_', '');
+  const numberGroup2 = ng2temp?.replaceAll(',', '').replaceAll('_', '');
 
   // Numerify capture group 1
   if (!numberGroup1 && numberGroup2 && numberGroup2.startsWith('.')) {
