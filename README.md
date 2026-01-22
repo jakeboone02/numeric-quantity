@@ -13,12 +13,13 @@ Features:
 - In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), and the fraction slash character (`'1 2⁄3'`).
 - To allow and ignore trailing invalid characters _à la_ `parseFloat`, pass `{ allowTrailingInvalid: true }` as the second argument.
 - To parse Roman numerals like `'MCCXIV'` or `'Ⅻ'`, pass `{ romanNumerals: true }` as the second argument or call `parseRomanNumerals` directly.
+- To parse numbers with European-style decimal comma (where `'1,0'` means `1`, not `10`), pass `{ decimalSeparator: ',' }` as the second argument.
 - To produce `bigint` values when the input represents an integer that would exceeds the boundaries of `number`, pass `{ bigIntOnOverflow: true }` as the second argument.
 - Results will be rounded to three decimal places by default. To avoid rounding, pass `{ round: false }` as the second argument. To round to a different number of decimal places, assign that number to the `round` option (`{ round: 5 }` will round to five decimal places).
 - Returns `NaN` if the provided string does not resemble a number.
 
 > _For the inverse operation—converting a number to an imperial measurement—check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
->
+
 > _For a more complete solution to parsing recipe ingredients, try [parse-ingredient](https://www.npmjs.com/package/parse-ingredient)._
 
 ## Usage
@@ -52,5 +53,15 @@ As UMD (all exports are properties of the global object `NumericQuantity`):
   console.log(NumericQuantity.numericQuantity('xii', { romanNumerals: true })); // 12
 </script>
 ```
+
+## Options
+
+| Option                 | Type              | Default | Description                                                                                          |
+| ---------------------- | ----------------- | ------- | ---------------------------------------------------------------------------------------------------- |
+| `round`                | `number \| false` | `3`     | Round the result to a certain number of decimal places. Must be greater than or equal to zero.       |
+| `allowTrailingInvalid` | `boolean`         | `false` | Allow and ignore trailing invalid characters _à la_ `parseFloat`.                                    |
+| `romanNumerals`        | `boolean`         | `false` | Attempt to parse Roman numerals if Arabic numeral parsing fails.                                     |
+| `bigIntOnOverflow`     | `boolean`         | `false` | Generates a `bigint` value if the string represents a valid integer too large for the `number` type. |
+| `decimalSeparator`     | `',' \| '.'`      | `"."`   | Specifies which character to treat as the decimal separator.                                         |
 
 [badge-npm]: https://img.shields.io/npm/v/numeric-quantity.svg?cacheSeconds=3600&logo=npm
