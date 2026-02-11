@@ -10,7 +10,8 @@ import type {
 /**
  * Unicode decimal digit block start code points.
  * Each block contains 10 contiguous digits (0-9).
- * This list covers all \p{Nd} (Decimal_Number) blocks in Unicode.
+ * This list covers all \p{Nd} (Decimal_Number) blocks through Unicode 17.0.
+ * The drift test in index.test.ts validates completeness against the JS engine.
  */
 const decimalDigitBlockStarts = [
   0x0030, // ASCII (0-9)
@@ -52,6 +53,7 @@ const decimalDigitBlockStarts = [
   0xff10, // Fullwidth
   0x104a0, // Osmanya
   0x10d30, // Hanifi Rohingya
+  0x10d40, // Garay
   0x11066, // Brahmi
   0x110f0, // Sora Sompeng
   0x11136, // Chakma
@@ -61,16 +63,23 @@ const decimalDigitBlockStarts = [
   0x114d0, // Tirhuta
   0x11650, // Modi
   0x116c0, // Takri
+  0x116d0, // Myanmar Pao
+  0x116da, // Myanmar Eastern Pwo Karen
   0x11730, // Ahom
   0x118e0, // Warang Citi
   0x11950, // Dives Akuru
+  0x11bf0, // Sunuwar
   0x11c50, // Bhaiksuki
   0x11d50, // Masaram Gondi
   0x11da0, // Gunjala Gondi
+  0x11de0, // Tolong Siki
   0x11f50, // Kawi
+  0x16130, // Gurung Khema
   0x16a60, // Mro
   0x16ac0, // Tangsa
   0x16b50, // Pahawh Hmong
+  0x16d70, // Kirat Rai
+  0x1ccf0, // Outlined Digits
   0x1d7ce, // Mathematical Bold
   0x1d7d8, // Mathematical Double-Struck
   0x1d7e2, // Mathematical Sans-Serif
@@ -79,6 +88,7 @@ const decimalDigitBlockStarts = [
   0x1e140, // Nyiakeng Puachue Hmong
   0x1e2f0, // Wancho
   0x1e4f0, // Nag Mundari
+  0x1e5f1, // Ol Onal
   0x1e950, // Adlam
   0x1fbf0, // Segmented Digits
 ] as const;
@@ -95,11 +105,18 @@ export const normalizeDigits = (str: string): string =>
     const cp = ch.codePointAt(0)!;
     // ASCII digits (0x0030-0x0039) don't need conversion
     if (cp <= 0x39) return ch;
-    // Find the block this digit belongs to and calculate its value
-    const blockStart = decimalDigitBlockStarts.find(
-      start => cp >= start && cp < start + 10
-    )!;
-    return String(cp - blockStart);
+    // Binary search for the largest block start ≤ cp
+    let lo = 0;
+    let hi = decimalDigitBlockStarts.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >>> 1;
+      if (decimalDigitBlockStarts[mid] <= cp) {
+        lo = mid;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return String(cp - decimalDigitBlockStarts[lo]!);
   });
 
 /**
@@ -156,12 +173,12 @@ export const vulgarFractionToAsciiMap: Record<
  * ```
  */
 export const numericRegex: RegExp =
-  /^(?=-?\s*\.\p{Nd}|-?\s*\p{Nd})(-)?\s*((?:\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)*)(([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|\.\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|(\s+\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*\s*)?\s*\/\s*\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?$/u;
+  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
  */
 export const numericRegexWithTrailingInvalid: RegExp =
-  /^(?=-?\s*\.\p{Nd}|-?\s*\p{Nd})(-)?\s*((?:\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)*)(([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|\.\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|(\s+\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*\s*)?\s*\/\s*\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?(?:\s*[^.\p{Nd}/].*)?/u;
+  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(?:\s*[^.\d/].*)?/;
 
 /**
  * Captures any Unicode vulgar fractions.

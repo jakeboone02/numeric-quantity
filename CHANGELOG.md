@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for non-ASCII decimal numeral systems (Arabic-Indic, Devanagari, Bengali, Thai, Fullwidth, and 60+ other Unicode `\p{Nd}` digit blocks). For example, `numericQuantity('٣')` now returns `3`.
+- Support for non-ASCII decimal numeral systems (Arabic-Indic, Devanagari, Bengali, Thai, Fullwidth, and 70+ other Unicode `\p{Nd}` digit blocks). For example, `numericQuantity('٣')` now returns `3`.
 
 ## [v3.0.0] - 2026-01-21
 

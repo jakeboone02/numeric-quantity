@@ -11,7 +11,7 @@ Converts a string to a number, like an enhanced version of `parseFloat`.
 Features:
 
 - In addition to plain integers and decimals, `numeric-quantity` can parse numbers with comma or underscore separators (`'1,000'` or `'1_000'`), mixed numbers (`'1 2/3'`), vulgar fractions (`'1⅖'`), and the fraction slash character (`'1 2⁄3'`).
-- Supports non-ASCII decimal numeral systems including Arabic-Indic (`'٣'`), Devanagari (`'३'`), Bengali (`'৩'`), Thai (`'๓'`), Fullwidth (`'３'`), and 60+ other Unicode digit scripts.
+- Supports non-ASCII decimal numeral systems including Arabic-Indic (`'٣'`), Devanagari (`'३'`), Bengali (`'৩'`), Thai (`'๓'`), Fullwidth (`'３'`), and 70+ other Unicode digit scripts.
 - To allow and ignore trailing invalid characters _à la_ `parseFloat`, pass `{ allowTrailingInvalid: true }` as the second argument.
 - To parse Roman numerals like `'MCCXIV'` or `'Ⅻ'`, pass `{ romanNumerals: true }` as the second argument or call `parseRomanNumerals` directly.
 - To parse numbers with European-style decimal comma (where `'1,0'` means `1`, not `10`), pass `{ decimalSeparator: ',' }` as the second argument.
