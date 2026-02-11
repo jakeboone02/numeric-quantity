@@ -31,6 +31,46 @@ export interface NumericQuantityOptions {
   // TODO: Add support for automatic decimal separator detection
   // decimalSeparator?: ',' | '.' | 'auto';
   decimalSeparator?: ',' | '.';
+  /**
+   * Allow and strip currency symbols (Unicode `\p{Sc}` category) from the
+   * start and/or end of the string.
+   *
+   * @default false
+   */
+  allowCurrency?: boolean;
+  /**
+   * Parse percentage strings by stripping the `%` suffix.
+   * - `'decimal'` or `true`: `"50%"` → `0.5` (divide by 100)
+   * - `'number'`: `"50%"` → `50` (strip `%`, keep value)
+   * - `false` or omitted: `"50%"` → `NaN` (default behavior)
+   *
+   * @default false
+   */
+  percentage?: 'decimal' | 'number' | boolean;
+  /**
+   * Return a verbose result object with additional parsing metadata.
+   *
+   * @default false
+   */
+  verbose?: boolean;
+}
+
+/**
+ * Verbose result returned when `verbose: true` is set.
+ */
+export interface NumericQuantityVerboseResult {
+  /** The parsed numeric value (NaN if invalid). */
+  value: number | bigint;
+  /** The original input string. */
+  input: string;
+  /** Currency symbol(s) stripped from the start, if any. */
+  currencyPrefix?: string;
+  /** Currency symbol(s) stripped from the end, if any. */
+  currencySuffix?: string;
+  /** True if a `%` suffix was stripped. */
+  percentageSuffix?: boolean;
+  /** Characters ignored due to `allowTrailingInvalid`, if any. */
+  trailingInvalid?: string;
 }
 
 /**

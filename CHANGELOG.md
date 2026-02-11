@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-N/A
+### Added
+
+- `isNumericQuantity(str, options?)` function for boolean validation without parsing.
+- `percentage` option to parse percentage strings (`"50%"` → `0.5` with `'decimal'`/`true`, or `50` with `'number'`).
+- `allowCurrency` option to strip Unicode currency symbols (`$`, `€`, `£`, `¥`, `₹`, `₿`, etc.) from prefix or suffix.
+- `verbose` option to return a detailed result object with `value`, `input`, `currencyPrefix`, `currencySuffix`, `percentageSuffix`, and `trailingInvalid` fields.
 
 ## [v3.1.0] - 2026-02-11
 

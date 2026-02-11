@@ -176,9 +176,10 @@ export const numericRegex: RegExp =
   /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
+ * Capture group 7 contains the trailing invalid portion.
  */
 export const numericRegexWithTrailingInvalid: RegExp =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(?:\s*[^.\d/].*)?/;
+  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(\s*[^.\d/].*)?/;
 
 /**
  * Captures any Unicode vulgar fractions.
@@ -349,4 +350,7 @@ export const defaultOptions: Required<NumericQuantityOptions> = {
   romanNumerals: false,
   bigIntOnOverflow: false,
   decimalSeparator: '.',
+  allowCurrency: false,
+  percentage: false,
+  verbose: false,
 } as const;

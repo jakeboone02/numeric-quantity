@@ -7,9 +7,15 @@ import {
   vulgarFractionsRegex,
 } from './constants';
 import { parseRomanNumerals } from './parseRomanNumerals';
-import type { NumericQuantityOptions } from './types';
+import type {
+  NumericQuantityOptions,
+  NumericQuantityVerboseResult,
+} from './types';
 
 const spaceThenSlashRegex = /^\s*\//;
+const currencyPrefixRegex = /^(-?)\s*(\p{Sc}+)\s*/u;
+const currencySuffixRegex = /\s*(\p{Sc}+)$/u;
+const percentageSuffixRegex = /%$/;
 
 /**
  * Converts a string to a number, like an enhanced version of `parseFloat`.
@@ -17,6 +23,10 @@ const spaceThenSlashRegex = /^\s*\//;
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
  */
 function numericQuantity(quantity: string | number): number;
+function numericQuantity(
+  quantity: string | number,
+  options: NumericQuantityOptions & { verbose: true }
+): NumericQuantityVerboseResult;
 function numericQuantity(
   quantity: string | number,
   options: NumericQuantityOptions & { bigIntOnOverflow: true }
@@ -28,16 +38,69 @@ function numericQuantity(
 function numericQuantity(
   quantity: string | number,
   options: NumericQuantityOptions = defaultOptions
-) {
+): number | bigint | NumericQuantityVerboseResult {
+  const opts: Required<NumericQuantityOptions> = {
+    ...defaultOptions,
+    ...options,
+  };
+
+  // Metadata for verbose output
+  const originalInput = typeof quantity === 'string' ? quantity : `${quantity}`;
+  let currencyPrefix: string | undefined;
+  let currencySuffix: string | undefined;
+  let percentageSuffix: boolean | undefined;
+  let trailingInvalid: string | undefined;
+
+  const buildVerboseResult = (
+    value: number | bigint
+  ): NumericQuantityVerboseResult => {
+    const result: NumericQuantityVerboseResult = { value, input: originalInput };
+    if (currencyPrefix) result.currencyPrefix = currencyPrefix;
+    if (currencySuffix) result.currencySuffix = currencySuffix;
+    if (percentageSuffix) result.percentageSuffix = percentageSuffix;
+    if (trailingInvalid) result.trailingInvalid = trailingInvalid;
+    return result;
+  };
+
+  const returnValue = (value: number | bigint) =>
+    opts.verbose ? buildVerboseResult(value) : value;
+
   if (typeof quantity === 'number' || typeof quantity === 'bigint') {
-    return quantity;
+    return returnValue(quantity);
   }
 
   let finalResult = NaN;
+  let workingString = `${quantity}`;
 
-  // Coerce to string in case qty is a number
+  // Strip currency prefix if allowed (preserving leading dash for negatives)
+  if (opts.allowCurrency) {
+    const prefixMatch = currencyPrefixRegex.exec(workingString);
+    if (prefixMatch && prefixMatch[2]) {
+      currencyPrefix = prefixMatch[2];
+      // Keep the dash if present, remove currency symbol
+      workingString =
+        (prefixMatch[1] || '') + workingString.slice(prefixMatch[0].length);
+    }
+  }
+
+  // Strip currency suffix if allowed (before percentage check)
+  if (opts.allowCurrency) {
+    const suffixMatch = currencySuffixRegex.exec(workingString);
+    if (suffixMatch) {
+      currencySuffix = suffixMatch[1];
+      workingString = workingString.slice(0, -suffixMatch[0].length);
+    }
+  }
+
+  // Strip percentage suffix if option is set
+  if (opts.percentage && percentageSuffixRegex.test(workingString)) {
+    percentageSuffix = true;
+    workingString = workingString.slice(0, -1);
+  }
+
+  // Coerce to string and normalize
   const quantityAsString = normalizeDigits(
-    `${quantity}`
+    workingString
       // Convert vulgar fractions to ASCII, with a leading space
       // to keep the whole number and the fraction separate
       .replace(
@@ -52,13 +115,8 @@ function numericQuantity(
 
   // Bail out if the string was only white space
   if (quantityAsString.length === 0) {
-    return NaN;
+    return returnValue(NaN);
   }
-
-  const opts: Required<NumericQuantityOptions> = {
-    ...defaultOptions,
-    ...options,
-  };
 
   let normalizedString = quantityAsString;
 
@@ -74,7 +132,7 @@ function numericQuantity(
       // The second comma and everything after is "trailing invalid"
       if (!opts.allowTrailingInvalid) {
         // Bail out if trailing invalid is not allowed
-        return NaN;
+        return returnValue(NaN);
       }
 
       const firstCommaIndex = quantityAsString.indexOf(',');
@@ -103,7 +161,21 @@ function numericQuantity(
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
-    return opts.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN;
+    const romanResult = opts.romanNumerals
+      ? parseRomanNumerals(quantityAsString)
+      : NaN;
+    if (!isNaN(romanResult) && percentageSuffix) {
+      const percentageValue =
+        opts.percentage === 'number' ? romanResult : romanResult / 100;
+      return returnValue(percentageValue);
+    }
+    return returnValue(romanResult);
+  }
+
+  // Capture trailing invalid characters if present (group 7 of the regex)
+  if (opts.allowTrailingInvalid && regexResult[7]) {
+    trailingInvalid = regexResult[7].trim();
+    if (!trailingInvalid) trailingInvalid = undefined;
   }
 
   const [, dash, ng1temp, ng2temp] = regexResult;
@@ -120,7 +192,8 @@ function numericQuantity(
         asBigInt > BigInt(Number.MAX_SAFE_INTEGER) ||
         asBigInt < BigInt(Number.MIN_SAFE_INTEGER)
       ) {
-        return asBigInt;
+        // Note: percentage division not applied to bigint overflow
+        return returnValue(asBigInt);
       }
     }
 
@@ -130,7 +203,11 @@ function numericQuantity(
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
   if (!numberGroup2) {
-    return dash ? finalResult * -1 : finalResult;
+    finalResult = dash ? finalResult * -1 : finalResult;
+    if (percentageSuffix && opts.percentage !== 'number') {
+      finalResult = finalResult / 100;
+    }
+    return returnValue(finalResult);
   }
 
   const roundingFactor =
@@ -164,7 +241,16 @@ function numericQuantity(
       : Math.round((numerator * roundingFactor) / denominator) / roundingFactor;
   }
 
-  return dash ? finalResult * -1 : finalResult;
+  finalResult = dash ? finalResult * -1 : finalResult;
+
+  // Apply percentage division if needed
+  if (percentageSuffix && opts.percentage !== 'number') {
+    finalResult = isNaN(roundingFactor)
+      ? finalResult / 100
+      : Math.round((finalResult / 100) * roundingFactor) / roundingFactor;
+  }
+
+  return returnValue(finalResult);
 }
 
 export { numericQuantity };

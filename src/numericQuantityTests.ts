@@ -371,4 +371,62 @@ export const numericQuantityTests: Record<
     ['᭑', 1],
     ['᭑᭒᭓', 123],
   ],
+  'Percentage parsing': [
+    // Without option - should fail
+    ['50%', NaN],
+    ['50%', NaN, { percentage: false }],
+    // With 'decimal' option (divide by 100)
+    ['50%', 0.5, { percentage: 'decimal' }],
+    ['100%', 1, { percentage: 'decimal' }],
+    ['0.5%', 0.005, { percentage: 'decimal' }],
+    ['1/2%', 0.005, { percentage: 'decimal' }],
+    ['½%', 0.005, { percentage: 'decimal' }],
+    ['-50%', -0.5, { percentage: 'decimal' }],
+    ['1 1/2%', 0.015, { percentage: 'decimal' }],
+    // With true (same as 'decimal')
+    ['50%', 0.5, { percentage: true }],
+    ['25%', 0.25, { percentage: true }],
+    // With 'number' option (keep value)
+    ['50%', 50, { percentage: 'number' }],
+    ['100%', 100, { percentage: 'number' }],
+    ['0.5%', 0.5, { percentage: 'number' }],
+    ['1/2%', 0.5, { percentage: 'number' }],
+    ['-50%', -50, { percentage: 'number' }],
+    // Roman numerals with percentage
+    ['L%', 0.5, { percentage: 'decimal', romanNumerals: true }],
+    ['L%', 50, { percentage: 'number', romanNumerals: true }],
+    // Without % symbol - should work normally
+    ['50', 50, { percentage: 'decimal' }],
+  ],
+  'Currency stripping': [
+    // Without option - should fail
+    ['$100', NaN],
+    ['€100', NaN],
+    ['100€', NaN],
+    // With allowCurrency option
+    ['$100', 100, { allowCurrency: true }],
+    ['€100', 100, { allowCurrency: true }],
+    ['£100', 100, { allowCurrency: true }],
+    ['¥100', 100, { allowCurrency: true }],
+    ['₹100', 100, { allowCurrency: true }],
+    ['₽100', 100, { allowCurrency: true }],
+    ['₿100', 100, { allowCurrency: true }],
+    ['₩100', 100, { allowCurrency: true }],
+    // Suffix position
+    ['100€', 100, { allowCurrency: true }],
+    ['100£', 100, { allowCurrency: true }],
+    // With decimals
+    ['$100.50', 100.5, { allowCurrency: true }],
+    ['€1,000', 1000, { allowCurrency: true }],
+    // Negative
+    ['-$100', -100, { allowCurrency: true }],
+    // Multiple currency symbols
+    ['$$100', 100, { allowCurrency: true }],
+    // Currency + percentage combined
+    ['$50%', 0.5, { allowCurrency: true, percentage: 'decimal' }],
+    ['50%€', 0.5, { allowCurrency: true, percentage: 'decimal' }],
+    // With spaces
+    ['$ 100', 100, { allowCurrency: true }],
+    ['100 €', 100, { allowCurrency: true }],
+  ],
 };
