@@ -5,7 +5,103 @@ import type {
   VulgarFraction,
 } from './types';
 
-// #region Arabic numerals
+// #region Decimal_Number Unicode category
+
+/**
+ * Unicode decimal digit block start code points.
+ * Each block contains 10 contiguous digits (0-9).
+ * This list covers all \p{Nd} (Decimal_Number) blocks in Unicode.
+ */
+const decimalDigitBlockStarts = [
+  0x0030, // ASCII (0-9)
+  0x0660, // Arabic-Indic
+  0x06f0, // Extended Arabic-Indic (Persian/Urdu)
+  0x07c0, // NKo
+  0x0966, // Devanagari
+  0x09e6, // Bengali
+  0x0a66, // Gurmukhi
+  0x0ae6, // Gujarati
+  0x0b66, // Oriya
+  0x0be6, // Tamil
+  0x0c66, // Telugu
+  0x0ce6, // Kannada
+  0x0d66, // Malayalam
+  0x0de6, // Sinhala Lith
+  0x0e50, // Thai
+  0x0ed0, // Lao
+  0x0f20, // Tibetan
+  0x1040, // Myanmar
+  0x1090, // Myanmar Shan
+  0x17e0, // Khmer
+  0x1810, // Mongolian
+  0x1946, // Limbu
+  0x19d0, // New Tai Lue
+  0x1a80, // Tai Tham Hora
+  0x1a90, // Tai Tham Tham
+  0x1b50, // Balinese
+  0x1bb0, // Sundanese
+  0x1c40, // Lepcha
+  0x1c50, // Ol Chiki
+  0xa620, // Vai
+  0xa8d0, // Saurashtra
+  0xa900, // Kayah Li
+  0xa9d0, // Javanese
+  0xa9f0, // Myanmar Tai Laing
+  0xaa50, // Cham
+  0xabf0, // Meetei Mayek
+  0xff10, // Fullwidth
+  0x104a0, // Osmanya
+  0x10d30, // Hanifi Rohingya
+  0x11066, // Brahmi
+  0x110f0, // Sora Sompeng
+  0x11136, // Chakma
+  0x111d0, // Sharada
+  0x112f0, // Khudawadi
+  0x11450, // Newa
+  0x114d0, // Tirhuta
+  0x11650, // Modi
+  0x116c0, // Takri
+  0x11730, // Ahom
+  0x118e0, // Warang Citi
+  0x11950, // Dives Akuru
+  0x11c50, // Bhaiksuki
+  0x11d50, // Masaram Gondi
+  0x11da0, // Gunjala Gondi
+  0x11f50, // Kawi
+  0x16a60, // Mro
+  0x16ac0, // Tangsa
+  0x16b50, // Pahawh Hmong
+  0x1d7ce, // Mathematical Bold
+  0x1d7d8, // Mathematical Double-Struck
+  0x1d7e2, // Mathematical Sans-Serif
+  0x1d7ec, // Mathematical Sans-Serif Bold
+  0x1d7f6, // Mathematical Monospace
+  0x1e140, // Nyiakeng Puachue Hmong
+  0x1e2f0, // Wancho
+  0x1e4f0, // Nag Mundari
+  0x1e950, // Adlam
+  0x1fbf0, // Segmented Digits
+] as const;
+
+/**
+ * Normalizes non-ASCII decimal digits to ASCII digits.
+ * Converts characters from Unicode decimal digit blocks (e.g., Arabic-Indic,
+ * Devanagari, Bengali) to their ASCII equivalents (0-9).
+ *
+ * All current Unicode \p{Nd} blocks are included in decimalDigitBlockStarts.
+ */
+export const normalizeDigits = (str: string): string =>
+  str.replace(/\p{Nd}/gu, ch => {
+    const cp = ch.codePointAt(0)!;
+    // ASCII digits (0x0030-0x0039) don't need conversion
+    if (cp <= 0x39) return ch;
+    // Find the block this digit belongs to and calculate its value
+    const blockStart = decimalDigitBlockStarts.find(
+      start => cp >= start && cp < start + 10
+    )!;
+    return String(cp - blockStart);
+  });
+
 /**
  * Map of Unicode fraction code points to their ASCII equivalents.
  */
@@ -60,20 +156,22 @@ export const vulgarFractionToAsciiMap: Record<
  * ```
  */
 export const numericRegex: RegExp =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
+  /^(?=-?\s*\.\p{Nd}|-?\s*\p{Nd})(-)?\s*((?:\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)*)(([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|\.\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|(\s+\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*\s*)?\s*\/\s*\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?$/u;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
  */
 export const numericRegexWithTrailingInvalid: RegExp =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(?:\s*[^.\d/].*)?/;
+  /^(?=-?\s*\.\p{Nd}|-?\s*\p{Nd})(-)?\s*((?:\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)*)(([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|\.\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*([eE][+-]?\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?|(\s+\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*\s*)?\s*\/\s*\p{Nd}(?:[,_]\p{Nd}|\p{Nd})*)?(?:\s*[^.\p{Nd}/].*)?/u;
 
 /**
  * Captures any Unicode vulgar fractions.
  */
 export const vulgarFractionsRegex: RegExp = /([¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞⅟}])/g;
+
 // #endregion
 
 // #region Roman numerals
+
 type RomanNumeralSequenceFragment =
   | `${RomanNumeralAscii}`
   | `${RomanNumeralAscii}${RomanNumeralAscii}`
@@ -222,6 +320,7 @@ export const romanNumeralUnicodeRegex: RegExp =
  */
 export const romanNumeralRegex: RegExp =
   /^(?=[MDCLXVI])(M{0,3})(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/i;
+
 // #endregion
 
 /**

@@ -331,4 +331,44 @@ export const numericQuantityTests: Record<
         { romanNumerals: false },
       ] satisfies [RomanNumeralUnicode, number, NumericQuantityOptions]
   ),
+  'Non-ASCII numeral systems': [
+    // Arabic-Indic (U+0660–U+0669)
+    ['٠', 0],
+    ['٣', 3],
+    ['١٢٣', 123],
+    ['٣ ١/٢', 3.5],
+    ['١.٥', 1.5],
+    ['-٣', -3],
+    // Extended Arabic-Indic / Persian (U+06F0–U+06F9)
+    ['۰', 0],
+    ['۲', 2],
+    ['۱۲۳', 123],
+    ['۲ ۱/۲', 2.5],
+    // Devanagari (U+0966–U+096F)
+    ['०', 0],
+    ['२', 2],
+    ['१२३', 123],
+    ['२ १/२', 2.5],
+    // Bengali (U+09E6–U+09EF)
+    ['০', 0],
+    ['৩', 3],
+    ['১২৩', 123],
+    ['৩ ১/২', 3.5],
+    // Fullwidth (U+FF10–U+FF19)
+    ['０', 0],
+    ['２', 2],
+    ['１２３', 123],
+    ['２ １/２', 2.5],
+    ['１.５', 1.5],
+    // Thai (U+0E50–U+0E59)
+    ['๐', 0],
+    ['๓', 3],
+    ['๑๒๓', 123],
+    // Mixed ASCII and non-ASCII
+    ['1٢3', 123],
+    ['1 ٢/٤', 1.5],
+    // Balinese (U+1B50-U+1B59)
+    ['᭑', 1],
+    ['᭑᭒᭓', 123],
+  ],
 };
