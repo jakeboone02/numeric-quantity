@@ -1,6 +1,22 @@
 import { describe, expect, Matchers, test } from 'bun:test';
+import { normalizeDigits } from './constants';
 import { numericQuantity } from './numericQuantity';
 import { numericQuantityTests } from './numericQuantityTests';
+
+// Verify that decimalDigitBlockStarts covers every \p{Nd} codepoint.
+// If a future Unicode version adds a new Nd block, this test will fail.
+const ndRegex = /^\p{Nd}$/u;
+describe('Unicode \\p{Nd} drift check', () => {
+  test('normalizeDigits handles every \\p{Nd} codepoint', () => {
+    for (let cp = 0x0660; cp <= 0x10ffff; cp++) {
+      if (cp >= 0xd800 && cp <= 0xdfff) continue;
+      const ch = String.fromCodePoint(cp);
+      if (ndRegex.test(ch)) {
+        expect(normalizeDigits(ch)).toMatch(/^[0-9]$/);
+      }
+    }
+  });
+});
 
 for (const [title, tests] of Object.entries(numericQuantityTests)) {
   describe(title, () => {

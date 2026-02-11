@@ -1,5 +1,6 @@
 import {
   defaultOptions,
+  normalizeDigits,
   numericRegex,
   numericRegexWithTrailingInvalid,
   vulgarFractionToAsciiMap,
@@ -35,17 +36,19 @@ function numericQuantity(
   let finalResult = NaN;
 
   // Coerce to string in case qty is a number
-  const quantityAsString = `${quantity}`
-    // Convert vulgar fractions to ASCII, with a leading space
-    // to keep the whole number and the fraction separate
-    .replace(
-      vulgarFractionsRegex,
-      (_m, vf: keyof typeof vulgarFractionToAsciiMap) =>
-        ` ${vulgarFractionToAsciiMap[vf]}`
-    )
-    // Convert fraction slash to standard slash
-    .replace('⁄', '/')
-    .trim();
+  const quantityAsString = normalizeDigits(
+    `${quantity}`
+      // Convert vulgar fractions to ASCII, with a leading space
+      // to keep the whole number and the fraction separate
+      .replace(
+        vulgarFractionsRegex,
+        (_m, vf: keyof typeof vulgarFractionToAsciiMap) =>
+          ` ${vulgarFractionToAsciiMap[vf]}`
+      )
+      // Convert fraction slash to standard slash
+      .replace('⁄', '/')
+      .trim()
+  );
 
   // Bail out if the string was only white space
   if (quantityAsString.length === 0) {
