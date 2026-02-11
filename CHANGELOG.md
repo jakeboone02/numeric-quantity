@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+N/A
+
+## [v3.1.0] - 2026-02-11
+
 ### Added
 
 - Support for non-ASCII decimal numeral systems (Arabic-Indic, Devanagari, Bengali, Thai, Fullwidth, and 70+ other Unicode `\p{Nd}` digit blocks). For example, `numericQuantity('٣')` now returns `3`.
@@ -189,7 +193,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.0.0...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.1.0...HEAD
+[v3.1.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v2.1.0...v3.0.0
 [v2.1.0]: https://github.com/jakeboone02/numeric-quantity/compare/v2.0.1...v2.1.0
 [v2.0.1]: https://github.com/jakeboone02/numeric-quantity/compare/v2.0.0...v2.0.1
