@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+N/A
+
+## [v3.2.0] - 2026-02-12
+
 ### Added
 
 - [#39] `isNumericQuantity(str, options?)` function for boolean validation without parsing.
@@ -209,7 +213,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.1.0...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.0...HEAD
+[v3.2.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.1.0...v3.2.0
 [v3.1.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v2.1.0...v3.0.0
 [v2.1.0]: https://github.com/jakeboone02/numeric-quantity/compare/v2.0.1...v2.1.0
