@@ -155,6 +155,27 @@ numericQuantity('100abc', {
 // }
 ```
 
+For fraction and mixed-number inputs, the result also includes parsed fraction components (always unsigned):
+
+```js
+numericQuantity('1 2/3', { verbose: true });
+// {
+//   value: 1.667,
+//   input: '1 2/3',
+//   whole: 1,
+//   numerator: 2,
+//   denominator: 3
+// }
+
+numericQuantity('½', { verbose: true });
+// {
+//   value: 0.5,
+//   input: '½',
+//   numerator: 1,
+//   denominator: 2
+// }
+```
+
 The verbose result object has the following shape:
 
 ```ts
@@ -165,6 +186,10 @@ interface NumericQuantityVerboseResult {
   currencySuffix?: string; // Currency symbol(s) stripped from end
   percentageSuffix?: boolean; // True if "%" was stripped
   trailingInvalid?: string; // Characters ignored (if allowTrailingInvalid)
+  sign?: '-' | '+'; // Leading sign character, if present
+  whole?: number; // Whole part of a mixed fraction (e.g. 1 from "1 2/3")
+  numerator?: number; // Fraction numerator (e.g. 2 from "1 2/3")
+  denominator?: number; // Fraction denominator (e.g. 3 from "1 2/3")
 }
 ```
 

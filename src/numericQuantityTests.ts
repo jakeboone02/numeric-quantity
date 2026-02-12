@@ -53,6 +53,14 @@ export const numericQuantityTests: Record<
     ['012', 12],
     ['100', 100],
   ],
+  'Leading + sign': [
+    ['+1', 1],
+    ['+1.5', 1.5],
+    ['+1/2', 0.5],
+    ['+1 1/2', 1.5],
+    ['+.5', 0.5],
+    ['+1,000', 1000],
+  ],
   Separators: [
     ['1,000', 1000],
     ['1,000,000', 1_000_000],
@@ -420,6 +428,8 @@ export const numericQuantityTests: Record<
     ['€1,000', 1000, { allowCurrency: true }],
     // Negative
     ['-$100', -100, { allowCurrency: true }],
+    // Positive with + sign
+    ['+$100', 100, { allowCurrency: true }],
     // Multiple currency symbols
     ['$$100', 100, { allowCurrency: true }],
     // Currency + percentage combined

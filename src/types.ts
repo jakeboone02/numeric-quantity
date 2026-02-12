@@ -82,6 +82,14 @@ export interface NumericQuantityVerboseResult {
   percentageSuffix?: boolean;
   /** Trailing invalid (usually non-numeric) characters detected in the input, if any. Populated even when `allowTrailingInvalid` is `false`. */
   trailingInvalid?: string;
+  /** The leading sign character (`'-'` or `'+'`), if present. Omitted when no explicit sign was in the input. */
+  sign?: '-' | '+';
+  /** The whole-number part of a mixed fraction (e.g. `1` from `"1 2/3"`). Omitted for pure fractions, decimals, and integers. */
+  whole?: number;
+  /** The numerator of a fraction (e.g. `2` from `"1 2/3"`, or `1` from `"1/2"`). Always unsigned. */
+  numerator?: number;
+  /** The denominator of a fraction (e.g. `3` from `"1 2/3"`, or `2` from `"1/2"`). Always unsigned. */
+  denominator?: number;
 }
 
 /**

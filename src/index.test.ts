@@ -52,6 +52,7 @@ describe('isNumericQuantity', () => {
     expect(isNumericQuantity('1 1/2')).toBe(true);
     expect(isNumericQuantity('½')).toBe(true);
     expect(isNumericQuantity(42)).toBe(true);
+    expect(isNumericQuantity('+42')).toBe(true);
   });
 
   test('returns false for invalid numbers', () => {
@@ -157,5 +158,79 @@ describe('verbose output', () => {
     });
     expect(result.value).toBe(9007199254740992n);
     expect(result.input).toBe('9007199254740992');
+  });
+
+  test('includes fraction components for mixed fraction', () => {
+    const result = numericQuantity('1 2/3', { verbose: true });
+    expect(result.value).toBe(1.667);
+    expect(result.whole).toBe(1);
+    expect(result.numerator).toBe(2);
+    expect(result.denominator).toBe(3);
+  });
+
+  test('includes fraction components for pure fraction', () => {
+    const result = numericQuantity('2/3', { verbose: true });
+    expect(result.value).toBe(0.667);
+    expect(result.whole).toBeUndefined();
+    expect(result.numerator).toBe(2);
+    expect(result.denominator).toBe(3);
+  });
+
+  test('includes fraction components for vulgar fraction', () => {
+    const result = numericQuantity('½', { verbose: true });
+    expect(result.value).toBe(0.5);
+    expect(result.whole).toBeUndefined();
+    expect(result.numerator).toBe(1);
+    expect(result.denominator).toBe(2);
+  });
+
+  test('includes fraction components for mixed vulgar fraction', () => {
+    const result = numericQuantity('2½', { verbose: true });
+    expect(result.value).toBe(2.5);
+    expect(result.whole).toBe(2);
+    expect(result.numerator).toBe(1);
+    expect(result.denominator).toBe(2);
+  });
+
+  test('omits fraction components for integer', () => {
+    const result = numericQuantity('42', { verbose: true });
+    expect(result.value).toBe(42);
+    expect(result.whole).toBeUndefined();
+    expect(result.numerator).toBeUndefined();
+    expect(result.denominator).toBeUndefined();
+  });
+
+  test('omits fraction components for decimal', () => {
+    const result = numericQuantity('1.5', { verbose: true });
+    expect(result.value).toBe(1.5);
+    expect(result.whole).toBeUndefined();
+    expect(result.numerator).toBeUndefined();
+    expect(result.denominator).toBeUndefined();
+  });
+
+  test('fraction components are unsigned for negative mixed fraction', () => {
+    const result = numericQuantity('-1 2/3', { verbose: true });
+    expect(result.value).toBe(-1.667);
+    expect(result.whole).toBe(1);
+    expect(result.numerator).toBe(2);
+    expect(result.denominator).toBe(3);
+  });
+
+  test('includes sign for negative input', () => {
+    const result = numericQuantity('-42', { verbose: true });
+    expect(result.value).toBe(-42);
+    expect(result.sign).toBe('-');
+  });
+
+  test('includes sign for positive input with +', () => {
+    const result = numericQuantity('+42', { verbose: true });
+    expect(result.value).toBe(42);
+    expect(result.sign).toBe('+');
+  });
+
+  test('omits sign when no explicit sign', () => {
+    const result = numericQuantity('42', { verbose: true });
+    expect(result.value).toBe(42);
+    expect(result.sign).toBeUndefined();
   });
 });
