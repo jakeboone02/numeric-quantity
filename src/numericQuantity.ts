@@ -1,7 +1,6 @@
 import {
   defaultOptions,
   normalizeDigits,
-  numericRegex,
   numericRegexWithTrailingInvalid,
   vulgarFractionToAsciiMap,
   vulgarFractionsRegex,
@@ -9,6 +8,7 @@ import {
 import { parseRomanNumerals } from './parseRomanNumerals';
 import type {
   NumericQuantityOptions,
+  NumericQuantityReturnType,
   NumericQuantityVerboseResult,
 } from './types';
 
@@ -23,14 +23,10 @@ const percentageSuffixRegex = /%$/;
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
  */
 function numericQuantity(quantity: string | number): number;
-function numericQuantity(
+function numericQuantity<T extends NumericQuantityOptions>(
   quantity: string | number,
-  options: NumericQuantityOptions & { verbose: true }
-): NumericQuantityVerboseResult;
-function numericQuantity(
-  quantity: string | number,
-  options: NumericQuantityOptions & { bigIntOnOverflow: true }
-): number | bigint;
+  options: T
+): NumericQuantityReturnType<T>;
 function numericQuantity(
   quantity: string | number,
   options?: NumericQuantityOptions
@@ -155,27 +151,25 @@ function numericQuantity(
     }
   }
 
-  const regexResult = (
-    opts.allowTrailingInvalid ? numericRegexWithTrailingInvalid : numericRegex
-  ).exec(normalizedString);
+  const regexResult = numericRegexWithTrailingInvalid.exec(normalizedString);
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
-    const romanResult = opts.romanNumerals
-      ? parseRomanNumerals(quantityAsString)
-      : NaN;
-    if (!isNaN(romanResult) && percentageSuffix) {
-      const percentageValue =
-        opts.percentage === 'number' ? romanResult : romanResult / 100;
-      return returnValue(percentageValue);
-    }
-    return returnValue(romanResult);
+    return returnValue(
+      opts.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN);
   }
 
-  // Capture trailing invalid characters if present (group 7 of the regex)
-  if (opts.allowTrailingInvalid && regexResult[7]) {
-    trailingInvalid = regexResult[7].trim();
-    if (!trailingInvalid) trailingInvalid = undefined;
+  // Capture trailing invalid characters: group 7 catches chars starting with
+  // [^.\d/], but the regex (which lacks a $ anchor) may also leave unconsumed
+  // input starting with ".", "/", or digits (e.g. "0.1.2" or "1/").
+  const rawTrailing = (
+    regexResult[7] || normalizedString.slice(regexResult[0].length)
+  ).trim();
+  if (rawTrailing) {
+    trailingInvalid = rawTrailing;
+    if (!opts.allowTrailingInvalid) {
+      return returnValue(NaN);
+    }
   }
 
   const [, dash, ng1temp, ng2temp] = regexResult;

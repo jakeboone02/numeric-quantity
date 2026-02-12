@@ -3,7 +3,6 @@ import { normalizeDigits } from './constants';
 import { isNumericQuantity } from './isNumericQuantity';
 import { numericQuantity } from './numericQuantity';
 import { numericQuantityTests } from './numericQuantityTests';
-import type { NumericQuantityVerboseResult } from './types';
 
 // Verify that decimalDigitBlockStarts covers every \p{Nd} codepoint.
 // If a future Unicode version adds a new Nd block, this test will fail.
@@ -86,7 +85,7 @@ describe('verbose output', () => {
     const result = numericQuantity('$100', {
       verbose: true,
       allowCurrency: true,
-    }) as NumericQuantityVerboseResult;
+    });
     expect(result.value).toBe(100);
     expect(result.currencyPrefix).toBe('$');
   });
@@ -95,7 +94,7 @@ describe('verbose output', () => {
     const result = numericQuantity('100€', {
       verbose: true,
       allowCurrency: true,
-    }) as NumericQuantityVerboseResult;
+    });
     expect(result.value).toBe(100);
     expect(result.currencySuffix).toBe('€');
   });
@@ -104,7 +103,7 @@ describe('verbose output', () => {
     const result = numericQuantity('50%', {
       verbose: true,
       percentage: 'decimal',
-    }) as NumericQuantityVerboseResult;
+    });
     expect(result.value).toBe(0.5);
     expect(result.percentageSuffix).toBe(true);
   });
@@ -113,8 +112,17 @@ describe('verbose output', () => {
     const result = numericQuantity('100abc', {
       verbose: true,
       allowTrailingInvalid: true,
-    }) as NumericQuantityVerboseResult;
+    });
     expect(result.value).toBe(100);
+    expect(result.trailingInvalid).toBe('abc');
+  });
+
+  test('includes trailingInvalid even when allowTrailingInvalid is false', () => {
+    const result = numericQuantity('100abc', {
+      verbose: true,
+    });
+    expect(result.value).toBeNaN();
+    expect(result.input).toBe('100abc');
     expect(result.trailingInvalid).toBe('abc');
   });
 
@@ -123,7 +131,7 @@ describe('verbose output', () => {
       verbose: true,
       allowCurrency: true,
       percentage: 'decimal',
-    }) as NumericQuantityVerboseResult;
+    });
     expect(result.value).toBe(0.5);
     expect(result.currencyPrefix).toBe('$');
     expect(result.percentageSuffix).toBe(true);
@@ -132,7 +140,7 @@ describe('verbose output', () => {
   test('returns NaN value for invalid input', () => {
     const result = numericQuantity('invalid', {
       verbose: true,
-    }) as NumericQuantityVerboseResult;
+    });
     expect(result.value).toBeNaN();
     expect(result.input).toBe('invalid');
   });
@@ -140,5 +148,14 @@ describe('verbose output', () => {
   test('works with number input', () => {
     const result = numericQuantity(42, { verbose: true });
     expect(result).toEqual({ value: 42, input: '42' });
+  });
+
+  test('works with bigIntOnOverflow', () => {
+    const result = numericQuantity('9007199254740992', {
+      verbose: true,
+      bigIntOnOverflow: true,
+    });
+    expect(result.value).toBe(9007199254740992n);
+    expect(result.input).toBe('9007199254740992');
   });
 });

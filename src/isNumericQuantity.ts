@@ -11,6 +11,6 @@ export const isNumericQuantity = (
   quantity: string | number,
   options?: NumericQuantityOptions
 ): boolean => {
-  const result = numericQuantity(quantity, options);
+  const result = numericQuantity(quantity, { ...options, verbose: false });
   return typeof result === 'bigint' || !isNaN(result);
 };

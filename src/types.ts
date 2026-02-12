@@ -56,6 +56,17 @@ export interface NumericQuantityOptions {
 }
 
 /**
+ * Resolves the return type of {@link numericQuantity} based on the options provided.
+ */
+export type NumericQuantityReturnType<
+  T extends NumericQuantityOptions | undefined = undefined,
+> = T extends { verbose: true }
+  ? NumericQuantityVerboseResult
+  : T extends { bigIntOnOverflow: true }
+    ? number | bigint
+    : number;
+
+/**
  * Verbose result returned when `verbose: true` is set.
  */
 export interface NumericQuantityVerboseResult {
@@ -69,7 +80,7 @@ export interface NumericQuantityVerboseResult {
   currencySuffix?: string;
   /** True if a `%` suffix was stripped. */
   percentageSuffix?: boolean;
-  /** Characters ignored due to `allowTrailingInvalid`, if any. */
+  /** Trailing invalid (usually non-numeric) characters detected in the input, if any. Populated even when `allowTrailingInvalid` is `false`. */
   trailingInvalid?: string;
 }
 
