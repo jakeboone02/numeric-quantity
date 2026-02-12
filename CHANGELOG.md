@@ -7,13 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-N/A
+### Added
+
+- [#39] `isNumericQuantity(str, options?)` function for boolean validation without parsing.
+- [#39] `percentage` option to parse percentage strings (`"50%"` → `0.5` with `'decimal'`/`true`, or `50` with `'number'`).
+- [#39] `allowCurrency` option to strip Unicode currency symbols (`$`, `€`, `£`, `¥`, `₹`, `₿`, etc.) from prefix or suffix.
+- [#39] `verbose` option to return a detailed result object with the following fields:
+  - `value` — the parsed numeric value (`NaN` if invalid).
+  - `input` — the original input string.
+  - `currencyPrefix` / `currencySuffix` — currency symbol(s) stripped from start/end, if any.
+  - `percentageSuffix` — `true` if a `%` suffix was stripped.
+  - `trailingInvalid` — trailing non-numeric characters detected in the input, if any. Populated regardless of the `allowTrailingInvalid` setting.
+  - `sign` — the leading sign character (`'-'` or `'+'`), if present.
+  - `whole` — the whole-number part of a mixed fraction (e.g. `1` from `"1 2/3"`).
+  - `numerator` / `denominator` — fraction components (e.g. `2` and `3` from `"1 2/3"`). Always unsigned.
+- [#39] Leading `+` sign support: `numericQuantity('+42')` now returns `42` instead of `NaN`. Works with all input forms including fractions (`'+1/2'`), mixed numbers (`'+1 1/2'`), decimals (`'+1.5'`), and currency (`'+$100'`).
 
 ## [v3.1.0] - 2026-02-11
 
 ### Added
 
-- Support for non-ASCII decimal numeral systems (Arabic-Indic, Devanagari, Bengali, Thai, Fullwidth, and 70+ other Unicode `\p{Nd}` digit blocks). For example, `numericQuantity('٣')` now returns `3`.
+- [#38] Support for non-ASCII decimal numeral systems (Arabic-Indic, Devanagari, Bengali, Thai, Fullwidth, and 70+ other Unicode `\p{Nd}` digit blocks). For example, `numericQuantity('٣')` now returns `3`.
 
 ## [v3.0.0] - 2026-01-21
 
@@ -190,6 +204,8 @@ N/A
 [#12]: https://github.com/jakeboone02/numeric-quantity/pull/12
 [#26]: https://github.com/jakeboone02/numeric-quantity/pull/26
 [#37]: https://github.com/jakeboone02/numeric-quantity/pull/37
+[#38]: https://github.com/jakeboone02/numeric-quantity/pull/38
+[#39]: https://github.com/jakeboone02/numeric-quantity/pull/39
 
 <!-- Release comparison links -->
 

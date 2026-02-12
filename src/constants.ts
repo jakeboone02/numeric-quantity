@@ -156,7 +156,7 @@ export const vulgarFractionToAsciiMap: Record<
  * |  #  |    Description                                   |        Example(s)                                                   |
  * | --- | ------------------------------------------------ | ------------------------------------------------------------------- |
  * | `0` | entire string                                    | `"2 1/3"` from `"2 1/3"`                                            |
- * | `1` | "negative" dash                                  | `"-"` from `"-2 1/3"`                                               |
+ * | `1` | sign (`-` or `+`)                                | `"-"` from `"-2 1/3"`                                               |
  * | `2` | whole number or numerator                        | `"2"` from `"2 1/3"`; `"1"` from `"1/3"`                            |
  * | `3` | entire fraction, decimal portion, or denominator | `" 1/3"` from `"2 1/3"`; `".33"` from `"2.33"`; `"/3"` from `"1/3"` |
  *
@@ -173,12 +173,13 @@ export const vulgarFractionToAsciiMap: Record<
  * ```
  */
 export const numericRegex: RegExp =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
+  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
+ * Capture group 7 contains the trailing invalid portion.
  */
 export const numericRegexWithTrailingInvalid: RegExp =
-  /^(?=-?\s*\.\d|-?\s*\d)(-)?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(?:\s*[^.\d/].*)?/;
+  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(\s*[^.\d/].*)?/;
 
 /**
  * Captures any Unicode vulgar fractions.
@@ -349,4 +350,7 @@ export const defaultOptions: Required<NumericQuantityOptions> = {
   romanNumerals: false,
   bigIntOnOverflow: false,
   decimalSeparator: '.',
+  allowCurrency: false,
+  percentage: false,
+  verbose: false,
 } as const;

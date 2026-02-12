@@ -13,16 +13,16 @@
     "./package.json": "./package.json",
     ".": {
       "import": {
-        "types": "./dist/types-esm/index.d.mts",
+        "types": "./dist/numeric-quantity.d.mts",
         "default": "./dist/numeric-quantity.mjs"
       },
       "require": {
-        "types": "./dist/types/index.d.ts",
+        "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
     }
   },
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/numeric-quantity.legacy-esm.d.ts",
   "unpkg": "./dist/numeric-quantity.umd.min.js",
   "bugs": {
     "url": "https://github.com/jakeboone02/numeric-quantity/issues"
@@ -53,10 +53,9 @@
     "pretty-print": "prettier --write '*.{html,json,ts}' 'src/*.*'"
   },
   "devDependencies": {
-    "@jakeboone02/generate-dts": "0.1.2",
     "@types/bun": "^1.3.9",
     "@types/node": "^25.2.3",
-    "@types/web": "^0.0.331",
+    "@types/web": "^0.0.332",
     "@typescript/native-preview": "^7.0.0-dev.20260211.1",
     "np": "^11.0.2",
     "oxlint": "^1.46.0",

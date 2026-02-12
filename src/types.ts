@@ -31,6 +31,65 @@ export interface NumericQuantityOptions {
   // TODO: Add support for automatic decimal separator detection
   // decimalSeparator?: ',' | '.' | 'auto';
   decimalSeparator?: ',' | '.';
+  /**
+   * Allow and strip currency symbols (Unicode `\p{Sc}` category) from the
+   * start and/or end of the string.
+   *
+   * @default false
+   */
+  allowCurrency?: boolean;
+  /**
+   * Parse percentage strings by stripping the `%` suffix.
+   * - `'decimal'` or `true`: `"50%"` → `0.5` (divide by 100)
+   * - `'number'`: `"50%"` → `50` (strip `%`, keep value)
+   * - `false` or omitted: `"50%"` → `NaN` (default behavior)
+   *
+   * @default false
+   */
+  percentage?: 'decimal' | 'number' | boolean;
+  /**
+   * Return a verbose result object with additional parsing metadata.
+   *
+   * @default false
+   */
+  verbose?: boolean;
+}
+
+/**
+ * Resolves the return type of {@link numericQuantity} based on the options provided.
+ */
+export type NumericQuantityReturnType<
+  T extends NumericQuantityOptions | undefined = undefined,
+> = T extends { verbose: true }
+  ? NumericQuantityVerboseResult
+  : T extends { bigIntOnOverflow: true }
+    ? number | bigint
+    : number;
+
+/**
+ * Verbose result returned when `verbose: true` is set.
+ */
+export interface NumericQuantityVerboseResult {
+  /** The parsed numeric value (NaN if invalid). */
+  value: number | bigint;
+  /** The original input string. */
+  input: string;
+  /** Currency symbol(s) stripped from the start, if any. */
+  currencyPrefix?: string;
+  /** Currency symbol(s) stripped from the end, if any. */
+  currencySuffix?: string;
+  /** True if a `%` suffix was stripped. */
+  percentageSuffix?: boolean;
+  /** Trailing invalid (usually non-numeric) characters detected in the input, if any. Populated even when `allowTrailingInvalid` is `false`. */
+  trailingInvalid?: string;
+  /** The leading sign character (`'-'` or `'+'`), if present. Omitted when no explicit sign was in the input. */
+  sign?: '-' | '+';
+  /** The whole-number part of a mixed fraction (e.g. `1` from `"1 2/3"`). Omitted for pure fractions, decimals, and integers. */
+  whole?: number;
+  /** The numerator of a fraction (e.g. `2` from `"1 2/3"`, or `1` from `"1/2"`). Always unsigned. */
+  numerator?: number;
+  /** The denominator of a fraction (e.g. `3` from `"1 2/3"`, or `2` from `"1/2"`). Always unsigned. */
+  denominator?: number;
 }
 
 /**
