@@ -12,6 +12,7 @@ In addition to plain integers and decimals, `numeric-quantity` handles:
 
 - **Fractions and mixed numbers**: `'1 2/3'` → `1.667`, `'1⅖'` → `1.4`, `'1 2⁄3'` → `1.667`
 - **Separators**: `'1,000'` → `1000`, `'1_000_000'` → `1000000`
+- **Roman numerals** (see [option](#roman-numerals-romannumerals) below): `'XIV'` → `14`, `'Ⅻ'` → `12`
 - **Non-ASCII numerals**: Arabic-Indic (`'٣'`), Devanagari (`'३'`), Bengali, Thai, Fullwidth, and 70+ other Unicode digit scripts
 
 > _For the inverse operation—converting a number to an imperial measurement—check out [format-quantity](https://www.npmjs.com/package/format-quantity)._
