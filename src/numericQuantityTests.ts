@@ -273,6 +273,13 @@ export const numericQuantityTests: Record<
     ['1⁄2', 0.5],
     ['2 1⁄2', 2.5],
   ],
+  'Unicode superscript/subscript fractions': [
+    ['¹⁄₂', 0.5],
+    ['1 ¹⁄₂', 1.5],
+    ['¹¹⁄₁₆', 0.688],
+    ['2 ³⁄₈', 2.375],
+    ['-¹⁄₂', -0.5],
+  ],
   BigInts: [
     ['9007199254740992', 9007199254740992n, { bigIntOnOverflow: true }],
     ['-9007199254740992', -9007199254740992n, { bigIntOnOverflow: true }],

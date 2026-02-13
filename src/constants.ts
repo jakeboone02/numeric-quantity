@@ -2,6 +2,8 @@ import type {
   NumericQuantityOptions,
   RomanNumeralAscii,
   RomanNumeralUnicode,
+  SubscriptDigit,
+  SuperscriptDigit,
   VulgarFraction,
 } from './types';
 
@@ -118,6 +120,40 @@ export const normalizeDigits = (str: string): string =>
     }
     return String(cp - decimalDigitBlockStarts[lo]!);
   });
+
+/**
+ * Map of Unicode superscript and subscript digit code points to ASCII digits.
+ */
+export const superSubDigitToAsciiMap: Record<
+  SuperscriptDigit | SubscriptDigit,
+  string
+> = {
+  '⁰': '0',
+  '¹': '1',
+  '²': '2',
+  '³': '3',
+  '⁴': '4',
+  '⁵': '5',
+  '⁶': '6',
+  '⁷': '7',
+  '⁸': '8',
+  '⁹': '9',
+  '₀': '0',
+  '₁': '1',
+  '₂': '2',
+  '₃': '3',
+  '₄': '4',
+  '₅': '5',
+  '₆': '6',
+  '₇': '7',
+  '₈': '8',
+  '₉': '9',
+} as const;
+
+/**
+ * Captures Unicode superscript and subscript digits.
+ */
+export const superSubDigitsRegex: RegExp = /[⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉]/g;
 
 /**
  * Map of Unicode fraction code points to their ASCII equivalents.

@@ -117,6 +117,16 @@ export type VulgarFraction =
   | '⅟';
 
 /**
+ * Unicode superscript digit code points.
+ */
+export type SuperscriptDigit = '⁰' | '¹' | '²' | '³' | '⁴' | '⁵' | '⁶' | '⁷' | '⁸' | '⁹';
+
+/**
+ * Unicode subscript digit code points.
+ */
+export type SubscriptDigit = '₀' | '₁' | '₂' | '₃' | '₄' | '₅' | '₆' | '₇' | '₈' | '₉';
+
+/**
  * Allowable Roman numeral characters (ASCII, uppercase only).
  */
 export type RomanNumeralAscii = 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M';

@@ -2,6 +2,8 @@ import {
   defaultOptions,
   normalizeDigits,
   numericRegexWithTrailingInvalid,
+  superSubDigitToAsciiMap,
+  superSubDigitsRegex,
   vulgarFractionToAsciiMap,
   vulgarFractionsRegex,
 } from './constants';
@@ -111,6 +113,11 @@ function numericQuantity(
         vulgarFractionsRegex,
         (_m, vf: keyof typeof vulgarFractionToAsciiMap) =>
           ` ${vulgarFractionToAsciiMap[vf]}`
+      )
+      // Convert superscript/subscript digits to ASCII
+      .replace(
+        superSubDigitsRegex,
+        ch => superSubDigitToAsciiMap[ch as keyof typeof superSubDigitToAsciiMap]
       )
       // Convert fraction slash to standard slash
       .replace('⁄', '/')
