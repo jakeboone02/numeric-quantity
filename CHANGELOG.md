@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+N/A
+
+## [v3.2.1] - 2026-02-13
+
 ### Fixed
 
 - Parsing of Unicode superscript/subscript fraction notation (e.g. `¹⁄₂`) now works correctly by normalizing superscript (`⁰`–`⁹`) and subscript (`₀`–`₉`) digits to ASCII before processing.
@@ -215,7 +219,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.0...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.1...HEAD
+[v3.2.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.0...v3.2.1
 [v3.2.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.1.0...v3.2.0
 [v3.1.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/jakeboone02/numeric-quantity/compare/v2.1.0...v3.0.0
