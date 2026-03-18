@@ -49,7 +49,6 @@
     "watch": "bun test --watch",
     "lint": "bunx oxlint --type-aware --report-unused-disable-directives --type-check",
     "publish:npm": "np",
-    "codesandbox-ci": "bash .codesandbox/ci.sh",
     "pretty-print": "prettier --write '*.{html,json,ts}' 'src/*.*'"
   },
   "devDependencies": {
