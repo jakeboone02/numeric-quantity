@@ -124,10 +124,7 @@ export const normalizeDigits = (str: string): string =>
 /**
  * Map of Unicode superscript and subscript digit code points to ASCII digits.
  */
-export const superSubDigitToAsciiMap: Record<
-  SuperscriptDigit | SubscriptDigit,
-  string
-> = {
+export const superSubDigitToAsciiMap: Record<SuperscriptDigit | SubscriptDigit, string> = {
   '⁰': '0',
   '¹': '1',
   '²': '2',
@@ -158,10 +155,7 @@ export const superSubDigitsRegex: RegExp = /[⁰¹²³⁴⁵⁶⁷⁸⁹₀₁�
 /**
  * Map of Unicode fraction code points to their ASCII equivalents.
  */
-export const vulgarFractionToAsciiMap: Record<
-  VulgarFraction,
-  `${number}/${number | ''}`
-> = {
+export const vulgarFractionToAsciiMap: Record<VulgarFraction, `${number}/${number | ''}`> = {
   '¼': '1/4',
   '½': '1/2',
   '¾': '3/4',
@@ -348,8 +342,7 @@ export const romanNumeralUnicodeToAsciiMap: Record<
 /**
  * Captures all Unicode Roman numeral code points.
  */
-export const romanNumeralUnicodeRegex: RegExp =
-  /([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ])/gi;
+export const romanNumeralUnicodeRegex: RegExp = /([ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ])/gi;
 
 /**
  * Captures a valid Roman numeral sequence.

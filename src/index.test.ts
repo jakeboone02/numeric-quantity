@@ -27,9 +27,7 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
           ? JSON.stringify(arg)
           : `${arg}`.replace(/(?:\r?\n)/g, ' ')
       }${
-        typeof options !== 'undefined'
-          ? ` with option ${JSON.stringify(options)}`
-          : ''
+        typeof options !== 'undefined' ? ` with option ${JSON.stringify(options)}` : ''
       } should evaluate to ${expected}`, () => {
         const expectation = expect(numericQuantity(arg, options));
         if (typeof expected === 'bigint') {
@@ -70,9 +68,7 @@ describe('isNumericQuantity', () => {
   });
 
   test('returns true for bigint values', () => {
-    expect(
-      isNumericQuantity('9007199254740992', { bigIntOnOverflow: true })
-    ).toBe(true);
+    expect(isNumericQuantity('9007199254740992', { bigIntOnOverflow: true })).toBe(true);
   });
 });
 

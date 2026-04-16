@@ -29,10 +29,7 @@ function numericQuantity<T extends NumericQuantityOptions>(
   quantity: string | number,
   options: T
 ): NumericQuantityReturnType<T>;
-function numericQuantity(
-  quantity: string | number,
-  options?: NumericQuantityOptions
-): number;
+function numericQuantity(quantity: string | number, options?: NumericQuantityOptions): number;
 function numericQuantity(
   quantity: string | number,
   options: NumericQuantityOptions = defaultOptions
@@ -53,10 +50,11 @@ function numericQuantity(
   let parsedNumerator: number | undefined;
   let parsedDenominator: number | undefined;
 
-  const buildVerboseResult = (
-    value: number | bigint
-  ): NumericQuantityVerboseResult => {
-    const result: NumericQuantityVerboseResult = { value, input: originalInput };
+  const buildVerboseResult = (value: number | bigint): NumericQuantityVerboseResult => {
+    const result: NumericQuantityVerboseResult = {
+      value,
+      input: originalInput,
+    };
     if (currencyPrefix) result.currencyPrefix = currencyPrefix;
     if (currencySuffix) result.currencySuffix = currencySuffix;
     if (percentageSuffix) result.percentageSuffix = percentageSuffix;
@@ -84,8 +82,7 @@ function numericQuantity(
     if (prefixMatch && prefixMatch[2]) {
       currencyPrefix = prefixMatch[2];
       // Keep the dash if present, remove currency symbol
-      workingString =
-        (prefixMatch[1] || '') + workingString.slice(prefixMatch[0].length);
+      workingString = (prefixMatch[1] || '') + workingString.slice(prefixMatch[0].length);
     }
   }
 
@@ -111,8 +108,7 @@ function numericQuantity(
       // to keep the whole number and the fraction separate
       .replace(
         vulgarFractionsRegex,
-        (_m, vf: keyof typeof vulgarFractionToAsciiMap) =>
-          ` ${vulgarFractionToAsciiMap[vf]}`
+        (_m, vf: keyof typeof vulgarFractionToAsciiMap) => ` ${vulgarFractionToAsciiMap[vf]}`
       )
       // Convert superscript/subscript digits to ASCII
       .replace(
@@ -136,9 +132,7 @@ function numericQuantity(
     if (commaCount === 1) {
       // Treat lone comma as decimal separator; remove all "." since they represent
       // thousands/whatever separators
-      normalizedString = quantityAsString
-        .replaceAll('.', '_')
-        .replace(',', '.');
+      normalizedString = quantityAsString.replaceAll('.', '_').replace(',', '.');
     } else if (commaCount > 1) {
       // The second comma and everything after is "trailing invalid"
       if (!opts.allowTrailingInvalid) {
@@ -147,10 +141,7 @@ function numericQuantity(
       }
 
       const firstCommaIndex = quantityAsString.indexOf(',');
-      const secondCommaIndex = quantityAsString.indexOf(
-        ',',
-        firstCommaIndex + 1
-      );
+      const secondCommaIndex = quantityAsString.indexOf(',', firstCommaIndex + 1);
       const beforeSecondComma = quantityAsString
         .substring(0, secondCommaIndex)
         .replaceAll('.', '_')
@@ -170,16 +161,13 @@ function numericQuantity(
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
-    return returnValue(
-      opts.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN);
+    return returnValue(opts.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN);
   }
 
   // Capture trailing invalid characters: group 7 catches chars starting with
   // [^.\d/], but the regex (which lacks a $ anchor) may also leave unconsumed
   // input starting with ".", "/", or digits (e.g. "0.1.2" or "1/").
-  const rawTrailing = (
-    regexResult[7] || normalizedString.slice(regexResult[0].length)
-  ).trim();
+  const rawTrailing = (regexResult[7] || normalizedString.slice(regexResult[0].length)).trim();
   if (rawTrailing) {
     trailingInvalid = rawTrailing;
     if (!opts.allowTrailingInvalid) {
@@ -221,9 +209,7 @@ function numericQuantity(
   }
 
   const roundingFactor =
-    opts.round === false
-      ? NaN
-      : parseFloat(`1e${Math.floor(Math.max(0, opts.round))}`);
+    opts.round === false ? NaN : parseFloat(`1e${Math.floor(Math.max(0, opts.round))}`);
 
   if (
     numberGroup2.startsWith('.') ||

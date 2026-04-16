@@ -58,13 +58,12 @@ export interface NumericQuantityOptions {
 /**
  * Resolves the return type of {@link numericQuantity} based on the options provided.
  */
-export type NumericQuantityReturnType<
-  T extends NumericQuantityOptions | undefined = undefined,
-> = T extends { verbose: true }
-  ? NumericQuantityVerboseResult
-  : T extends { bigIntOnOverflow: true }
-    ? number | bigint
-    : number;
+export type NumericQuantityReturnType<T extends NumericQuantityOptions | undefined = undefined> =
+  T extends { verbose: true }
+    ? NumericQuantityVerboseResult
+    : T extends { bigIntOnOverflow: true }
+      ? number | bigint
+      : number;
 
 /**
  * Verbose result returned when `verbose: true` is set.

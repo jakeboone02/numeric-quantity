@@ -26,11 +26,7 @@ gtag('config', '${gaID}');
           async: true,
           src: 'https://www.googletagmanager.com/gtag/js?id=' + gaID,
         }),
-        td.JSX.createElement(
-          'script',
-          null,
-          td.JSX.createElement(td.JSX.Raw, { html: script })
-        ),
+        td.JSX.createElement('script', null, td.JSX.createElement(td.JSX.Raw, { html: script })),
       ]);
     }
 

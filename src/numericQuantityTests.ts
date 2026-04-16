@@ -11,11 +11,7 @@ export const numericQuantityTests: Record<
   (
     | [string | number, number]
     | [string | number, number, NumericQuantityOptions]
-    | [
-        string | number,
-        number | bigint,
-        NumericQuantityOptions & { bigIntOnOverflow: true },
-      ]
+    | [string | number, number | bigint, NumericQuantityOptions & { bigIntOnOverflow: true }]
   )[]
 > = {
   'Non-numeric stuff': [
@@ -316,15 +312,17 @@ export const numericQuantityTests: Record<
       ['MmⅪⅰ', 2012],
     ] as const
   ).map(t => [t[0], t[1], { romanNumerals }]),
-  'Automated Roman numeral tests (ASCII)': Object.entries(
-    romanNumeralValues
-  ).map(t => [t[0], t[1], { romanNumerals }]),
-  'Automated invalid Roman numeral tests (ASCII)': Object.entries(
-    romanNumeralValues
-  ).map(t => [t[0], NaN, { romanNumerals: false }]),
-  'Automated Roman numeral tests (Unicode)': Object.entries(
-    romanNumeralUnicodeToAsciiMap
-  )
+  'Automated Roman numeral tests (ASCII)': Object.entries(romanNumeralValues).map(t => [
+    t[0],
+    t[1],
+    { romanNumerals },
+  ]),
+  'Automated invalid Roman numeral tests (ASCII)': Object.entries(romanNumeralValues).map(t => [
+    t[0],
+    NaN,
+    { romanNumerals: false },
+  ]),
+  'Automated Roman numeral tests (Unicode)': Object.entries(romanNumeralUnicodeToAsciiMap)
     // If 'XI' and 'XII' were not in `romanNumeralValues`, we would need to
     // filter out their Unicode counterparts like this:
     // .filter(entry => !['Ⅺ', 'Ⅻ', 'ⅺ', 'ⅻ'].includes(entry[0]))
@@ -340,11 +338,11 @@ export const numericQuantityTests: Record<
     romanNumeralUnicodeToAsciiMap
   ).map(
     ([unicodeChar]) =>
-      [
-        unicodeChar as RomanNumeralUnicode,
-        NaN,
-        { romanNumerals: false },
-      ] satisfies [RomanNumeralUnicode, number, NumericQuantityOptions]
+      [unicodeChar as RomanNumeralUnicode, NaN, { romanNumerals: false }] satisfies [
+        RomanNumeralUnicode,
+        number,
+        NumericQuantityOptions,
+      ]
   ),
   'Non-ASCII numeral systems': [
     // Arabic-Indic (U+0660–U+0669)

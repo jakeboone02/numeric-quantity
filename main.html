@@ -43,9 +43,7 @@
       </div>
       <div>
         <label
-          ><input type="checkbox" id="romanNumerals" checked /><code
-            >romanNumerals</code
-          ></label
+          ><input type="checkbox" id="romanNumerals" checked /><code>romanNumerals</code></label
         >
       </div>
       <div><code>round</code> <input type="number" id="round" value="3" /></div>
@@ -55,9 +53,7 @@
     <script type="module" src="/src/dev.ts"></script>
     <script>
       const updateResult = () => {
-        const allowTrailingInvalid = document.getElementById(
-          'allowTrailingInvalid'
-        ).checked;
+        const allowTrailingInvalid = document.getElementById('allowTrailingInvalid').checked;
         const romanNumerals = document.getElementById('romanNumerals').checked;
         const round = document.getElementById('round').valueAsNumber;
         document.getElementById('result').innerText = numericQuantity(
@@ -66,9 +62,7 @@
         );
       };
       for (const event of ['keyup', 'change']) {
-        document
-          .querySelectorAll('input')
-          .forEach(el => el.addEventListener(event, updateResult));
+        document.querySelectorAll('input').forEach(el => el.addEventListener(event, updateResult));
       }
       setTimeout(updateResult, 500);
     </script>

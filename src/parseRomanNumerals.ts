@@ -20,8 +20,7 @@ export const parseRomanNumerals = (romanNumerals: string): number => {
     // Convert Unicode Roman numerals to ASCII
     .replace(
       romanNumeralUnicodeRegex,
-      (_m, rn: keyof typeof romanNumeralUnicodeToAsciiMap) =>
-        romanNumeralUnicodeToAsciiMap[rn]
+      (_m, rn: keyof typeof romanNumeralUnicodeToAsciiMap) => romanNumeralUnicodeToAsciiMap[rn]
     )
     // Normalize to uppercase (more common for Roman numerals)
     .toUpperCase();
