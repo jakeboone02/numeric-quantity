@@ -13,7 +13,7 @@ numeric-quantity is a TypeScript library that converts human-readable numeric st
 - **Test single file:** `bun test src/index.test.ts`
 - **Test watch:** `bun test --watch`
 - **Lint:** `bun run lint` (oxlint)
-- **Format:** `bun run pretty-print` (Prettier)
+- **Format:** `bun run fmt` (Prettier)
 - **Type-check:** `tsc`
 - **Docs:** `bun run docs` (TypeDoc)
 
@@ -26,6 +26,7 @@ All source lives in `src/`. The library exports three public APIs from `src/inde
 - `parseRomanNumerals()` — standalone Roman numeral parser (`src/parseRomanNumerals.ts`)
 
 Supporting files:
+
 - `src/constants.ts` — regex patterns, Unicode digit range table, default options
 - `src/types.ts` — TypeScript types and interfaces
 
