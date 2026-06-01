@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 N/A
 
+## [v3.2.2] - 2026-06-01
+
+### Fixed
+
+- Loosened type restriction on `numericQuantity` input.
+
 ## [v3.2.1] - 2026-02-13
 
 ### Fixed
@@ -219,7 +225,8 @@ N/A
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.1...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.2...HEAD
+[v3.2.2]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.1...v3.2.2
 [v3.2.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.0...v3.2.1
 [v3.2.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.1.0...v3.2.0
 [v3.1.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.0.0...v3.1.0
