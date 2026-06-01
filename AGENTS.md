@@ -38,7 +38,8 @@ Tests use `bun:test` (import from `'bun:test'`). Test data fixtures are in `src/
 
 - 2-space indentation, single quotes, semicolons, ES5 trailing commas
 - Arrow parens: avoid when possible
-- Prettier handles formatting; oxlint handles linting
+- Oxfmt handles formatting
+- Oxlint handles linting
 - Strict TypeScript (`isolatedModules`, `isolatedDeclarations` enabled)
 
 ## Build Output
