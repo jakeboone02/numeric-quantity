@@ -23,15 +23,19 @@ const percentageSuffixRegex = /%$/;
  * Converts a string to a number, like an enhanced version of `parseFloat`.
  *
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
+ * Input is expected to be a `string`, but will be coerced to `string` if necessary.
+ *
+ * @param quantity - The value to parse as a numeric quantity.
+ * @param options - Optional settings to control parsing behavior.
  */
-function numericQuantity(quantity: string | number): number;
+function numericQuantity(quantity: unknown): number;
 function numericQuantity<T extends NumericQuantityOptions>(
-  quantity: string | number,
+  quantity: unknown,
   options: T
 ): NumericQuantityReturnType<T>;
-function numericQuantity(quantity: string | number, options?: NumericQuantityOptions): number;
+function numericQuantity(quantity: unknown, options?: NumericQuantityOptions): number;
 function numericQuantity(
-  quantity: string | number,
+  quantity: unknown,
   options: NumericQuantityOptions = defaultOptions
 ): number | bigint | NumericQuantityVerboseResult {
   const opts: Required<NumericQuantityOptions> = {
@@ -39,8 +43,10 @@ function numericQuantity(
     ...options,
   };
 
-  // Metadata for verbose output
+  // oxlint-disable-next-line typescript/restrict-template-expressions
   const originalInput = typeof quantity === 'string' ? quantity : `${quantity}`;
+
+  // Metadata for verbose output
   let currencyPrefix: string | undefined;
   let currencySuffix: string | undefined;
   let percentageSuffix: boolean | undefined;
@@ -74,7 +80,7 @@ function numericQuantity(
   }
 
   let finalResult = NaN;
-  let workingString = `${quantity}`;
+  let workingString = originalInput;
 
   // Strip currency prefix if allowed (preserving leading dash for negatives)
   if (opts.allowCurrency) {
