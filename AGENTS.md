@@ -13,7 +13,7 @@ numeric-quantity is a TypeScript library that converts human-readable numeric st
 - **Test single file:** `bun test src/index.test.ts`
 - **Test watch:** `bun test --watch`
 - **Lint:** `bun run lint` (oxlint)
-- **Format:** `bun run fmt` (Prettier)
+- **Format:** `bun run fmt` (oxfmt)
 - **Type-check:** `tsc`
 - **Docs:** `bun run docs` (TypeDoc)
 
