@@ -47,9 +47,9 @@
     "docs": "typedoc",
     "test": "bun test",
     "watch": "bun test --watch",
-    "lint": "bunx oxlint",
+    "lint": "oxlint",
     "publish:npm": "np",
-    "fmt": "bunx oxfmt"
+    "fmt": "oxfmt"
   },
   "devDependencies": {
     "@types/bun": "^1.3.14",
