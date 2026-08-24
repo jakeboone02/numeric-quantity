@@ -265,6 +265,13 @@ export const numericQuantityTests: Record<
     ['2\u2155', 2.2], // 2 1/5
     ['1\u215F2', 1.5], // 1 1/2
   ],
+  'Vulgar fraction edge cases': [
+    ['1}', NaN],
+    ['}', NaN],
+    ['1}', 1, { allowTrailingInvalid }],
+    ['1} 1/2', 1, { allowTrailingInvalid }],
+    ['½}', 0.5, { allowTrailingInvalid }],
+  ],
   'Unicode fraction slash': [
     ['1⁄2', 0.5],
     ['2 1⁄2', 2.5],

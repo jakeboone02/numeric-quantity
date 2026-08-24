@@ -214,7 +214,7 @@ export const numericRegexWithTrailingInvalid: RegExp =
 /**
  * Captures any Unicode vulgar fractions.
  */
-export const vulgarFractionsRegex: RegExp = /([¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞⅟}])/g;
+export const vulgarFractionsRegex: RegExp = /([¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞⅟])/g;
 
 // #endregion
 
