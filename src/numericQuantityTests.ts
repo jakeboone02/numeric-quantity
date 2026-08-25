@@ -323,8 +323,12 @@ export const numericQuantityTests: Record<
     ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true, round: 4 }],
     // Zero denominators fall through to the `number` path
     ['9007199254740993 1/0', Infinity, { bigIntOnOverflow: true }],
+    // Leading-decimal scientific notation still gets exact evaluation
+    ['.1e17', 10000000000000000n, { bigIntOnOverflow: true }],
+    ['-.1e17', -10000000000000000n, { bigIntOnOverflow: true }],
     // No overflow: untouched by the bigint path
     ['1.5', 1.5, { bigIntOnOverflow: true }],
+    ['.1e15', 100000000000000, { bigIntOnOverflow: true }],
     ['9007199254740993.5', 9007199254740992, { round: false }],
   ],
   'BigInt percentages': [

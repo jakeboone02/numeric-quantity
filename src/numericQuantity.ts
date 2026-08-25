@@ -290,23 +290,22 @@ function numericQuantity(
   const numberGroup1 = rawGroup1.replaceAll(',', '').replaceAll('_', '');
   const numberGroup2 = rawGroup2?.replaceAll(',', '').replaceAll('_', '');
 
-  // Numerify capture group 1
-  if (!numberGroup1 && numberGroup2 && numberGroup2.startsWith('.')) {
-    finalResult = 0;
-  } else {
-    if (opts.bigIntOnOverflow) {
-      const asBigInt = toRoundedBigInt(
-        numberGroup1,
-        numberGroup2,
-        !!percentageSuffix && opts.percentage !== 'number'
-      );
-      if (asBigInt !== undefined) {
-        return returnValue(sign === '-' ? -asBigInt : asBigInt);
-      }
+  // Exact overflow evaluation must precede the empty-whole shortcut below, otherwise
+  // leading-decimal scientific values (e.g. ".1e17") skip the `bigint` path entirely.
+  if (opts.bigIntOnOverflow) {
+    const asBigInt = toRoundedBigInt(
+      numberGroup1,
+      numberGroup2,
+      !!percentageSuffix && opts.percentage !== 'number'
+    );
+    if (asBigInt !== undefined) {
+      return returnValue(sign === '-' ? -asBigInt : asBigInt);
     }
-
-    finalResult = parseInt(numberGroup1);
   }
+
+  // Numerify capture group 1
+  finalResult =
+    !numberGroup1 && numberGroup2 && numberGroup2.startsWith('.') ? 0 : parseInt(numberGroup1);
 
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
