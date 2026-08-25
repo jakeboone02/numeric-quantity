@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `vulgarFractionsRegex` no longer matches `}`.
 - `bigIntOnOverflow` now evaluates decimals, exponents, fractions, mixed numbers, and percentages exactly, rounding half-up instead of discarding the tail.
 - `round` is now applied to the value as written, before percentage division, on all code paths. Previously `'1%'` and `'1.0%'` could produce different results.
+- The `percentage` option now applies to Roman numeral results (e.g. `'L%'` → `0.5`).
 
 ## [v3.2.2] - 2026-06-01
 

@@ -232,7 +232,8 @@ function numericQuantity(
 
   // If the Arabic numeral regex fails, try Roman numerals
   if (!regexResult) {
-    return returnValue(opts.romanNumerals ? parseRomanNumerals(quantityAsString) : NaN);
+    if (!opts.romanNumerals) return returnValue(NaN);
+    return returnValue(applyPercentage(parseRomanNumerals(quantityAsString)));
   }
 
   // Capture trailing invalid characters: group 7 catches chars starting with

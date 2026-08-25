@@ -467,9 +467,13 @@ export const numericQuantityTests: Record<
     ['0.5%', 0.5, { percentage: 'number' }],
     ['1/2%', 0.5, { percentage: 'number' }],
     ['-50%', -50, { percentage: 'number' }],
-    // Roman numerals with percentage (percentage never affects Roman numeral output)
-    ['L%', 50, { percentage: 'decimal', romanNumerals: true }],
+    // Roman numerals with percentage
+    ['L%', 0.5, { percentage: 'decimal', romanNumerals: true }],
     ['L%', 50, { percentage: 'number', romanNumerals: true }],
+    ['MCMXCIX%', 19.99, { percentage: 'decimal', romanNumerals: true }],
+    ['I%', 0.01, { percentage: 'decimal', romanNumerals: true }],
+    ['I%', 0.01, { percentage: 'decimal', romanNumerals: true, round: 0 }],
+    ['$L%', 0.5, { allowCurrency: true, percentage: 'decimal', romanNumerals: true }],
     // Without % symbol - should work normally
     ['50', 50, { percentage: 'decimal' }],
   ],
