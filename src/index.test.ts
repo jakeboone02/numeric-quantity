@@ -238,6 +238,26 @@ describe('verbose output', () => {
     expect(result2.trailingInvalid).toBe(',0');
   });
 
+  test('trailingInvalid preserves the full unconsumed suffix from the original input', () => {
+    // "." is internally replaced with "_" in comma-decimal mode; the placeholder must not
+    // leak, and the chars after the second comma must not be dropped
+    const result = numericQuantity('10,00.,0', {
+      verbose: true,
+      decimalSeparator: ',',
+      allowTrailingInvalid: true,
+    });
+    expect(result.value).toBe(10);
+    expect(result.trailingInvalid).toBe('.,0');
+
+    const result2 = numericQuantity('10,00.,0', {
+      verbose: true,
+      decimalSeparator: ',',
+      allowTrailingInvalid: false,
+    });
+    expect(result2.value).toBeNaN();
+    expect(result2.trailingInvalid).toBe('.,0');
+  });
+
   test('handles combined currency and percentage', () => {
     const result = numericQuantity('$50%', {
       verbose: true,

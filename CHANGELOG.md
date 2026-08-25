@@ -19,12 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `bigIntOnOverflow` now evaluates decimals, exponents, fractions, mixed numbers, and percentages exactly, rounding half-up instead of discarding the tail.
 - `round` is now applied to the value as written, before percentage division, on all code paths. Previously `'1%'` and `'1.0%'` could produce different results.
 - The `percentage` option now applies to Roman numeral results (e.g. `'L%'` → `0.5`).
-- The internal `&` marker no longer leaks into `verbose.trailingInvalid` when `decimalSeparator` is `","`.
+- `verbose.trailingInvalid` is now the complete unconsumed suffix of the original input. Previously, when `decimalSeparator` was `","`, the internal separator marker could leak into it and part of the suffix could be dropped (e.g. `'10,00.,0'` reported `'&'`; it now reports `'.,0'`).
 - `symbol` input returns `NaN` instead of throwing. In verbose mode, `input` is the stringified symbol (e.g. `'Symbol(1)'`).
 - Input that cannot be coerced to a string (null-prototype objects, throwing `toString`/`valueOf`) returns `NaN` instead of throwing `TypeError`. In verbose mode, `input` is an empty string.
 - `bigIntOnOverflow` no longer throws `RangeError` for absurdly large exponents (e.g. `'1e' + '9'.repeat(400)`). Exponents beyond ±10,000 fall back to the `number` path, yielding `Infinity`/`0`.
 - `verbose.trailingInvalid` is now populated for multi-comma input when `decimalSeparator` is `','` and `allowTrailingInvalid` is `false`, matching the behavior of every other trailing-invalid path.
 - Non-finite `round` values (`NaN`, `±Infinity`) are now treated as `false` (no rounding) instead of silently rounding to 0 decimal places. Negative finite values still clamp to 0.
+- Very large `round` values no longer produce incorrect results. The rounding factor was built by string concatenation, so values in exponential range were misread (e.g. `round: 1e21` became `"1e1e+21"` → a factor of `10`, rounding `'1.23456'` to `1.2`). Factors beyond `Number.MAX_VALUE` now fall back to no rounding, as does a rounding operation that would overflow an otherwise finite value (e.g. `'1.5e300'` with `round: 308` returned `NaN`, now returns `1.5e300`).
 - Currency and percentage affixes are now stripped in any order (e.g. `'100€%'` → `1`, matching `'50%€'`). At most one `%` is stripped, so `'50%%'` is still `NaN`.
 
 ## [v3.2.2] - 2026-06-01

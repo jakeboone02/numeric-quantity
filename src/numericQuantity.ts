@@ -53,16 +53,16 @@ const toRoundedBigInt = (
   } else if (group2.startsWith('.') || group2.startsWith('e') || group2.startsWith('E')) {
     // Decimal and/or scientific notation
     const expIndex = group2.search(/[eE]/);
+    const exponent = expIndex === -1 ? 0 : parseInt(group2.slice(expIndex + 1));
+    // Defer to the `number` path for non-finite/absurd exponents, before allocating any
+    // `bigint`s. Fractional digit counts are bounded by the input length, but the exponent
+    // is not, so validate it first.
+    if (!Number.isFinite(exponent) || Math.abs(exponent) > maxExactExponent) return undefined;
     const fractionDigits = (expIndex === -1 ? group2 : group2.slice(0, expIndex)).slice(1);
     numerator = BigInt(`${group1}${fractionDigits}`);
     if (fractionDigits) denominator = pow10(fractionDigits.length);
-    if (expIndex !== -1) {
-      const exponent = parseInt(group2.slice(expIndex + 1));
-      // Defer to the `number` path for non-finite/absurd exponents
-      if (!Number.isFinite(exponent) || Math.abs(exponent) > maxExactExponent) return undefined;
-      if (exponent > 0) numerator *= pow10(exponent);
-      else if (exponent < 0) denominator *= pow10(-exponent);
-    }
+    if (exponent > 0) numerator *= pow10(exponent);
+    else if (exponent < 0) denominator *= pow10(-exponent);
   } else if (leadingSlashRegex.test(group2)) {
     // Pure fraction, e.g. "1/2"
     numerator = BigInt(group1);
@@ -228,8 +228,6 @@ function numericQuantity(
   }
 
   let normalizedString = quantityAsString;
-  // Trailing invalid chars identified before the regex runs (comma-decimal path)
-  let pendingTrailing: string | undefined;
 
   if (opts.decimalSeparator === ',') {
     const commaCount = (quantityAsString.match(/,/g) || []).length;
@@ -241,18 +239,10 @@ function numericQuantity(
       // The second comma and everything after is "trailing invalid"
       const firstCommaIndex = quantityAsString.indexOf(',');
       const secondCommaIndex = quantityAsString.indexOf(',', firstCommaIndex + 1);
-      const beforeSecondComma = quantityAsString
+      normalizedString = quantityAsString
         .substring(0, secondCommaIndex)
         .replaceAll('.', '_')
         .replace(',', '.');
-      normalizedString = beforeSecondComma;
-      pendingTrailing = quantityAsString.slice(secondCommaIndex);
-
-      // Bail out if trailing invalid is not allowed, but record the metadata first
-      if (!opts.allowTrailingInvalid) {
-        trailingInvalid = pendingTrailing;
-        return returnValue(NaN);
-      }
     } else {
       // No comma as decimal separator, so remove all "." since they represent
       // thousands/whatever separators
@@ -268,15 +258,15 @@ function numericQuantity(
     return returnValue(applyPercentage(parseRomanNumerals(quantityAsString)));
   }
 
-  // Capture trailing invalid characters: group 7 catches chars starting with
-  // [^.\d/], but the regex (which lacks a $ anchor) may also leave unconsumed
-  // input starting with ".", "/", or digits (e.g. "0.1.2" or "1/").
-  const rawTrailing = (
-    regexResult[7] ||
-    normalizedString.slice(regexResult[0].length) ||
-    pendingTrailing ||
-    ''
-  ).trim();
+  // Capture trailing invalid characters. Group 7 catches chars starting with [^.\d/], but
+  // the regex (which lacks a $ anchor) may also leave unconsumed input starting with ".",
+  // "/", or digits (e.g. "0.1.2" or "1/"), and the comma-decimal path above may have
+  // truncated the string. All normalization steps are length-preserving, so the number of
+  // consumed characters maps 1:1 onto `quantityAsString`; slice the remainder from the
+  // original (normalized-digit) input so nothing is dropped and no internal placeholder
+  // ("_" for a stripped ".") leaks into the metadata.
+  const consumedLength = regexResult[0].length - (regexResult[7]?.length ?? 0);
+  const rawTrailing = quantityAsString.slice(consumedLength).trim();
   if (rawTrailing) {
     trailingInvalid = rawTrailing;
     if (!opts.allowTrailingInvalid) {
@@ -319,7 +309,18 @@ function numericQuantity(
     typeof opts.round === 'number' && Number.isFinite(opts.round)
       ? Math.floor(Math.max(0, opts.round))
       : false;
-  const roundingFactor = roundTo === false ? NaN : parseFloat(`1e${roundTo}`);
+  // `10 ** roundTo` (not `parseFloat('1e' + roundTo)`, which mangles exponential notation,
+  // e.g. `1e21` => "1e1e+21" => 10). Factors beyond `Number.MAX_VALUE` are `Infinity`, which
+  // would poison the arithmetic below; rounding to >308 decimals is a no-op for a double
+  // anyway, so fall back to no rounding. `NaN` means "no rounding".
+  const roundingFactorRaw = roundTo === false ? NaN : 10 ** roundTo;
+  const roundingFactor = Number.isFinite(roundingFactorRaw) ? roundingFactorRaw : NaN;
+
+  /** Rounds to `roundTo` decimal places, falling back to `value` if the scaling overflows. */
+  const round = (value: number, scaled: number) => {
+    const result = Math.round(scaled) / roundingFactor;
+    return Number.isFinite(result) || !Number.isFinite(value) ? result : value;
+  };
 
   if (
     numberGroup2.startsWith('.') ||
@@ -330,7 +331,7 @@ function numericQuantity(
     const decimalValue = parseFloat(`${finalResult}${numberGroup2}`);
     finalResult = isNaN(roundingFactor)
       ? decimalValue
-      : Math.round(decimalValue * roundingFactor) / roundingFactor;
+      : round(decimalValue, decimalValue * roundingFactor);
   } else if (leadingSlashRegex.test(numberGroup2)) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
     const numerator = parseInt(numberGroup1);
@@ -339,7 +340,7 @@ function numericQuantity(
     parsedDenominator = denominator;
     finalResult = isNaN(roundingFactor)
       ? numerator / denominator
-      : Math.round((numerator * roundingFactor) / denominator) / roundingFactor;
+      : round(numerator / denominator, (numerator * roundingFactor) / denominator);
   } else {
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
     const fractionArray = numberGroup2.split('/');
@@ -349,7 +350,7 @@ function numericQuantity(
     parsedDenominator = denominator;
     finalResult += isNaN(roundingFactor)
       ? numerator / denominator
-      : Math.round((numerator * roundingFactor) / denominator) / roundingFactor;
+      : round(numerator / denominator, (numerator * roundingFactor) / denominator);
   }
 
   finalResult = sign === '-' ? finalResult * -1 : finalResult;

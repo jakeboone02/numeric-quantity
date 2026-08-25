@@ -198,6 +198,14 @@ export const numericQuantityTests: Record<
     ['111.2345e-2', 1, { round: 0 }],
     ['123.456789', 123, { round: -4 }],
     ['123.456789', 123.4568, { round: 4.8 }],
+    // Absurdly large `round` values: the rounding factor overflows to `Infinity`,
+    // so no rounding is applied (rounding to >308 decimals is a no-op for a double)
+    ['1.23456789', 1.23456789, { round: 1e21 }],
+    ['1.23456789', 1.23456789, { round: 400 }],
+    ['1 / 2345', 1 / 2345, { round: 1e21 }],
+    ['1 2/345', 1 + 2 / 345, { round: 400 }],
+    // Factor is finite but scaling the value overflows; falls back to the unrounded value
+    ['1.5e300', 1.5e300, { round: 308 }],
   ],
   'Non-finite round values': [
     // Non-finite values are treated as `false` (no rounding)
