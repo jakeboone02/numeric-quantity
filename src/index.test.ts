@@ -123,6 +123,24 @@ describe('verbose output', () => {
     expect(result.trailingInvalid).toBe('abc');
   });
 
+  test('trailingInvalid with comma decimal separator', () => {
+    const result = numericQuantity('1,000,001', {
+      verbose: true,
+      decimalSeparator: ',',
+      allowTrailingInvalid: true,
+    });
+    expect(result.value).toBe(1);
+    expect(result.trailingInvalid).toBe('001');
+
+    const result2 = numericQuantity('10,00.00,0', {
+      verbose: true,
+      decimalSeparator: ',',
+      allowTrailingInvalid: true,
+    });
+    expect(result2.value).toBe(10);
+    expect(result2.trailingInvalid).toBe('0');
+  });
+
   test('handles combined currency and percentage', () => {
     const result = numericQuantity('$50%', {
       verbose: true,

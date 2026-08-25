@@ -197,6 +197,8 @@ function numericQuantity(
   }
 
   let normalizedString = quantityAsString;
+  // Trailing invalid chars identified before the regex runs (comma-decimal path)
+  let pendingTrailing: string | undefined;
 
   if (opts.decimalSeparator === ',') {
     const commaCount = (quantityAsString.match(/,/g) || []).length;
@@ -218,9 +220,8 @@ function numericQuantity(
         .replaceAll('.', '_')
         .replace(',', '.');
       const afterSecondComma = quantityAsString.substring(secondCommaIndex + 1);
-      normalizedString = opts.allowTrailingInvalid
-        ? beforeSecondComma + '&' + afterSecondComma
-        : beforeSecondComma;
+      normalizedString = beforeSecondComma;
+      pendingTrailing = afterSecondComma;
     } else {
       // No comma as decimal separator, so remove all "." since they represent
       // thousands/whatever separators
@@ -239,7 +240,12 @@ function numericQuantity(
   // Capture trailing invalid characters: group 7 catches chars starting with
   // [^.\d/], but the regex (which lacks a $ anchor) may also leave unconsumed
   // input starting with ".", "/", or digits (e.g. "0.1.2" or "1/").
-  const rawTrailing = (regexResult[7] || normalizedString.slice(regexResult[0].length)).trim();
+  const rawTrailing = (
+    regexResult[7] ||
+    normalizedString.slice(regexResult[0].length) ||
+    pendingTrailing ||
+    ''
+  ).trim();
   if (rawTrailing) {
     trailingInvalid = rawTrailing;
     if (!opts.allowTrailingInvalid) {
