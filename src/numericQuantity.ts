@@ -245,13 +245,12 @@ function numericQuantity(
         .substring(0, secondCommaIndex)
         .replaceAll('.', '_')
         .replace(',', '.');
-      const afterSecondComma = quantityAsString.substring(secondCommaIndex + 1);
       normalizedString = beforeSecondComma;
-      pendingTrailing = afterSecondComma;
+      pendingTrailing = quantityAsString.slice(secondCommaIndex);
 
       // Bail out if trailing invalid is not allowed, but record the metadata first
       if (!opts.allowTrailingInvalid) {
-        trailingInvalid = afterSecondComma.trim() || undefined;
+        trailingInvalid = pendingTrailing;
         return returnValue(NaN);
       }
     } else {

@@ -145,17 +145,27 @@ describe('trailing invalid metadata', () => {
       verbose: true,
     });
     expect(result.value).toBeNaN();
-    expect(result.trailingInvalid).toBe('3');
+    expect(result.trailingInvalid).toBe(',3');
   });
 
-  test('is omitted when there is nothing after the second comma', () => {
+  test('includes second comma and trailing characters', () => {
+    const result = numericQuantity('1,2,345', {
+      decimalSeparator: ',',
+      allowTrailingInvalid: false,
+      verbose: true,
+    });
+    expect(result.value).toBeNaN();
+    expect(result.trailingInvalid).toBe(',345');
+  });
+
+  test('includes second comma when there is nothing after it', () => {
     const result = numericQuantity('1,2,', {
       decimalSeparator: ',',
       allowTrailingInvalid: false,
       verbose: true,
     });
     expect(result.value).toBeNaN();
-    expect(result.trailingInvalid).toBeUndefined();
+    expect(result.trailingInvalid).toBe(',');
   });
 });
 
@@ -217,7 +227,7 @@ describe('verbose output', () => {
       allowTrailingInvalid: true,
     });
     expect(result.value).toBe(1);
-    expect(result.trailingInvalid).toBe('001');
+    expect(result.trailingInvalid).toBe(',001');
 
     const result2 = numericQuantity('10,00.00,0', {
       verbose: true,
@@ -225,7 +235,7 @@ describe('verbose output', () => {
       allowTrailingInvalid: true,
     });
     expect(result2.value).toBe(10);
-    expect(result2.trailingInvalid).toBe('0');
+    expect(result2.trailingInvalid).toBe(',0');
   });
 
   test('handles combined currency and percentage', () => {
@@ -248,7 +258,6 @@ describe('verbose output', () => {
       allowCurrency: true,
       percentage: 'decimal',
     });
-    console.log(result);
     expect(result.value).toBe(1);
     expect(result.currencySuffix).toBe('€');
     expect(result.percentageSuffix).toBe(true);
