@@ -84,8 +84,8 @@ describe('isNumericQuantity', () => {
   });
 
   test('returns false for symbol input', () => {
-    expect(isNumericQuantity(Symbol() as unknown as string)).toBe(false);
-    expect(isNumericQuantity(Symbol('1') as unknown as string)).toBe(false);
+    expect(isNumericQuantity(Symbol())).toBe(false);
+    expect(isNumericQuantity(Symbol('1'))).toBe(false);
   });
 });
 
