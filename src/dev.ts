@@ -21,12 +21,12 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
   table.appendChild(tr);
 
   for (const [test, expect, opts] of tests) {
-    const result = numericQuantity(test, opts);
+    const result = numericQuantity(test, opts) as number | bigint;
     const pass =
       typeof expect === 'bigint'
         ? expect === (result as unknown as bigint)
         : isNaN(expect)
-          ? isNaN(result)
+          ? isNaN(result as number)
           : expect === result;
     const testTR = document.createElement('tr');
     const tdCall = document.createElement('td');

@@ -87,14 +87,13 @@ const toRoundedBigInt = (
  * @param options - Optional settings to control parsing behavior.
  */
 function numericQuantity(quantity: unknown): number;
-function numericQuantity<T extends NumericQuantityOptions>(
+function numericQuantity<const T extends NumericQuantityOptions | undefined | null>(
   quantity: unknown,
   options: T
 ): NumericQuantityReturnType<T>;
-function numericQuantity(quantity: unknown, options?: NumericQuantityOptions): number;
 function numericQuantity(
   quantity: unknown,
-  options: NumericQuantityOptions = defaultOptions
+  options: NumericQuantityOptions | null = defaultOptions
 ): number | bigint | NumericQuantityVerboseResult {
   const opts: Required<NumericQuantityOptions> = {
     ...defaultOptions,

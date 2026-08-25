@@ -56,14 +56,39 @@ export interface NumericQuantityOptions {
 }
 
 /**
- * Resolves the return type of {@link numericQuantity} based on the options provided.
+ * Extracts the type of the `verbose` option from an options type, defaulting to `false`.
  */
-export type NumericQuantityReturnType<T extends NumericQuantityOptions | undefined = undefined> =
-  T extends { verbose: true }
-    ? NumericQuantityVerboseResult
-    : T extends { bigIntOnOverflow: true }
-      ? number | bigint
-      : number;
+export type VerboseOption<T> = T extends { verbose?: infer V } ? V : false;
+
+/**
+ * Extracts the type of the `bigIntOnOverflow` option from an options type,
+ * defaulting to `false`.
+ */
+export type BigIntOnOverflowOption<T> = T extends { bigIntOnOverflow?: infer B } ? B : false;
+
+/**
+ * Resolves the return type of {@link numericQuantity} based on the options provided.
+ *
+ * @remarks
+ * Inference requires the options object to have literal types. An options object
+ * annotated as `const opts: NumericQuantityOptions = { ... }` widens every option to
+ * `boolean | undefined`, so the return type is the full
+ * `number | bigint | NumericQuantityVerboseResult` union. Use
+ * `satisfies NumericQuantityOptions` instead of a `:` annotation to retain literal
+ * inference.
+ */
+export type NumericQuantityReturnType<
+  T extends NumericQuantityOptions | undefined | null = undefined,
+> =
+  boolean extends VerboseOption<T>
+    ? number | bigint | NumericQuantityVerboseResult
+    : true extends VerboseOption<T>
+      ? NumericQuantityVerboseResult
+      : boolean extends BigIntOnOverflowOption<T>
+        ? number | bigint
+        : true extends BigIntOnOverflowOption<T>
+          ? number | bigint
+          : number;
 
 /**
  * Verbose result returned when `verbose: true` is set.
@@ -71,7 +96,7 @@ export type NumericQuantityReturnType<T extends NumericQuantityOptions | undefin
 export interface NumericQuantityVerboseResult {
   /** The parsed numeric value (NaN if invalid). */
   value: number | bigint;
-  /** The original input string. */
+  /** The original input, coerced to a string (`symbol` input becomes e.g. `'Symbol(1)'`). */
   input: string;
   /** Currency symbol(s) stripped from the start, if any. */
   currencyPrefix?: string;
