@@ -30,9 +30,13 @@ Supporting files:
 - `src/constants.ts` — regex patterns, Unicode digit range table, default options
 - `src/types.ts` — TypeScript types and interfaces
 
+`src/index.ts` deliberately re-exports _all_ of `src/constants.ts` (`export * from './constants'`). Those exports are **frozen public API** consumed by downstream packages (`format-quantity`, `parse-ingredient`, and others). Do not trim the public surface.
+
+`numericRegex` and `numericRegexWithTrailingInvalid` are two hand-maintained literals that must stay in sync — they differ **only** in the tail (`$` vs. `(\s*[^.\d/].*)?`). A test in `src/index.test.ts` asserts this; keep it passing rather than editing one pattern in isolation.
+
 ## Testing
 
-Tests use `bun:test` (import from `'bun:test'`). Test data fixtures are in `src/numericQuantityTests.ts` — add new test cases there rather than inline in the test file. Coverage must stay at 100%.
+Tests use `bun:test` (import from `'bun:test'`). Test data fixtures are in `src/numericQuantityTests.ts` — add new test cases there rather than inline in the test file. Coverage must stay at 100% (note: Bun reports line/function coverage only, not branch, so 100% is a floor rather than a proof).
 
 ## Code Style
 
