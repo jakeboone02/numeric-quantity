@@ -124,7 +124,7 @@ export const normalizeDigits = (str: string): string =>
 /**
  * Map of Unicode superscript and subscript digit code points to ASCII digits.
  */
-export const superSubDigitToAsciiMap: Record<SuperscriptDigit | SubscriptDigit, string> = {
+export const superSubDigitToAsciiMap: Record<SuperscriptDigit | SubscriptDigit, `${number}`> = {
   '⁰': '0',
   '¹': '1',
   '²': '2',

@@ -14,7 +14,7 @@ import type {
   NumericQuantityVerboseResult,
 } from './types';
 
-const spaceThenSlashRegex = /^\s*\//;
+const leadingSlashRegex = /^\s*\//;
 const currencyPrefixRegex = /^([-+]?)\s*(\p{Sc}+)\s*/u;
 const currencySuffixRegex = /\s*(\p{Sc}+)\s*$/u;
 const percentageSuffixRegex = /\s*%$/;
@@ -55,7 +55,7 @@ const toRoundedBigInt = (
       if (exponent > 0) numerator *= pow10(exponent);
       else if (exponent < 0) denominator *= pow10(-exponent);
     }
-  } else if (spaceThenSlashRegex.test(group2)) {
+  } else if (leadingSlashRegex.test(group2)) {
     // Pure fraction, e.g. "1/2"
     numerator = BigInt(group1);
     denominator = BigInt(group2.replace('/', '').trim());
@@ -266,10 +266,10 @@ function numericQuantity(
     }
   }
 
-  const [, sign, ng1temp, ng2temp] = regexResult;
+  const [, sign, rawGroup1, rawGroup2] = regexResult;
   if (sign === '-' || sign === '+') parsedSign = sign;
-  const numberGroup1 = ng1temp.replaceAll(',', '').replaceAll('_', '');
-  const numberGroup2 = ng2temp?.replaceAll(',', '').replaceAll('_', '');
+  const numberGroup1 = rawGroup1.replaceAll(',', '').replaceAll('_', '');
+  const numberGroup2 = rawGroup2?.replaceAll(',', '').replaceAll('_', '');
 
   // Numerify capture group 1
   if (!numberGroup1 && numberGroup2 && numberGroup2.startsWith('.')) {
@@ -314,7 +314,7 @@ function numericQuantity(
     finalResult = isNaN(roundingFactor)
       ? decimalValue
       : Math.round(decimalValue * roundingFactor) / roundingFactor;
-  } else if (spaceThenSlashRegex.test(numberGroup2)) {
+  } else if (leadingSlashRegex.test(numberGroup2)) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
     const numerator = parseInt(numberGroup1);
     const denominator = parseInt(numberGroup2.replace('/', ''));

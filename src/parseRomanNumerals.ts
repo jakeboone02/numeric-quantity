@@ -6,7 +6,7 @@ import {
 } from './constants';
 
 // Just a shorthand type alias
-type RNV = keyof typeof romanNumeralValues;
+type RomanNumeralKey = keyof typeof romanNumeralValues;
 
 /**
  * Converts a string of Roman numerals to a number, like `parseInt`
@@ -16,7 +16,7 @@ type RNV = keyof typeof romanNumeralValues;
  * or Unicode Roman numeral code points (`U+2160` through `U+217F`).
  */
 export const parseRomanNumerals = (romanNumerals: string): number => {
-  const normalized = `${romanNumerals}`
+  const normalized = romanNumerals
     // Convert Unicode Roman numerals to ASCII
     .replace(
       romanNumeralUnicodeRegex,
@@ -34,9 +34,9 @@ export const parseRomanNumerals = (romanNumerals: string): number => {
   const [, thousands, hundreds, tens, ones] = regexResult;
 
   return (
-    (romanNumeralValues[thousands as RNV] ?? 0) +
-    (romanNumeralValues[hundreds as RNV] ?? 0) +
-    (romanNumeralValues[tens as RNV] ?? 0) +
-    (romanNumeralValues[ones as RNV] ?? 0)
+    (romanNumeralValues[thousands as RomanNumeralKey] ?? 0) +
+    (romanNumeralValues[hundreds as RomanNumeralKey] ?? 0) +
+    (romanNumeralValues[tens as RomanNumeralKey] ?? 0) +
+    (romanNumeralValues[ones as RomanNumeralKey] ?? 0)
   );
 };
