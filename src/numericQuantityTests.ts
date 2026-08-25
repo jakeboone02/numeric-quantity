@@ -199,6 +199,16 @@ export const numericQuantityTests: Record<
     ['123.456789', 123, { round: -4 }],
     ['123.456789', 123.4568, { round: 4.8 }],
   ],
+  'Non-finite round values': [
+    // Non-finite values are treated as `false` (no rounding)
+    ['1.23456789', 1.23456789, { round: NaN }],
+    ['1.23456789', 1.23456789, { round: Infinity }],
+    ['1.23456789', 1.23456789, { round: -Infinity }],
+    ['1 / 2345', 1 / 2345, { round: NaN }],
+    ['1 2/345', 1 + 2 / 345, { round: NaN }],
+    // Negative (finite) values still clamp to 0
+    ['123.456789', 123, { round: -1 }],
+  ],
   'Acceptable white space': [
     ['1 1/ 2', 1.5],
     ['1 1 /2', 1.5],

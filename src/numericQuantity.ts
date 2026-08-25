@@ -288,8 +288,13 @@ function numericQuantity(
     return returnValue(applyPercentage(finalResult));
   }
 
-  const roundingFactor =
-    opts.round === false ? NaN : parseFloat(`1e${Math.floor(Math.max(0, opts.round))}`);
+  // Non-finite `round` values are treated as `false` (no rounding);
+  // negative values clamp to 0 (round to whole number)
+  const roundTo =
+    typeof opts.round === 'number' && Number.isFinite(opts.round)
+      ? Math.floor(Math.max(0, opts.round))
+      : false;
+  const roundingFactor = roundTo === false ? NaN : parseFloat(`1e${roundTo}`);
 
   if (
     numberGroup2.startsWith('.') ||

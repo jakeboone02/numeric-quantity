@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `percentage` option now applies to Roman numeral results (e.g. `'L%'` → `0.5`).
 - The internal `&` marker no longer leaks into `verbose.trailingInvalid` when `decimalSeparator` is `","`.
 - `symbol` input returns `NaN` instead of throwing. In verbose mode, `input` is the stringified symbol (e.g. `'Symbol(1)'`).
+- Non-finite `round` values (`NaN`, `±Infinity`) are now treated as `false` (no rounding) instead of silently rounding to 0 decimal places. Negative finite values still clamp to 0.
 
 ## [v3.2.2] - 2026-06-01
 
