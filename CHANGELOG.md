@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-N/A
+### Fixed
+
+- Added `"sideEffects": false` to package.json.
+- `vulgarFractionsRegex` no longer matches `}`.
+- `bigIntOnOverflow` now evaluates decimals, exponents, fractions, mixed numbers, and percentages exactly, rounding half-up instead of discarding the tail.
 
 ## [v3.2.2] - 2026-06-01
 

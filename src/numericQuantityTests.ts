@@ -289,6 +289,61 @@ export const numericQuantityTests: Record<
     ['123', 123, { bigIntOnOverflow: true }],
     ['-123', -123, { bigIntOnOverflow: true }],
   ],
+  'BigInt with non-integers': [
+    // Fractional tails round half-up (half away from zero for negatives)
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true }],
+    ['9007199254740993.4', 9007199254740993n, { bigIntOnOverflow: true }],
+    ['-9007199254740993.5', -9007199254740994n, { bigIntOnOverflow: true }],
+    // Positive exponents are exact; no rounding involved
+    ['9007199254740993e1', 90071992547409930n, { bigIntOnOverflow: true }],
+    // Negative exponents are a denominator factor
+    ['900719925474099300e-1', 90071992547409930n, { bigIntOnOverflow: true }],
+    ['90071992547409935e-1', 9007199254740994n, { bigIntOnOverflow: true }],
+    ['9007199254740993 1/2', 9007199254740994n, { bigIntOnOverflow: true }],
+    ['9007199254740993 1/3', 9007199254740993n, { bigIntOnOverflow: true }],
+    // Pure fractions participate on the same rational path
+    ['90071992547409930/2', 45035996273704965n, { bigIntOnOverflow: true }],
+    ['90071992547409930/ 4', 22517998136852483n, { bigIntOnOverflow: true }],
+    ['90071992547409930/10000', 9007199254740.994, { bigIntOnOverflow: true }],
+    // Rounding can push a non-overflowing integer part into overflow
+    ['9007199254740991.6', 9007199254740992n, { bigIntOnOverflow: true }],
+    // `round` is not consulted for bigint results
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true, round: false }],
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true, round: 0 }],
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true, round: 4 }],
+    // Zero denominators fall through to the `number` path
+    ['9007199254740993 1/0', Infinity, { bigIntOnOverflow: true }],
+    // No overflow: untouched by the bigint path
+    ['1.5', 1.5, { bigIntOnOverflow: true }],
+    ['9007199254740993.5', 9007199254740992, { round: false }],
+  ],
+  'BigInt percentages': [
+    // No overflow, so the (lossy) `number` path handles it
+    ['9007199254740993%', 90071992547409.92, { bigIntOnOverflow: true, percentage: 'decimal' }],
+    ['900719925474099300%', 9007199254740993n, { bigIntOnOverflow: true, percentage: 'decimal' }],
+    ['900719925474099399%', 9007199254740994n, { bigIntOnOverflow: true, percentage: 'decimal' }],
+    ['900719925474099350%', 9007199254740994n, { bigIntOnOverflow: true, percentage: 'decimal' }],
+    [
+      '900719925474099300001%',
+      9007199254740993000n,
+      { bigIntOnOverflow: true, percentage: 'decimal' },
+    ],
+    ['-900719925474099350%', -9007199254740994n, { bigIntOnOverflow: true, percentage: 'decimal' }],
+    // `percentage: 'number'` contributes no denominator factor
+    ['9007199254740993%', 9007199254740993n, { bigIntOnOverflow: true, percentage: 'number' }],
+    ['900719925474099300%', 900719925474099300n, { bigIntOnOverflow: true, percentage: 'number' }],
+    ['900719925474099399%', 900719925474099399n, { bigIntOnOverflow: true, percentage: 'number' }],
+    [
+      '900719925474099300001%',
+      900719925474099300001n,
+      { bigIntOnOverflow: true, percentage: 'number' },
+    ],
+    [
+      '-900719925474099350%',
+      -900719925474099350n,
+      { bigIntOnOverflow: true, percentage: 'number' },
+    ],
+  ],
   'Roman numerals': (
     [
       // Invalid

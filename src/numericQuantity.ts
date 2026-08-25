@@ -19,6 +19,64 @@ const currencyPrefixRegex = /^([-+]?)\s*(\p{Sc}+)\s*/u;
 const currencySuffixRegex = /\s*(\p{Sc}+)$/u;
 const percentageSuffixRegex = /%$/;
 
+const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
+const pow10 = (exp: number) => 10n ** BigInt(exp);
+
+/**
+ * Evaluates the parsed numeric components as an exact `bigint` rational (magnitude only,
+ * sign is applied by the caller) and rounds the result half-up.
+ *
+ * Returns the rounded `bigint` only if its magnitude exceeds `Number.MAX_SAFE_INTEGER`;
+ * otherwise returns `undefined`, meaning "no overflow, use the `number` path".
+ *
+ * @param group1 - Whole number or numerator (separators already stripped).
+ * @param group2 - Decimal/exponent/fraction tail, if any.
+ * @param divideBy100 - Whether a percentage suffix was stripped.
+ */
+const toRoundedBigInt = (
+  group1: string,
+  group2: string | undefined,
+  divideBy100: boolean
+): bigint | undefined => {
+  let numerator: bigint;
+  let denominator = 1n;
+
+  if (!group2) {
+    // Plain integer
+    numerator = BigInt(group1);
+  } else if (group2.startsWith('.') || group2.startsWith('e') || group2.startsWith('E')) {
+    // Decimal and/or scientific notation
+    const expIndex = group2.search(/[eE]/);
+    const fractionDigits = (expIndex === -1 ? group2 : group2.slice(0, expIndex)).slice(1);
+    numerator = BigInt(`${group1}${fractionDigits}`);
+    if (fractionDigits) denominator = pow10(fractionDigits.length);
+    if (expIndex !== -1) {
+      const exponent = parseInt(group2.slice(expIndex + 1));
+      if (exponent > 0) numerator *= pow10(exponent);
+      else if (exponent < 0) denominator *= pow10(-exponent);
+    }
+  } else if (spaceThenSlashRegex.test(group2)) {
+    // Pure fraction, e.g. "1/2"
+    numerator = BigInt(group1);
+    denominator = BigInt(group2.replace('/', '').trim());
+  } else {
+    // Mixed number, e.g. "1 2/3"
+    const [n, d] = group2.split('/');
+    denominator = BigInt(d.trim());
+    numerator = BigInt(group1) * denominator + BigInt(n.trim());
+  }
+
+  if (divideBy100) denominator *= 100n;
+
+  // Let the `number` path produce `Infinity` for zero denominators
+  if (denominator === 0n) return undefined;
+
+  // Round half-up (BigInt division truncates, i.e. floors for non-negative operands)
+  const rounded = (2n * numerator + denominator) / (2n * denominator);
+
+  return rounded > maxSafeBigInt ? rounded : undefined;
+};
+
 /**
  * Converts a string to a number, like an enhanced version of `parseFloat`.
  *
@@ -191,13 +249,13 @@ function numericQuantity(
     finalResult = 0;
   } else {
     if (opts.bigIntOnOverflow) {
-      const asBigInt = sign === '-' ? BigInt(`-${numberGroup1}`) : BigInt(numberGroup1);
-      if (
-        asBigInt > BigInt(Number.MAX_SAFE_INTEGER) ||
-        asBigInt < BigInt(Number.MIN_SAFE_INTEGER)
-      ) {
-        // Note: percentage division not applied to bigint overflow
-        return returnValue(asBigInt);
+      const asBigInt = toRoundedBigInt(
+        numberGroup1,
+        numberGroup2,
+        !!percentageSuffix && opts.percentage !== 'number'
+      );
+      if (asBigInt !== undefined) {
+        return returnValue(sign === '-' ? -asBigInt : asBigInt);
       }
     }
 
