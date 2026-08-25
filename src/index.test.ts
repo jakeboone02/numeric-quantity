@@ -102,6 +102,63 @@ describe('symbol input', () => {
   });
 });
 
+describe('uncoercible input', () => {
+  test('returns NaN instead of throwing', () => {
+    expect(numericQuantity(Object.create(null))).toBeNaN();
+    expect(
+      numericQuantity({
+        toString() {
+          throw new Error('nope');
+        },
+      })
+    ).toBeNaN();
+    expect(isNumericQuantity(Object.create(null))).toBe(false);
+  });
+
+  test('verbose input is an empty string', () => {
+    const result = numericQuantity(Object.create(null), { verbose: true });
+    expect(result.value).toBeNaN();
+    expect(result.input).toBe('');
+  });
+});
+
+describe('absurd exponents', () => {
+  const hugeExponent = '9'.repeat(400);
+
+  test('falls back to the number path instead of throwing', () => {
+    expect(numericQuantity(`1e${hugeExponent}`, { bigIntOnOverflow: true })).toBe(Infinity);
+    expect(numericQuantity(`1e-${hugeExponent}`, { bigIntOnOverflow: true })).toBe(0);
+  });
+
+  test('still evaluates bounded exponents exactly', () => {
+    expect(numericQuantity('9007199254740993e1', { bigIntOnOverflow: true })).toBe(
+      90071992547409930n
+    );
+  });
+});
+
+describe('trailing invalid metadata', () => {
+  test('is captured for multi-comma input when trailing invalid is disallowed', () => {
+    const result = numericQuantity('1,2,3', {
+      decimalSeparator: ',',
+      allowTrailingInvalid: false,
+      verbose: true,
+    });
+    expect(result.value).toBeNaN();
+    expect(result.trailingInvalid).toBe('3');
+  });
+
+  test('is omitted when there is nothing after the second comma', () => {
+    const result = numericQuantity('1,2,', {
+      decimalSeparator: ',',
+      allowTrailingInvalid: false,
+      verbose: true,
+    });
+    expect(result.value).toBeNaN();
+    expect(result.trailingInvalid).toBeUndefined();
+  });
+});
+
 describe('verbose output', () => {
   test('returns object with value and input', () => {
     const result = numericQuantity('123', { verbose: true });

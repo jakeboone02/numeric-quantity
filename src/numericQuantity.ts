@@ -20,6 +20,12 @@ const currencySuffixRegex = /\s*(\p{Sc}+)\s*$/u;
 const percentageSuffixRegex = /\s*%$/;
 
 const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
+/**
+ * Upper bound on `10 ** exp` magnitudes evaluated exactly. Anything beyond this
+ * overflows/underflows the `number` path to `Infinity`/`0` anyway, so bounding it
+ * avoids allocating absurdly large `bigint`s (and `BigInt(Infinity)` throwing).
+ */
+const maxExactExponent = 10_000;
 const pow10 = (exp: number) => 10n ** BigInt(exp);
 
 /**
@@ -52,6 +58,8 @@ const toRoundedBigInt = (
     if (fractionDigits) denominator = pow10(fractionDigits.length);
     if (expIndex !== -1) {
       const exponent = parseInt(group2.slice(expIndex + 1));
+      // Defer to the `number` path for non-finite/absurd exponents
+      if (!Number.isFinite(exponent) || Math.abs(exponent) > maxExactExponent) return undefined;
       if (exponent > 0) numerator *= pow10(exponent);
       else if (exponent < 0) denominator *= pow10(-exponent);
     }
@@ -100,8 +108,19 @@ function numericQuantity(
     ...options,
   };
 
-  // `String` (unlike a template literal) does not throw for `symbol` input
-  const originalInput = typeof quantity === 'string' ? quantity : String(quantity);
+  // `String` (unlike a template literal) does not throw for `symbol` input, but it does
+  // throw for objects with a null prototype or throwing `toString`/`valueOf` methods.
+  // Coercion failures fall through as an empty string, which parses to `NaN`.
+  let originalInput: string;
+  if (typeof quantity === 'string') {
+    originalInput = quantity;
+  } else {
+    try {
+      originalInput = String(quantity);
+    } catch {
+      originalInput = '';
+    }
+  }
 
   // Metadata for verbose output
   let currencyPrefix: string | undefined;
@@ -220,11 +239,6 @@ function numericQuantity(
       normalizedString = quantityAsString.replaceAll('.', '_').replace(',', '.');
     } else if (commaCount > 1) {
       // The second comma and everything after is "trailing invalid"
-      if (!opts.allowTrailingInvalid) {
-        // Bail out if trailing invalid is not allowed
-        return returnValue(NaN);
-      }
-
       const firstCommaIndex = quantityAsString.indexOf(',');
       const secondCommaIndex = quantityAsString.indexOf(',', firstCommaIndex + 1);
       const beforeSecondComma = quantityAsString
@@ -234,6 +248,12 @@ function numericQuantity(
       const afterSecondComma = quantityAsString.substring(secondCommaIndex + 1);
       normalizedString = beforeSecondComma;
       pendingTrailing = afterSecondComma;
+
+      // Bail out if trailing invalid is not allowed, but record the metadata first
+      if (!opts.allowTrailingInvalid) {
+        trailingInvalid = afterSecondComma.trim() || undefined;
+        return returnValue(NaN);
+      }
     } else {
       // No comma as decimal separator, so remove all "." since they represent
       // thousands/whatever separators
