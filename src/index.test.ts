@@ -1,5 +1,5 @@
 import { describe, expect, Matchers, test } from 'bun:test';
-import { normalizeDigits } from './constants';
+import { normalizeDigits, numericRegex, numericRegexWithTrailingInvalid } from './constants';
 import { isNumericQuantity } from './isNumericQuantity';
 import { numericQuantity } from './numericQuantity';
 import { numericQuantityTests } from './numericQuantityTests';
@@ -41,6 +41,18 @@ for (const [title, tests] of Object.entries(numericQuantityTests)) {
     }
   });
 }
+
+describe('numeric regex sync', () => {
+  // The two patterns must differ only in the tail. Catches drift if one is edited alone.
+  test('numericRegexWithTrailingInvalid matches numericRegex except for the tail', () => {
+    const trailingTail = String.raw`(\s*[^.\d/].*)?`;
+    expect(numericRegexWithTrailingInvalid.source.endsWith(trailingTail)).toBe(true);
+    expect(`${numericRegexWithTrailingInvalid.source.slice(0, -trailingTail.length)}$`).toBe(
+      numericRegex.source
+    );
+    expect(numericRegexWithTrailingInvalid.flags).toBe(numericRegex.flags);
+  });
+});
 
 describe('isNumericQuantity', () => {
   test('returns true for valid numbers', () => {

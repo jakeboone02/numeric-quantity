@@ -183,30 +183,60 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, `${number}/${numbe
  *
  * Capture groups:
  *
- * |  #  |    Description                                   |        Example(s)                                                   |
- * | --- | ------------------------------------------------ | ------------------------------------------------------------------- |
- * | `0` | entire string                                    | `"2 1/3"` from `"2 1/3"`                                            |
- * | `1` | sign (`-` or `+`)                                | `"-"` from `"-2 1/3"`                                               |
- * | `2` | whole number or numerator                        | `"2"` from `"2 1/3"`; `"1"` from `"1/3"`                            |
- * | `3` | entire fraction, decimal portion, or denominator | `" 1/3"` from `"2 1/3"`; `".33"` from `"2.33"`; `"/3"` from `"1/3"` |
+ * |  #  | Description                                        | Example(s)                                                              |
+ * | --- | -------------------------------------------------- | ----------------------------------------------------------------------- |
+ * | `0` | entire match                                       | `"2 1/3"` from `"2 1/3"`                                                |
+ * | `1` | sign (`-` or `+`)                                  | `"-"` from `"-2 1/3"`                                                   |
+ * | `2` | whole number or numerator                          | `"2"` from `"2 1/3"`; `"1"` from `"1/3"`                                |
+ * | `3` | entire tail: fraction, decimal, and/or exponent    | `" 1/3"` from `"2 1/3"`; `".23"` from `"1.23"`; `".5e3"` from `"1.5e3"` |
+ * | `4` | exponent, when there is no decimal portion         | `"e3"` from `"1e3"`                                                     |
+ * | `5` | exponent, when there is a decimal portion          | `"e-3"` from `"1.5e-3"`                                                 |
+ * | `6` | numerator of a mixed number (incl. leading space)  | `" 2"` from `"1 2/3"`                                                   |
  *
- * _Capture group 2 may include comma/underscore separators._
+ * Groups 4–6 are subgroups of group 3 and are not used directly by
+ * {@link numericQuantity}; only groups 1–3 are consumed.
+ *
+ * _Capture groups 2 and 3 may include comma/underscore separators._
  *
  * @example
  *
  * ```ts
- * numericRegex.exec("1")     // [ "1",     "1", null,   null ]
- * numericRegex.exec("1.23")  // [ "1.23",  "1", ".23",  null ]
- * numericRegex.exec("1 2/3") // [ "1 2/3", "1", " 2/3", " 2" ]
- * numericRegex.exec("2/3")   // [ "2/3",   "2", "/3",   null ]
- * numericRegex.exec("2 / 3") // [ "2 / 3", "2", "/ 3",  null ]
+ * numericRegex.exec("1")      // [ "1",      null, "1",     null,     null, null,  null ]
+ * numericRegex.exec("1.23")   // [ "1.23",   null, "1",     ".23",    null, null,  null ]
+ * numericRegex.exec("1 2/3")  // [ "1 2/3",  null, "1",     " 2/3",   null, null,  " 2" ]
+ * numericRegex.exec("2/3")    // [ "2/3",    null, "2",     "/3",     null, null,  null ]
+ * numericRegex.exec("2 / 3")  // [ "2 / 3",  null, "2",     " / 3",   null, null,  null ]
+ * numericRegex.exec("-2 1/3") // [ "-2 1/3", "-",  "2",     " 1/3",   null, null,  " 1" ]
+ * numericRegex.exec("1e3")    // [ "1e3",    null, "1",     "e3",     "e3", null,  null ]
+ * numericRegex.exec("1.5e-3") // [ "1.5e-3", null, "1",     ".5e-3",  null, "e-3", null ]
+ * numericRegex.exec("1,000")  // [ "1,000",  null, "1,000", null,     null, null,  null ]
  * ```
+ *
+ * @remarks
+ *
+ * This pattern and {@link numericRegexWithTrailingInvalid} are maintained as two separate
+ * literals and must be kept in sync. They differ _only_ in the tail: `$` here versus
+ * `(\s*[^.\d/].*)?` there. `src/index.test.ts` asserts that equality.
  */
 export const numericRegex: RegExp =
   /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
- * Capture group 7 contains the trailing invalid portion.
+ * Capture groups 1–6 are identical to {@link numericRegex}'s; capture group 7 contains the
+ * trailing invalid portion.
+ *
+ * @example
+ *
+ * ```ts
+ * numericRegexWithTrailingInvalid.exec("1abc")
+ * // [ "1abc",      null, "1", null,   null, null, null, "abc"  ]
+ * numericRegexWithTrailingInvalid.exec("1 2/3 xyz")
+ * // [ "1 2/3 xyz", null, "1", " 2/3", null, null, " 2", " xyz" ]
+ * ```
+ *
+ * @remarks
+ *
+ * Must be kept in sync with {@link numericRegex} — see that pattern's remarks.
  */
 export const numericRegexWithTrailingInvalid: RegExp =
   /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(\s*[^.\d/].*)?/;
