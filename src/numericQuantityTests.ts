@@ -540,4 +540,20 @@ export const numericQuantityTests: Record<
     ['$ 100', 100, { allowCurrency: true }],
     ['100 €', 100, { allowCurrency: true }],
   ],
+  'Currency/percentage affix ordering': [
+    ['100€%', 1, { allowCurrency: true, percentage: 'decimal' }],
+    ['50%€', 0.5, { allowCurrency: true, percentage: 'decimal' }],
+    ['€50%', 0.5, { allowCurrency: true, percentage: 'decimal' }],
+    ['$50%', 0.5, { allowCurrency: true, percentage: 'decimal' }],
+    ['50%$', 0.5, { allowCurrency: true, percentage: 'decimal' }],
+    ['100 € %', 1, { allowCurrency: true, percentage: 'decimal' }],
+    ['€ 100 %', 1, { allowCurrency: true, percentage: 'decimal' }],
+    ['100€%', 100, { allowCurrency: true, percentage: 'number' }],
+    ['-100€%', -1, { allowCurrency: true, percentage: 'decimal' }],
+    // At most one `%` is stripped
+    ['50%%', NaN, { percentage: 'decimal' }],
+    ['50%€%', NaN, { allowCurrency: true, percentage: 'decimal' }],
+    // Currency without the option is still invalid
+    ['100€%', NaN, { percentage: 'decimal' }],
+  ],
 };

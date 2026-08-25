@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The internal `&` marker no longer leaks into `verbose.trailingInvalid` when `decimalSeparator` is `","`.
 - `symbol` input returns `NaN` instead of throwing. In verbose mode, `input` is the stringified symbol (e.g. `'Symbol(1)'`).
 - Non-finite `round` values (`NaN`, `±Infinity`) are now treated as `false` (no rounding) instead of silently rounding to 0 decimal places. Negative finite values still clamp to 0.
+- Currency and percentage affixes are now stripped in any order (e.g. `'100€%'` → `1`, matching `'50%€'`). At most one `%` is stripped, so `'50%%'` is still `NaN`.
 
 ## [v3.2.2] - 2026-06-01
 

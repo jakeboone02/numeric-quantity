@@ -170,6 +170,21 @@ describe('verbose output', () => {
     expect(result.percentageSuffix).toBe(true);
   });
 
+  test.each([
+    ['suffix first', '100€%'],
+    ['percent first', '100%€'],
+  ])('populates affix fields regardless of affix order (%s)', (_name, input) => {
+    const result = numericQuantity(input, {
+      verbose: true,
+      allowCurrency: true,
+      percentage: 'decimal',
+    });
+    console.log(result);
+    expect(result.value).toBe(1);
+    expect(result.currencySuffix).toBe('€');
+    expect(result.percentageSuffix).toBe(true);
+  });
+
   test('returns NaN value for invalid input', () => {
     const result = numericQuantity('invalid', {
       verbose: true,

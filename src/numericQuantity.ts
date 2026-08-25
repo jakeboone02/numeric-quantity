@@ -16,8 +16,8 @@ import type {
 
 const spaceThenSlashRegex = /^\s*\//;
 const currencyPrefixRegex = /^([-+]?)\s*(\p{Sc}+)\s*/u;
-const currencySuffixRegex = /\s*(\p{Sc}+)$/u;
-const percentageSuffixRegex = /%$/;
+const currencySuffixRegex = /\s*(\p{Sc}+)\s*$/u;
+const percentageSuffixRegex = /\s*%$/;
 
 const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
 const pow10 = (exp: number) => 10n ** BigInt(exp);
@@ -152,29 +152,37 @@ function numericQuantity(
   let finalResult = NaN;
   let workingString = originalInput;
 
-  // Strip currency prefix if allowed (preserving leading dash for negatives)
-  if (opts.allowCurrency) {
-    const prefixMatch = currencyPrefixRegex.exec(workingString);
-    if (prefixMatch && prefixMatch[2]) {
-      currencyPrefix = prefixMatch[2];
-      // Keep the dash if present, remove currency symbol
-      workingString = (prefixMatch[1] || '') + workingString.slice(prefixMatch[0].length);
-    }
-  }
+  // Strip currency/percentage affixes until none match, so the two are order-independent.
+  // At most one `%` is stripped per parse, so `'50%%'` remains invalid.
+  let affixStripped = true;
+  while (affixStripped) {
+    affixStripped = false;
 
-  // Strip currency suffix if allowed (before percentage check)
-  if (opts.allowCurrency) {
-    const suffixMatch = currencySuffixRegex.exec(workingString);
-    if (suffixMatch) {
-      currencySuffix = suffixMatch[1];
-      workingString = workingString.slice(0, -suffixMatch[0].length);
-    }
-  }
+    if (opts.allowCurrency) {
+      const prefixMatch = currencyPrefixRegex.exec(workingString);
+      if (prefixMatch?.[2]) {
+        currencyPrefix = (currencyPrefix ?? '') + prefixMatch[2];
+        // Keep the sign if present, remove currency symbol
+        workingString = (prefixMatch[1] || '') + workingString.slice(prefixMatch[0].length);
+        affixStripped = true;
+      }
 
-  // Strip percentage suffix if option is set
-  if (opts.percentage && percentageSuffixRegex.test(workingString)) {
-    percentageSuffix = true;
-    workingString = workingString.slice(0, -1);
+      const suffixMatch = currencySuffixRegex.exec(workingString);
+      if (suffixMatch) {
+        currencySuffix = suffixMatch[1] + (currencySuffix ?? '');
+        workingString = workingString.slice(0, -suffixMatch[0].length);
+        affixStripped = true;
+      }
+    }
+
+    if (!percentageSuffix && opts.percentage) {
+      const pctMatch = percentageSuffixRegex.exec(workingString);
+      if (pctMatch) {
+        percentageSuffix = true;
+        workingString = workingString.slice(0, -pctMatch[0].length);
+        affixStripped = true;
+      }
+    }
   }
 
   // Coerce to string and normalize
