@@ -106,8 +106,8 @@ numericQuantity('1.000,50', { decimalSeparator: ',' }); // 1000.5
 When the parsed value exceeds `Number.MAX_SAFE_INTEGER` or is less than `Number.MIN_SAFE_INTEGER`, set `bigIntOnOverflow: true` to return a `bigint` instead.
 
 ```js
-numericQuantity('9007199254740992'); // 9007199254740992 (loses precision)
-numericQuantity('9007199254740992', { bigIntOnOverflow: true }); // 9007199254740992n
+numericQuantity('9007199254740993'); // 9007199254740992 (loses precision)
+numericQuantity('9007199254740993', { bigIntOnOverflow: true }); // 9007199254740993n
 ```
 
 This applies to _any_ overflowing value, not just integers as written—decimals, fractions, mixed numbers, and exponents all participate. The value is evaluated exactly as a rational number and only rounded at the end.
