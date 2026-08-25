@@ -65,6 +65,13 @@ numericQuantity('1/3', { round: 5 }); // 0.33333
 numericQuantity('1/3', { round: false }); // 0.3333333333333333
 ```
 
+Coercion rules:
+
+- Non-finite values (`NaN`, `Infinity`, `-Infinity`) are treated as `false`, i.e. no rounding.
+- Negative values clamp to `0`, i.e. round to a whole number.
+- `round` does not apply to `bigint` results (see [`bigIntOnOverflow`](#large-numbers-bigintonoverflow)).
+- When the `percentage` option divides by 100, `round` applies to the value _as written_, before the division (see [Percentages](#percentages-percentage)).
+
 ### Trailing Invalid Characters (`allowTrailingInvalid`)
 
 By default, strings with trailing non-numeric characters return `NaN`. Set `allowTrailingInvalid: true` to ignore trailing invalid characters, similar to `parseFloat`.
@@ -94,14 +101,37 @@ numericQuantity('1,5', { decimalSeparator: ',' }); // 1.5
 numericQuantity('1.000,50', { decimalSeparator: ',' }); // 1000.5
 ```
 
-### Large Integers (`bigIntOnOverflow`)
+### Large Numbers (`bigIntOnOverflow`)
 
-When parsing integers that exceed `Number.MAX_SAFE_INTEGER` or are less than `Number.MIN_SAFE_INTEGER`, set `bigIntOnOverflow: true` to return a `bigint` instead.
+When the parsed value exceeds `Number.MAX_SAFE_INTEGER` or is less than `Number.MIN_SAFE_INTEGER`, set `bigIntOnOverflow: true` to return a `bigint` instead.
 
 ```js
 numericQuantity('9007199254740992'); // 9007199254740992 (loses precision)
 numericQuantity('9007199254740992', { bigIntOnOverflow: true }); // 9007199254740992n
 ```
+
+This applies to _any_ overflowing value, not just integers as written—decimals, fractions, mixed numbers, and exponents all participate. The value is evaluated exactly as a rational number and only rounded at the end.
+
+```js
+const opts = { bigIntOnOverflow: true };
+numericQuantity('9007199254740993.5', opts); // 9007199254740994n (half-up)
+numericQuantity('-9007199254740993.5', opts); // -9007199254740994n (half away from zero)
+numericQuantity('9007199254740993 1/2', opts); // 9007199254740994n
+numericQuantity('9007199254740993e1', opts); // 90071992547409930n (exact, no rounding)
+```
+
+Notes:
+
+- **Fractional tails are unrecoverable anyway.** Past `Number.MAX_SAFE_INTEGER` the gap between adjacent `number` values is 2, so no `number` can carry a fraction at that magnitude. Rounding to a `bigint` loses less than falling back to `number` would.
+- **`round` is not consulted.** `bigint` has no fractional representation, so `round: false` does not disable the half-up rounding.
+- **Rounding can _cause_ overflow.** `numericQuantity('9007199254740991.6', opts)` is `9007199254740992n`, even though the integer part as written is within range.
+- **`percentage` division is folded in exactly**, as a factor of `100n` in the denominator, so it is subject to the same single half-up rounding at the end.
+
+  ```js
+  const opts = { bigIntOnOverflow: true, percentage: true };
+  numericQuantity('900719925474099300%', opts); // 9007199254740993n (exact)
+  numericQuantity('900719925474099399%', opts); // 9007199254740994n (rounded)
+  ```
 
 ### Percentages (`percentage`)
 
@@ -115,6 +145,21 @@ numericQuantity('50%', { percentage: 'number' }); // 50
 numericQuantity('1/2%', { percentage: true }); // 0.005
 ```
 
+`round` applies to the value as written, _before_ the division by 100, so the requested number of decimal places is not silently reduced:
+
+```js
+numericQuantity('12.345%', { percentage: true, round: 3 }); // 0.12345, not 0.123
+numericQuantity('1%', { percentage: true, round: 0 }); // 0.01
+numericQuantity('1.0%', { percentage: true, round: 0 }); // 0.01
+numericQuantity('1/1%', { percentage: true, round: 0 }); // 0.01
+```
+
+Roman numerals honor `percentage` as well:
+
+```js
+numericQuantity('L%', { percentage: true, romanNumerals: true }); // 0.5
+```
+
 ### Currency Symbols (`allowCurrency`)
 
 Strip currency symbols from the start or end of the string by setting `allowCurrency: true`. Supports all Unicode currency symbols (`$`, `€`, `£`, `¥`, `₹`, `₽`, `₿`, `₩`, etc.).
@@ -125,6 +170,17 @@ numericQuantity('$100', { allowCurrency: true }); // 100
 numericQuantity('€1.000,50', { allowCurrency: true, decimalSeparator: ',' }); // 1000.5
 numericQuantity('100€', { allowCurrency: true }); // 100
 numericQuantity('-$50', { allowCurrency: true }); // -50
+```
+
+Currency symbols and the `%` suffix may appear in either order, but at most one `%` is stripped per parse:
+
+```js
+const opts = { allowCurrency: true, percentage: true };
+numericQuantity('50%€', opts); // 0.5
+numericQuantity('100€%', opts); // 1
+numericQuantity('100 € %', opts); // 1
+numericQuantity('50%%', opts); // NaN
+numericQuantity('50%€%', opts); // NaN
 ```
 
 ### Verbose Output (`verbose`)
@@ -193,6 +249,16 @@ interface NumericQuantityVerboseResult {
 }
 ```
 
+## `Infinity`
+
+`Infinity` is a valid result, not an error. Division by zero and overflowing exponents both produce it, and `isNumericQuantity` returns `true` for them.
+
+```js
+numericQuantity('1/0'); // Infinity
+numericQuantity('1e400'); // Infinity
+isNumericQuantity('1/0'); // true
+```
+
 ## Additional Exports
 
 ### `isNumericQuantity(str, options?): boolean`
@@ -220,5 +286,20 @@ parseRomanNumerals('MCMXCIX'); // 1999
 parseRomanNumerals('Ⅻ'); // 12
 parseRomanNumerals('invalid'); // NaN
 ```
+
+### Constants and utilities
+
+The internals used by the parser are also part of the public API and are safe to depend on:
+
+| Export                                                       | Description                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `normalizeDigits(str)`                                       | Converts non-ASCII decimal digits (70+ Unicode scripts) to ASCII `0`–`9` |
+| `numericRegex`                                               | The core pattern matched against a fully normalized string               |
+| `numericRegexWithTrailingInvalid`                            | Same, but with a trailing capture group for `allowTrailingInvalid`       |
+| `vulgarFractionToAsciiMap` / `vulgarFractionsRegex`          | Vulgar fraction characters (`½`, `⅔`, …) and their ASCII equivalents     |
+| `superSubDigitToAsciiMap` / `superSubDigitsRegex`            | Superscript/subscript digits (`¹`, `₂`, …) and their ASCII equivalents   |
+| `romanNumeralValues` / `romanNumeralRegex`                   | Roman numeral values and the validation pattern                          |
+| `romanNumeralUnicodeToAsciiMap` / `romanNumeralUnicodeRegex` | Unicode Roman numeral characters (`Ⅻ`, …) and their ASCII equivalents    |
+| `defaultOptions`                                             | The fully-resolved default option set                                    |
 
 [badge-npm]: https://img.shields.io/npm/v/numeric-quantity.svg?cacheSeconds=3600&logo=npm
