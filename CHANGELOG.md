@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `round` is now applied to the value as written, before percentage division, on all code paths. Previously `'1%'` and `'1.0%'` could produce different results.
 - The `percentage` option now applies to Roman numeral results (e.g. `'L%'` → `0.5`).
 - The internal `&` marker no longer leaks into `verbose.trailingInvalid` when `decimalSeparator` is `","`.
+- `symbol` input returns `NaN` instead of throwing. In verbose mode, `input` is the stringified symbol (e.g. `'Symbol(1)'`).
 
 ## [v3.2.2] - 2026-06-01
 

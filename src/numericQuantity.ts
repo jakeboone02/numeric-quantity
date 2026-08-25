@@ -101,8 +101,8 @@ function numericQuantity(
     ...options,
   };
 
-  // oxlint-disable-next-line typescript/restrict-template-expressions
-  const originalInput = typeof quantity === 'string' ? quantity : `${quantity}`;
+  // `String` (unlike a template literal) does not throw for `symbol` input
+  const originalInput = typeof quantity === 'string' ? quantity : String(quantity);
 
   // Metadata for verbose output
   let currencyPrefix: string | undefined;
@@ -139,6 +139,11 @@ function numericQuantity(
    */
   const applyPercentage = (value: number) =>
     percentageSuffix && opts.percentage !== 'number' ? value / 100 : value;
+
+  if (typeof quantity === 'symbol') {
+    // `String(sym)` is e.g. `'Symbol(1)'`; never a valid quantity
+    return returnValue(NaN);
+  }
 
   if (typeof quantity === 'number' || typeof quantity === 'bigint') {
     return returnValue(quantity);

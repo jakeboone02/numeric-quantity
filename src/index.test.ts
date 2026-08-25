@@ -70,6 +70,24 @@ describe('isNumericQuantity', () => {
   test('returns true for bigint values', () => {
     expect(isNumericQuantity('9007199254740992', { bigIntOnOverflow: true })).toBe(true);
   });
+
+  test('returns false for symbol input', () => {
+    expect(isNumericQuantity(Symbol() as unknown as string)).toBe(false);
+    expect(isNumericQuantity(Symbol('1') as unknown as string)).toBe(false);
+  });
+});
+
+describe('symbol input', () => {
+  test('returns NaN instead of throwing', () => {
+    expect(numericQuantity(Symbol())).toBeNaN();
+    expect(numericQuantity(Symbol('1'))).toBeNaN();
+  });
+
+  test('verbose input is the stringified symbol', () => {
+    const result = numericQuantity(Symbol('1'), { verbose: true });
+    expect(result.value).toBeNaN();
+    expect(result.input).toBe('Symbol(1)');
+  });
 });
 
 describe('verbose output', () => {
