@@ -473,6 +473,26 @@ export const numericQuantityTests: Record<
     // Without % symbol - should work normally
     ['50', 50, { percentage: 'decimal' }],
   ],
+  'Percentage rounding': [
+    // `round` applies to the value as written, before percentage division, on every path
+    ['1%', 0.01, { percentage: 'decimal', round: 0 }],
+    ['1.0%', 0.01, { percentage: 'decimal', round: 0 }],
+    ['1/1%', 0.01, { percentage: 'decimal', round: 0 }],
+    ['1%', 0.01, { percentage: 'decimal', round: 3 }],
+    ['1.0%', 0.01, { percentage: 'decimal', round: 3 }],
+    ['1/1%', 0.01, { percentage: 'decimal', round: 3 }],
+    ['1%', 0.01, { percentage: 'decimal', round: false }],
+    ['1.0%', 0.01, { percentage: 'decimal', round: false }],
+    ['1/1%', 0.01, { percentage: 'decimal', round: false }],
+    // Precision is no longer destroyed by re-rounding after the division
+    ['12.345%', 0.12345, { percentage: 'decimal', round: 3 }],
+    ['1/3%', 0.00333, { percentage: 'decimal', round: 3 }],
+    // 0.667 / 100 is not exactly representable
+    ['2/3%', 0.006670000000000001, { percentage: 'decimal', round: 3 }],
+    ['12345%', 123.45, { percentage: 'decimal', round: 3 }],
+    // The non-dividing path is untouched
+    ['12.345%', 12.345, { percentage: 'number', round: 3 }],
+  ],
   'Currency stripping': [
     // Without option - should fail
     ['$100', NaN],

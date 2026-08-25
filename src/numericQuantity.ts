@@ -133,6 +133,13 @@ function numericQuantity(
   const returnValue = (value: number | bigint) =>
     opts.verbose ? buildVerboseResult(value) : value;
 
+  /**
+   * Divides by 100 if a percentage suffix was stripped. Exact scaling, no rounding:
+   * `round` applies to the quantity as written, before this division.
+   */
+  const applyPercentage = (value: number) =>
+    percentageSuffix && opts.percentage !== 'number' ? value / 100 : value;
+
   if (typeof quantity === 'number' || typeof quantity === 'bigint') {
     return returnValue(quantity);
   }
@@ -266,10 +273,7 @@ function numericQuantity(
   // and there is nothing left to process
   if (!numberGroup2) {
     finalResult = sign === '-' ? finalResult * -1 : finalResult;
-    if (percentageSuffix && opts.percentage !== 'number') {
-      finalResult = finalResult / 100;
-    }
-    return returnValue(finalResult);
+    return returnValue(applyPercentage(finalResult));
   }
 
   const roundingFactor =
@@ -308,14 +312,7 @@ function numericQuantity(
 
   finalResult = sign === '-' ? finalResult * -1 : finalResult;
 
-  // Apply percentage division if needed
-  if (percentageSuffix && opts.percentage !== 'number') {
-    finalResult = isNaN(roundingFactor)
-      ? finalResult / 100
-      : Math.round((finalResult / 100) * roundingFactor) / roundingFactor;
-  }
-
-  return returnValue(finalResult);
+  return returnValue(applyPercentage(finalResult));
 }
 
 export { numericQuantity };
