@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `percentage` option now applies to Roman numeral results (e.g. `'L%'` → `0.5`).
 - The internal `&` marker no longer leaks into `verbose.trailingInvalid` when `decimalSeparator` is `","`.
 - `symbol` input returns `NaN` instead of throwing. In verbose mode, `input` is the stringified symbol (e.g. `'Symbol(1)'`).
+- Input that cannot be coerced to a string (null-prototype objects, throwing `toString`/`valueOf`) returns `NaN` instead of throwing `TypeError`. In verbose mode, `input` is an empty string.
+- `bigIntOnOverflow` no longer throws `RangeError` for absurdly large exponents (e.g. `'1e' + '9'.repeat(400)`). Exponents beyond ±10,000 fall back to the `number` path, yielding `Infinity`/`0`.
+- `verbose.trailingInvalid` is now populated for multi-comma input when `decimalSeparator` is `','` and `allowTrailingInvalid` is `false`, matching the behavior of every other trailing-invalid path.
 - Non-finite `round` values (`NaN`, `±Infinity`) are now treated as `false` (no rounding) instead of silently rounding to 0 decimal places. Negative finite values still clamp to 0.
 - Currency and percentage affixes are now stripped in any order (e.g. `'100€%'` → `1`, matching `'50%€'`). At most one `%` is stripped, so `'50%%'` is still `NaN`.
 
