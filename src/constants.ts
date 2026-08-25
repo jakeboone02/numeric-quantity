@@ -282,8 +282,10 @@ export const romanNumeralValues: {
   XL: 40,
   XXX: 30,
   XX: 20,
-  XII: 12, // only here for tests; not used in practice
-  XI: 11, // only here for tests; not used in practice
+  // XII/XI are redundant for ASCII input (X + II / X + I), but `romanNumeralUnicodeToAsciiMap`
+  // maps Ⅻ/ⅻ and Ⅺ/ⅺ onto these keys, so they are used in practice.
+  XII: 12,
+  XI: 11,
   X: 10,
   IX: 9,
   VIII: 8,
