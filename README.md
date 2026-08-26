@@ -3,6 +3,7 @@
 [![codecov.io](https://codecov.io/github/jakeboone02/numeric-quantity/coverage.svg?branch=main)](https://codecov.io/github/jakeboone02/numeric-quantity?branch=main)
 [![downloads](https://img.shields.io/npm/dm/numeric-quantity.svg)](https://npm-stat.com/charts.html?package=numeric-quantity&from=2015-08-01)
 [![MIT License](https://img.shields.io/npm/l/numeric-quantity.svg)](https://opensource.org/licenses/MIT)
+[![pkg.pr.new](https://pkg.pr.new/badge/jakeboone02/numeric-quantity)](https://pkg.pr.new/~/jakeboone02/numeric-quantity)
 
 Converts a string to a number, like an enhanced version of `parseFloat`. Returns `NaN` if the provided string does not resemble a number.
 
