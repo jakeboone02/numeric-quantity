@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["bun-types", "web"],
+    "types": ["bun", "web"],
     "isolatedModules": true,
     "isolatedDeclarations": true,
     "declaration": true,

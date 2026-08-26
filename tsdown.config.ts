@@ -34,6 +34,9 @@ const config: ReturnType<typeof defineConfig> = defineConfig(options => {
       outExtensions: () => ({ js: '.js' }),
       format: 'esm',
       target: 'es2017',
+      suppressWarnings: [
+        'Big integer literals are not available in the configured target environment.',
+      ],
     },
     // ESM for use in browsers. Minified, with `process` compiled away
     {
