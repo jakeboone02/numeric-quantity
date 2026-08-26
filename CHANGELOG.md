@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.3.0] - 2026-08-25
+
 ### Changed
 
 - `numericQuantity` return type is now inferred from the options object: `verbose: true` yields `NumericQuantityVerboseResult`, `bigIntOnOverflow: true` yields `number | bigint`. Options typed as a plain `NumericQuantityOptions` variable now infer the full union `number | bigint | NumericQuantityVerboseResult` and must be narrowed; use `satisfies NumericQuantityOptions` instead of `: NumericQuantityOptions` to retain literal inference.
@@ -244,7 +246,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.2...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.0...HEAD
+[v3.3.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.2...v3.3.0
 [v3.2.2]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.1...v3.2.2
 [v3.2.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.0...v3.2.1
 [v3.2.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.1.0...v3.2.0
