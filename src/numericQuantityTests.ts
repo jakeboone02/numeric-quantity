@@ -1,7 +1,9 @@
 import { romanNumeralUnicodeToAsciiMap, romanNumeralValues } from './constants';
 import type { NumericQuantityOptions, RomanNumeralUnicode } from './types';
 
+const allowCurrency = true;
 const allowTrailingInvalid = true;
+const bigIntOnOverflow = true;
 const romanNumerals = true;
 
 const noop = () => {};
@@ -302,69 +304,57 @@ export const numericQuantityTests: Record<
     ['-¹⁄₂', -0.5],
   ],
   BigInts: [
-    ['9007199254740992', 9007199254740992n, { bigIntOnOverflow: true }],
-    ['-9007199254740992', -9007199254740992n, { bigIntOnOverflow: true }],
-    ['123', 123, { bigIntOnOverflow: true }],
-    ['-123', -123, { bigIntOnOverflow: true }],
+    ['9007199254740992', 9007199254740992n, { bigIntOnOverflow }],
+    ['-9007199254740992', -9007199254740992n, { bigIntOnOverflow }],
+    ['123', 123, { bigIntOnOverflow }],
+    ['-123', -123, { bigIntOnOverflow }],
   ],
   'BigInt with non-integers': [
     // Fractional tails round half-up (half away from zero for negatives)
-    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true }],
-    ['9007199254740993.4', 9007199254740993n, { bigIntOnOverflow: true }],
-    ['-9007199254740993.5', -9007199254740994n, { bigIntOnOverflow: true }],
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow }],
+    ['9007199254740993.4', 9007199254740993n, { bigIntOnOverflow }],
+    ['-9007199254740993.5', -9007199254740994n, { bigIntOnOverflow }],
     // Positive exponents are exact; no rounding involved
-    ['9007199254740993e1', 90071992547409930n, { bigIntOnOverflow: true }],
+    ['9007199254740993e1', 90071992547409930n, { bigIntOnOverflow }],
     // Negative exponents are a denominator factor
-    ['900719925474099300e-1', 90071992547409930n, { bigIntOnOverflow: true }],
-    ['90071992547409935e-1', 9007199254740994n, { bigIntOnOverflow: true }],
-    ['9007199254740993 1/2', 9007199254740994n, { bigIntOnOverflow: true }],
-    ['9007199254740993 1/3', 9007199254740993n, { bigIntOnOverflow: true }],
+    ['900719925474099300e-1', 90071992547409930n, { bigIntOnOverflow }],
+    ['90071992547409935e-1', 9007199254740994n, { bigIntOnOverflow }],
+    ['9007199254740993 1/2', 9007199254740994n, { bigIntOnOverflow }],
+    ['9007199254740993 1/3', 9007199254740993n, { bigIntOnOverflow }],
     // Pure fractions participate on the same rational path
-    ['90071992547409930/2', 45035996273704965n, { bigIntOnOverflow: true }],
-    ['90071992547409930/ 4', 22517998136852483n, { bigIntOnOverflow: true }],
-    ['90071992547409930/10000', 9007199254740.994, { bigIntOnOverflow: true }],
+    ['90071992547409930/2', 45035996273704965n, { bigIntOnOverflow }],
+    ['90071992547409930/ 4', 22517998136852483n, { bigIntOnOverflow }],
+    ['90071992547409930/10000', 9007199254740.994, { bigIntOnOverflow }],
     // Rounding can push a non-overflowing integer part into overflow
-    ['9007199254740991.6', 9007199254740992n, { bigIntOnOverflow: true }],
+    ['9007199254740991.6', 9007199254740992n, { bigIntOnOverflow }],
     // `round` is not consulted for bigint results
-    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true, round: false }],
-    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true, round: 0 }],
-    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow: true, round: 4 }],
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow, round: false }],
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow, round: 0 }],
+    ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow, round: 4 }],
     // Zero denominators fall through to the `number` path
-    ['9007199254740993 1/0', Infinity, { bigIntOnOverflow: true }],
+    ['9007199254740993 1/0', Infinity, { bigIntOnOverflow }],
     // Leading-decimal scientific notation still gets exact evaluation
-    ['.1e17', 10000000000000000n, { bigIntOnOverflow: true }],
-    ['-.1e17', -10000000000000000n, { bigIntOnOverflow: true }],
+    ['.1e17', 10000000000000000n, { bigIntOnOverflow }],
+    ['-.1e17', -10000000000000000n, { bigIntOnOverflow }],
     // No overflow: untouched by the bigint path
-    ['1.5', 1.5, { bigIntOnOverflow: true }],
-    ['.1e15', 100000000000000, { bigIntOnOverflow: true }],
+    ['1.5', 1.5, { bigIntOnOverflow }],
+    ['.1e15', 100000000000000, { bigIntOnOverflow }],
     ['9007199254740993.5', 9007199254740992, { round: false }],
   ],
   'BigInt percentages': [
     // No overflow, so the (lossy) `number` path handles it
-    ['9007199254740993%', 90071992547409.92, { bigIntOnOverflow: true, percentage: 'decimal' }],
-    ['900719925474099300%', 9007199254740993n, { bigIntOnOverflow: true, percentage: 'decimal' }],
-    ['900719925474099399%', 9007199254740994n, { bigIntOnOverflow: true, percentage: 'decimal' }],
-    ['900719925474099350%', 9007199254740994n, { bigIntOnOverflow: true, percentage: 'decimal' }],
-    [
-      '900719925474099300001%',
-      9007199254740993000n,
-      { bigIntOnOverflow: true, percentage: 'decimal' },
-    ],
-    ['-900719925474099350%', -9007199254740994n, { bigIntOnOverflow: true, percentage: 'decimal' }],
+    ['9007199254740993%', 90071992547409.92, { bigIntOnOverflow, percentage: 'decimal' }],
+    ['900719925474099300%', 9007199254740993n, { bigIntOnOverflow, percentage: 'decimal' }],
+    ['900719925474099399%', 9007199254740994n, { bigIntOnOverflow, percentage: 'decimal' }],
+    ['900719925474099350%', 9007199254740994n, { bigIntOnOverflow, percentage: 'decimal' }],
+    ['900719925474099300001%', 9007199254740993000n, { bigIntOnOverflow, percentage: 'decimal' }],
+    ['-900719925474099350%', -9007199254740994n, { bigIntOnOverflow, percentage: 'decimal' }],
     // `percentage: 'number'` contributes no denominator factor
-    ['9007199254740993%', 9007199254740993n, { bigIntOnOverflow: true, percentage: 'number' }],
-    ['900719925474099300%', 900719925474099300n, { bigIntOnOverflow: true, percentage: 'number' }],
-    ['900719925474099399%', 900719925474099399n, { bigIntOnOverflow: true, percentage: 'number' }],
-    [
-      '900719925474099300001%',
-      900719925474099300001n,
-      { bigIntOnOverflow: true, percentage: 'number' },
-    ],
-    [
-      '-900719925474099350%',
-      -900719925474099350n,
-      { bigIntOnOverflow: true, percentage: 'number' },
-    ],
+    ['9007199254740993%', 9007199254740993n, { bigIntOnOverflow, percentage: 'number' }],
+    ['900719925474099300%', 900719925474099300n, { bigIntOnOverflow, percentage: 'number' }],
+    ['900719925474099399%', 900719925474099399n, { bigIntOnOverflow, percentage: 'number' }],
+    ['900719925474099300001%', 900719925474099300001n, { bigIntOnOverflow, percentage: 'number' }],
+    ['-900719925474099350%', -900719925474099350n, { bigIntOnOverflow, percentage: 'number' }],
   ],
   'Roman numerals': (
     [
@@ -490,12 +480,12 @@ export const numericQuantityTests: Record<
     ['1/2%', 0.5, { percentage: 'number' }],
     ['-50%', -50, { percentage: 'number' }],
     // Roman numerals with percentage
-    ['L%', 0.5, { percentage: 'decimal', romanNumerals: true }],
-    ['L%', 50, { percentage: 'number', romanNumerals: true }],
-    ['MCMXCIX%', 19.99, { percentage: 'decimal', romanNumerals: true }],
-    ['I%', 0.01, { percentage: 'decimal', romanNumerals: true }],
-    ['I%', 0.01, { percentage: 'decimal', romanNumerals: true, round: 0 }],
-    ['$L%', 0.5, { allowCurrency: true, percentage: 'decimal', romanNumerals: true }],
+    ['L%', 0.5, { percentage: 'decimal', romanNumerals }],
+    ['L%', 50, { percentage: 'number', romanNumerals }],
+    ['MCMXCIX%', 19.99, { percentage: 'decimal', romanNumerals }],
+    ['I%', 0.01, { percentage: 'decimal', romanNumerals }],
+    ['I%', 0.01, { percentage: 'decimal', romanNumerals, round: 0 }],
+    ['$L%', 0.5, { allowCurrency, percentage: 'decimal', romanNumerals }],
     // Without % symbol - should work normally
     ['50', 50, { percentage: 'decimal' }],
   ],
@@ -525,46 +515,46 @@ export const numericQuantityTests: Record<
     ['€100', NaN],
     ['100€', NaN],
     // With allowCurrency option
-    ['$100', 100, { allowCurrency: true }],
-    ['€100', 100, { allowCurrency: true }],
-    ['£100', 100, { allowCurrency: true }],
-    ['¥100', 100, { allowCurrency: true }],
-    ['₹100', 100, { allowCurrency: true }],
-    ['₽100', 100, { allowCurrency: true }],
-    ['₿100', 100, { allowCurrency: true }],
-    ['₩100', 100, { allowCurrency: true }],
+    ['$100', 100, { allowCurrency }],
+    ['€100', 100, { allowCurrency }],
+    ['£100', 100, { allowCurrency }],
+    ['¥100', 100, { allowCurrency }],
+    ['₹100', 100, { allowCurrency }],
+    ['₽100', 100, { allowCurrency }],
+    ['₿100', 100, { allowCurrency }],
+    ['₩100', 100, { allowCurrency }],
     // Suffix position
-    ['100€', 100, { allowCurrency: true }],
-    ['100£', 100, { allowCurrency: true }],
+    ['100€', 100, { allowCurrency }],
+    ['100£', 100, { allowCurrency }],
     // With decimals
-    ['$100.50', 100.5, { allowCurrency: true }],
-    ['€1,000', 1000, { allowCurrency: true }],
+    ['$100.50', 100.5, { allowCurrency }],
+    ['€1,000', 1000, { allowCurrency }],
     // Negative
-    ['-$100', -100, { allowCurrency: true }],
+    ['-$100', -100, { allowCurrency }],
     // Positive with + sign
-    ['+$100', 100, { allowCurrency: true }],
+    ['+$100', 100, { allowCurrency }],
     // Multiple currency symbols
-    ['$$100', 100, { allowCurrency: true }],
+    ['$$100', 100, { allowCurrency }],
     // Currency + percentage combined
-    ['$50%', 0.5, { allowCurrency: true, percentage: 'decimal' }],
-    ['50%€', 0.5, { allowCurrency: true, percentage: 'decimal' }],
+    ['$50%', 0.5, { allowCurrency, percentage: 'decimal' }],
+    ['50%€', 0.5, { allowCurrency, percentage: 'decimal' }],
     // With spaces
-    ['$ 100', 100, { allowCurrency: true }],
-    ['100 €', 100, { allowCurrency: true }],
+    ['$ 100', 100, { allowCurrency }],
+    ['100 €', 100, { allowCurrency }],
   ],
   'Currency/percentage affix ordering': [
-    ['100€%', 1, { allowCurrency: true, percentage: 'decimal' }],
-    ['50%€', 0.5, { allowCurrency: true, percentage: 'decimal' }],
-    ['€50%', 0.5, { allowCurrency: true, percentage: 'decimal' }],
-    ['$50%', 0.5, { allowCurrency: true, percentage: 'decimal' }],
-    ['50%$', 0.5, { allowCurrency: true, percentage: 'decimal' }],
-    ['100 € %', 1, { allowCurrency: true, percentage: 'decimal' }],
-    ['€ 100 %', 1, { allowCurrency: true, percentage: 'decimal' }],
-    ['100€%', 100, { allowCurrency: true, percentage: 'number' }],
-    ['-100€%', -1, { allowCurrency: true, percentage: 'decimal' }],
+    ['100€%', 1, { allowCurrency, percentage: 'decimal' }],
+    ['50%€', 0.5, { allowCurrency, percentage: 'decimal' }],
+    ['€50%', 0.5, { allowCurrency, percentage: 'decimal' }],
+    ['$50%', 0.5, { allowCurrency, percentage: 'decimal' }],
+    ['50%$', 0.5, { allowCurrency, percentage: 'decimal' }],
+    ['100 € %', 1, { allowCurrency, percentage: 'decimal' }],
+    ['€ 100 %', 1, { allowCurrency, percentage: 'decimal' }],
+    ['100€%', 100, { allowCurrency, percentage: 'number' }],
+    ['-100€%', -1, { allowCurrency, percentage: 'decimal' }],
     // At most one `%` is stripped
     ['50%%', NaN, { percentage: 'decimal' }],
-    ['50%€%', NaN, { allowCurrency: true, percentage: 'decimal' }],
+    ['50%€%', NaN, { allowCurrency, percentage: 'decimal' }],
     // Currency without the option is still invalid
     ['100€%', NaN, { percentage: 'decimal' }],
   ],
