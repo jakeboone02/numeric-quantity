@@ -16,6 +16,7 @@ jobs:
       - run: bunx tsc
       - run: bun run build
       - run: bun run test
+      - run: bun run fmt --check
       - run: bun run lint --format=github
       - uses: codecov/codecov-action@v7
         env:
