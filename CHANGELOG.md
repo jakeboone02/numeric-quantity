@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.3.1] - 2026-08-26
+
+### Fixed
+
+- Corrected unpkg entry in package.json.
+
 ## [v3.3.0] - 2026-08-25
 
 ### Changed
@@ -246,7 +252,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.0...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.1...HEAD
+[v3.3.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.0...v3.3.1
 [v3.3.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.2...v3.3.0
 [v3.2.2]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.1...v3.2.2
 [v3.2.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.0...v3.2.1
