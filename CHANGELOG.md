@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.3.2] - 2026-09-08
+
 ### Fixed
 
-- `numericRegex` and `numericRegexWithTrailingInvalid` no longer backtrack catastrophically on long runs of digits. Capture group 2 was an ambiguous nested quantifier (`((?:\d(?:[,_]\d|\d)*)*)`), so a failing match was exponential in the length of the digit run — `numericRegex.exec('1'.repeat(30) + '!')` took roughly 15 seconds on V8, a denial-of-service risk for consumers running either exported pattern against untrusted input. The outer quantifier is now `?`, which matches the same language with the same capture groups. `numericQuantity` itself was not affected.
+- [#50] `numericRegex` and `numericRegexWithTrailingInvalid` no longer backtrack catastrophically on long runs of digits. Capture group 2 was an ambiguous nested quantifier (`((?:\d(?:[,_]\d|\d)*)*)`), so a failing match was exponential in the length of the digit run — `numericRegex.exec('1'.repeat(30) + '!')` took roughly 15 seconds on V8, a denial-of-service risk for consumers running either exported pattern against untrusted input. The outer quantifier is now `?`, which matches the same language with the same capture groups. `numericQuantity` itself was not affected.
 
 ## [v3.3.1] - 2026-08-26
 
@@ -253,10 +255,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#37]: https://github.com/jakeboone02/numeric-quantity/pull/37
 [#38]: https://github.com/jakeboone02/numeric-quantity/pull/38
 [#39]: https://github.com/jakeboone02/numeric-quantity/pull/39
+[#50]: https://github.com/jakeboone02/numeric-quantity/pull/50
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.1...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.2...HEAD
+[v3.3.2]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.1...v3.3.2
 [v3.3.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.0...v3.3.1
 [v3.3.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.2...v3.3.0
 [v3.2.2]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.1...v3.2.2
