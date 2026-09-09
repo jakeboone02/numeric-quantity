@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `numericRegex` and `numericRegexWithTrailingInvalid` no longer backtrack catastrophically on long runs of digits. Capture group 2 was an ambiguous nested quantifier (`((?:\d(?:[,_]\d|\d)*)*)`), so a failing match was exponential in the length of the digit run — `numericRegex.exec('1'.repeat(30) + '!')` took roughly 15 seconds on V8, a denial-of-service risk for consumers running either exported pattern against untrusted input. The outer quantifier is now `?`, which matches the same language with the same capture groups. `numericQuantity` itself was not affected.
+
 ## [v3.3.1] - 2026-08-26
 
 ### Fixed

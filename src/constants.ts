@@ -217,9 +217,15 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, `${number}/${numbe
  * This pattern and {@link numericRegexWithTrailingInvalid} are maintained as two separate
  * literals and must be kept in sync. They differ _only_ in the tail: `$` here versus
  * `(\s*[^.\d/].*)?` there. `src/index.test.ts` asserts that equality.
+ *
+ * Group 2 is `((?:\d(?:[,_]\d|\d)*)?)`, deliberately `?` and not `*`. Every string the
+ * inner group matches begins and ends with a digit, so concatenating two of them yields
+ * another string of the same shape: an outer `*` would add no strings to the language,
+ * only exponentially many ways to split one digit run across iterations. That made a
+ * failing match catastrophically backtrack — `'1'.repeat(30) + '!'` took ~15s on V8.
  */
 export const numericRegex: RegExp =
-  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
+  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)?)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
  * Capture groups 1–6 are identical to {@link numericRegex}'s; capture group 7 contains the
@@ -239,7 +245,7 @@ export const numericRegex: RegExp =
  * Must be kept in sync with {@link numericRegex} — see that pattern's remarks.
  */
 export const numericRegexWithTrailingInvalid: RegExp =
-  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)*)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(\s*[^.\d/].*)?/;
+  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)?)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(\s*[^.\d/].*)?/;
 
 /**
  * Captures any Unicode vulgar fractions.

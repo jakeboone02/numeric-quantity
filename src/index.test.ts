@@ -379,3 +379,69 @@ describe('verbose output', () => {
     expect(result.sign).toBeUndefined();
   });
 });
+
+/**
+ * Group 2 of both numeric patterns is `((?:\d(?:[,_]\d|\d)*)?)`. It was once `*` rather
+ * than `?`, which made a failing match exponential in the length of a digit run.
+ */
+describe('numeric regex backtracking', () => {
+  /** The previous, ambiguous form of group 2. */
+  const ambiguousSource = (source: string) =>
+    source.replace(String.raw`((?:\d(?:[,_]\d|\d)*)?)`, String.raw`((?:\d(?:[,_]\d|\d)*)*)`);
+
+  test('group 2 is not an ambiguous nested quantifier', () => {
+    for (const re of [numericRegex, numericRegexWithTrailingInvalid]) {
+      expect(re.source).toInclude(String.raw`((?:\d(?:[,_]\d|\d)*)?)`);
+      expect(re.source).not.toInclude(String.raw`((?:\d(?:[,_]\d|\d)*)*)`);
+    }
+  });
+
+  // `?` and `*` accept the same language here, so this must be a pure performance change.
+  test('matches exactly what the ambiguous form matched', () => {
+    const inputs = [
+      '1',
+      '1.5',
+      '1,000',
+      '1_000',
+      '1,000,000.5',
+      '1 2/3',
+      '2/3',
+      '2 / 3',
+      '-2 1/3',
+      '+2',
+      '1e3',
+      '1.5e-3',
+      '.5',
+      '.5e3',
+      '0',
+      '00',
+      '1,',
+      ',1',
+      '1,,000',
+      '1__0',
+      '1 2 3',
+      '12345678901234567890',
+      '1,2,3,4,5',
+      ' 1 ',
+      '1abc',
+      '1 2/3 xyz',
+      '',
+      'abc',
+      '1/0',
+    ];
+    for (const re of [numericRegex, numericRegexWithTrailingInvalid]) {
+      const ambiguous = new RegExp(ambiguousSource(re.source), re.flags);
+      for (const input of inputs) {
+        expect([input, re.exec(input)]).toEqual([input, ambiguous.exec(input)]);
+      }
+    }
+  });
+
+  // The ambiguous form took ~15s for 30 digits on V8; JSC merely caps the backtracking.
+  test('fails fast on a long digit run', () => {
+    const input = `${'1'.repeat(64)}!`;
+    const start = performance.now();
+    expect(numericRegex.exec(input)).toBeNull();
+    expect(performance.now() - start).toBeLessThan(500);
+  });
+});
