@@ -256,17 +256,17 @@ export const vulgarFractionsRegex: RegExp = /([¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘
 
 // #region Roman numerals
 
-type RomanNumeralSequenceFragment =
-  | `${RomanNumeralAscii}`
-  | `${RomanNumeralAscii}${RomanNumeralAscii}`
-  | `${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}`
-  | `${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}`;
-
 /**
  * Map of Roman numeral sequences to their decimal equivalents.
  */
 export const romanNumeralValues: {
-  [k in RomanNumeralSequenceFragment]?: number;
+  [
+    k in
+      | `${RomanNumeralAscii}`
+      | `${RomanNumeralAscii}${RomanNumeralAscii}`
+      | `${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}`
+      | `${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}${RomanNumeralAscii}`
+  ]?: number;
 } = {
   MMM: 3000,
   MM: 2000,

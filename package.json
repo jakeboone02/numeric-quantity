@@ -53,16 +53,16 @@
     "fmt": "oxfmt"
   },
   "devDependencies": {
-    "@types/bun": "^1.4.0",
-    "@types/node": "^26.3.0",
-    "@types/web": "^0.0.354",
+    "@types/bun": "^1.4.2",
+    "@types/node": "^26.6.1",
+    "@types/web": "^0.0.356",
     "@typescript/native-preview": "^7.0.0-dev.20260527.2",
-    "np": "^12.0.1",
-    "oxfmt": "^0.65.0",
-    "oxlint": "^1.80.0",
+    "np": "^12.1.1",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
     "oxlint-tsgolint": "^7.0.2001",
     "pkg-pr-new": "^0.0.88",
-    "tsdown": "^0.22.14",
+    "tsdown": "^0.23.0",
     "typedoc": "^0.28.20",
     "typescript": "^6"
   },

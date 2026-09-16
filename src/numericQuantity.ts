@@ -90,9 +90,6 @@ const toRoundedBigInt = (
  *
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
  * Input is expected to be a `string`, but will be coerced to `string` if necessary.
- *
- * @param quantity - The value to parse as a numeric quantity.
- * @param options - Optional settings to control parsing behavior.
  */
 function numericQuantity(quantity: unknown): number;
 function numericQuantity<const T extends NumericQuantityOptions | undefined | null>(
