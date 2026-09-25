@@ -15,8 +15,9 @@ import type {
 } from './types';
 
 const leadingSlashRegex = /^\s*\//;
-const currencyPrefixRegex = /^([-+]?)\s*(\p{Sc}+)\s*/u;
-const currencySuffixRegex = /\s*(\p{Sc}+)\s*$/u;
+// RegExp ctor (not literals) so old Babel regex transforms (e.g. Expo Snackager) skip `\p{}`
+const currencyPrefixRegex = new RegExp('^([-+]?)\\s*(\\p{Sc}+)\\s*', 'u');
+const currencySuffixRegex = new RegExp('\\s*(\\p{Sc}+)\\s*$', 'u');
 const percentageSuffixRegex = /\s*%$/;
 
 const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
