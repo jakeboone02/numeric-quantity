@@ -95,6 +95,9 @@ const decimalDigitBlockStarts = [
   0x1fbf0, // Segmented Digits
 ] as const;
 
+// RegExp ctor (not literal) so old Babel regex transforms (e.g. Expo Snackager) skip `\p{}`
+const unicodeDecimalDigitRegex = new RegExp('\\p{Nd}', 'gu');
+
 /**
  * Normalizes non-ASCII decimal digits to ASCII digits.
  * Converts characters from Unicode decimal digit blocks (e.g., Arabic-Indic,
@@ -103,7 +106,7 @@ const decimalDigitBlockStarts = [
  * All current Unicode \p{Nd} blocks are included in decimalDigitBlockStarts.
  */
 export const normalizeDigits = (str: string): string =>
-  str.replace(/\p{Nd}/gu, ch => {
+  str.replace(unicodeDecimalDigitRegex, ch => {
     const cp = ch.codePointAt(0)!;
     // ASCII digits (0x0030-0x0039) don't need conversion
     if (cp <= 0x39) return ch;

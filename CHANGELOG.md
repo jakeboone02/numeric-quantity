@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Unicode property escape regexes (`\p{Nd}`, `\p{Sc}`) are now built with the `RegExp` constructor instead of literals, fixing compatibility with older Babel regex transforms (e.g. Expo Snack).
+
 ## [v3.3.2] - 2026-09-08
 
 ### Fixed
