@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.3.3] - 2026-09-24
+
 ### Fixed
 
 - Unicode property escape regexes (`\p{Nd}`, `\p{Sc}`) are now built with the `RegExp` constructor instead of literals, fixing compatibility with older Babel regex transforms (e.g. Expo Snack).
@@ -263,7 +265,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.2...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.3...HEAD
+[v3.3.3]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.2...v3.3.3
 [v3.3.2]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.1...v3.3.2
 [v3.3.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.0...v3.3.1
 [v3.3.0]: https://github.com/jakeboone02/numeric-quantity/compare/v3.2.2...v3.3.0
