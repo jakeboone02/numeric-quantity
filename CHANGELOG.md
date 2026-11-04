@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.3.4] - 2026-11-03
+
 ### Fixed
 
-- `numericRegex` and `numericRegexWithTrailingInvalid` no longer backtrack quadratically on long whitespace runs (e.g. after a sign, or after the whole number of a mixed number). Same language, same capture groups.
+- [#52] `numericRegex` and `numericRegexWithTrailingInvalid` no longer backtrack quadratically on long whitespace runs (e.g. after a sign, or after the whole number of a mixed number). Same language, same capture groups.
 
 ## [v3.3.3] - 2026-09-24
 
@@ -266,10 +268,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#38]: https://github.com/jakeboone02/numeric-quantity/pull/38
 [#39]: https://github.com/jakeboone02/numeric-quantity/pull/39
 [#50]: https://github.com/jakeboone02/numeric-quantity/pull/50
+[#52]: https://github.com/jakeboone02/numeric-quantity/pull/52
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.3...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.4...HEAD
+[v3.3.4]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.3...v3.3.4
 [v3.3.3]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.2...v3.3.3
 [v3.3.2]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.1...v3.3.2
 [v3.3.1]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.0...v3.3.1
