@@ -228,7 +228,7 @@ export const vulgarFractionToAsciiMap: Record<VulgarFraction, `${number}/${numbe
  * failing match catastrophically backtrack — `'1'.repeat(30) + '!'` took ~15s on V8.
  */
 export const numericRegex: RegExp =
-  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)?)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
+  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*(?!\s)((?:\d(?:[,_]\d|\d)*)?)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*(?!\s))?\s*\/\s*\d(?:[,_]\d|\d)*)?$/;
 /**
  * Same as {@link numericRegex}, but allows (and ignores) trailing invalid characters.
  * Capture groups 1–6 are identical to {@link numericRegex}'s; capture group 7 contains the
@@ -248,7 +248,7 @@ export const numericRegex: RegExp =
  * Must be kept in sync with {@link numericRegex} — see that pattern's remarks.
  */
 export const numericRegexWithTrailingInvalid: RegExp =
-  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*((?:\d(?:[,_]\d|\d)*)?)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*)?\s*\/\s*\d(?:[,_]\d|\d)*)?(\s*[^.\d/].*)?/;
+  /^(?=[-+]?\s*\.\d|[-+]?\s*\d)([-+])?\s*(?!\s)((?:\d(?:[,_]\d|\d)*)?)(([eE][+-]?\d(?:[,_]\d|\d)*)?|\.\d(?:[,_]\d|\d)*([eE][+-]?\d(?:[,_]\d|\d)*)?|(\s+\d(?:[,_]\d|\d)*\s*(?!\s))?\s*\/\s*\d(?:[,_]\d|\d)*)?(\s*[^.\d/].*)?/;
 
 /**
  * Captures any Unicode vulgar fractions.
