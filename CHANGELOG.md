@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `numericRegex` and `numericRegexWithTrailingInvalid` no longer backtrack quadratically on long whitespace runs (e.g. after a sign, or after the whole number of a mixed number). Same language, same capture groups.
+
 ## [v3.3.3] - 2026-09-24
 
 ### Fixed

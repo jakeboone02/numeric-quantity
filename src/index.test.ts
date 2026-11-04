@@ -444,4 +444,31 @@ describe('numeric regex backtracking', () => {
     expect(numericRegex.exec(input)).toBeNull();
     expect(performance.now() - start).toBeLessThan(500);
   });
+
+  // Adjacent `\s*`s split a whitespace run every way before failing: quadratic, and worse once
+  // inlined unanchored by consumers. `(?!\s)` makes each run atomic without changing matches.
+  test('fails fast on long whitespace runs', () => {
+    for (const re of [numericRegex, numericRegexWithTrailingInvalid]) {
+      for (const input of [`-${' '.repeat(20_000)}1+`, `1 2${' '.repeat(20_000)}x`]) {
+        const start = performance.now();
+        re.exec(input);
+        expect(performance.now() - start).toBeLessThan(100);
+      }
+    }
+  });
+
+  test('whitespace runs match exactly what they matched before', () => {
+    const loose = (source: string) =>
+      source
+        .replace(String.raw`\s*(?!\s)((`, String.raw`\s*((`)
+        .replace(String.raw`\s*(?!\s))?`, String.raw`\s*)?`);
+    const inputs = ['- 1', '+  1 2/3', '1    1  /100', '2 2  /0', '1 2 / 3', '-  .5', '1  /  2 x'];
+    for (const re of [numericRegex, numericRegexWithTrailingInvalid]) {
+      const before = new RegExp(loose(re.source), re.flags);
+      expect(before.source).not.toBe(re.source);
+      for (const input of inputs) {
+        expect([input, re.exec(input)]).toEqual([input, before.exec(input)]);
+      }
+    }
+  });
 });
