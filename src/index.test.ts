@@ -457,6 +457,10 @@ describe('numeric regex backtracking', () => {
     }
   });
 
+  test('long whitespace runs still match', () => {
+    expect(numericRegexWithTrailingInvalid.exec(`-${' '.repeat(20_000)}1+`)?.[7]).toBe('+');
+  });
+
   test('whitespace runs match exactly what they matched before', () => {
     const loose = (source: string) =>
       source
