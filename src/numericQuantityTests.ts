@@ -552,6 +552,9 @@ export const numericQuantityTests: Record<
     ['€ 100 %', 1, { allowCurrency, percentage: 'decimal' }],
     ['100€%', 100, { allowCurrency, percentage: 'number' }],
     ['-100€%', -1, { allowCurrency, percentage: 'decimal' }],
+    // Currency affixes re-stripped on later passes
+    ['$-$100', -100, { allowCurrency }],
+    ['100€%€', 1, { allowCurrency, percentage: 'decimal' }],
     // At most one `%` is stripped
     ['50%%', NaN, { percentage: 'decimal' }],
     ['50%€%', NaN, { allowCurrency, percentage: 'decimal' }],
