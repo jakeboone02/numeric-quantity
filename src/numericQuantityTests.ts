@@ -302,6 +302,14 @@ export const numericQuantityTests: Record<
     ['¹¹⁄₁₆', 0.688],
     ['2 ³⁄₈', 2.375],
     ['-¹⁄₂', -0.5],
+    // Superscript numerator right after the whole number (no space)
+    ['2¹⁄₂', 2.5],
+    ['1²⁄₃', 1.667],
+    ['10¹⁄₄', 10.25],
+    ['3³⁄₁₆', 3.188],
+    ['-2¹⁄₂', -2.5],
+    ['2¹/₂', 2.5],
+    ['٢¹⁄₂', 2.5],
   ],
   BigInts: [
     ['9007199254740992', 9007199254740992n, { bigIntOnOverflow }],

@@ -19,6 +19,8 @@ const leadingSlashRegex = /^\s*\//;
 const currencyPrefixRegex = new RegExp('^([-+]?)\\s*(\\p{Sc}+)\\s*', 'u');
 const currencySuffixRegex = new RegExp('\\s*(\\p{Sc}+)\\s*$', 'u');
 const percentageSuffixRegex = /\s*%$/;
+// A superscript numerator that directly follows a whole-number digit ("2¹⁄₂")
+const superscriptNumeratorAfterDigitRegex = new RegExp('(\\p{Nd})([⁰¹²³⁴⁵⁶⁷⁸⁹]+[⁄/])', 'gu');
 
 const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
 /**
@@ -210,6 +212,9 @@ function numericQuantity(
         vulgarFractionsRegex,
         (_m, vf: keyof typeof vulgarFractionToAsciiMap) => ` ${vulgarFractionToAsciiMap[vf]}`
       )
+      // Add a space between a whole number and a superscript numerator so the
+      // digits don't merge once converted ("2¹⁄₂" -> "2 ¹⁄₂")
+      .replace(superscriptNumeratorAfterDigitRegex, '$1 $2')
       // Convert superscript/subscript digits to ASCII
       .replace(
         superSubDigitsRegex,

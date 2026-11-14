@@ -137,6 +137,16 @@ describe('absurd exponents', () => {
   });
 });
 
+describe('superscript fraction after a whole number', () => {
+  test('keeps the whole number separate in verbose output', () => {
+    const result = numericQuantity('2¹⁄₂', { verbose: true });
+    expect(result.value).toBe(2.5);
+    expect(result.whole).toBe(2);
+    expect(result.numerator).toBe(1);
+    expect(result.denominator).toBe(2);
+  });
+});
+
 describe('trailing invalid metadata', () => {
   test('is captured for multi-comma input when trailing invalid is disallowed', () => {
     const result = numericQuantity('1,2,3', {
