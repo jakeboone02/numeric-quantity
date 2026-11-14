@@ -20,7 +20,7 @@ const currencyPrefixRegex = new RegExp('^([-+]?)\\s*(\\p{Sc}+)\\s*', 'u');
 const currencySuffixRegex = new RegExp('\\s*(\\p{Sc}+)\\s*$', 'u');
 const percentageSuffixRegex = /\s*%$/;
 // A superscript numerator that directly follows a whole-number digit ("2¹⁄₂")
-const superscriptNumeratorAfterDigitRegex = new RegExp('(\\p{Nd})([⁰¹²³⁴⁵⁶⁷⁸⁹]+[⁄/])', 'gu');
+const superscriptNumeratorAfterDigitRegex = new RegExp('(\\p{Nd})([⁰¹²³⁴⁵⁶⁷⁸⁹]+\\s*[⁄/])', 'gu');
 
 const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
 /**
