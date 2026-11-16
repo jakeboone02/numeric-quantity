@@ -313,6 +313,10 @@ export const numericQuantityTests: Record<
     ['2¹ ⁄₂', 2.5],
     ['2¹ /₂', 2.5],
     ['2¹  ⁄ ₂', 2.5],
+    // Plain superscripts (no slash) still merge; ASCII slash yields mixed number
+    ['2³', 23],
+    ['2³/4', 2.75],
+    ['1,000¹⁄₂', 1000.5],
   ],
   BigInts: [
     ['9007199254740992', 9007199254740992n, { bigIntOnOverflow }],
