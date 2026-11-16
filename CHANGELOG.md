@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- [#54] A superscript fraction directly following a whole number now parses as a mixed number (e.g. `'2¹⁄₂'` → `2.5`, previously `10.5`). This also applies to an pullCII slash: `'2³/4'` is now `2.75` (previously `5.75`). Plain superscripts without a slash (`'2³'` → `23`) are unchanged.
+
 ## [v3.3.4] - 2026-11-03
 
 ### Fixed
@@ -269,6 +273,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#39]: https://github.com/jakeboone02/numeric-quantity/pull/39
 [#50]: https://github.com/jakeboone02/numeric-quantity/pull/50
 [#52]: https://github.com/jakeboone02/numeric-quantity/pull/52
+[#54]: https://github.com/jakeboone02/numeric-quantity/pull/54
 
 <!-- Release comparison links -->
 
