@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- [#55] Decimal/scientific values with a whole part of 1e21 or more no longer drop their exponent (e.g. `'1000000000000000000000e2'` → `1e23`, previously `1e21`). Whole parts beyond `Number.MAX_SAFE_INTEGER` are no longer rounded before the fractional part is applied, so results now match `Number()` (e.g. `'9007199254740993.5'` with `round: false` → `9007199254740994`, previously `9007199254740992`).
+
 ## [v3.3.5] - 2026-11-16
 
 ### Fixed
@@ -276,6 +280,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#50]: https://github.com/jakeboone02/numeric-quantity/pull/50
 [#52]: https://github.com/jakeboone02/numeric-quantity/pull/52
 [#54]: https://github.com/jakeboone02/numeric-quantity/pull/54
+[#55]: https://github.com/jakeboone02/numeric-quantity/pull/55
 
 <!-- Release comparison links -->
 
