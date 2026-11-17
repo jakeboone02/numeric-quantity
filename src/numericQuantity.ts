@@ -23,6 +23,8 @@ const percentageSuffixRegex = /\s*%$/;
 const superscriptNumeratorAfterDigitRegex = new RegExp('(\\p{Nd})([⁰¹²³⁴⁵⁶⁷⁸⁹]+\\s*[⁄/])', 'gu');
 
 const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
+/** Scaled decimals at or above this magnitude are already whole numbers. */
+const maxSafeScaled = 2 ** 53;
 /**
  * Upper bound on `10 ** exp` magnitudes evaluated exactly. Anything beyond this
  * overflows/underflows the `number` path to `Infinity`/`0` anyway, so bounding it
@@ -331,10 +333,20 @@ function numericQuantity(
   ) {
     // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal. Parse digits as
     // written; `finalResult` stringifies as "1e+21" from 1e21 up, breaking appended exponent.
-    const decimalValue = parseFloat(`${numberGroup1 || '0'}${numberGroup2}`);
-    finalResult = isNaN(roundingFactor)
-      ? decimalValue
-      : round(decimalValue, decimalValue * roundingFactor);
+    const decimalString = `${numberGroup1 || '0'}${numberGroup2}`;
+    const decimalValue = parseFloat(decimalString);
+    if (isNaN(roundingFactor)) {
+      finalResult = decimalValue;
+    } else {
+      // Scale by moving the exponent of the digits as written, not by multiplying the
+      // parsed double: `0.5005 * 1000` is `500.49999999999994`, but `0.5005e3` is `500.5`.
+      const [mantissa, exponent = '0'] = decimalString.split(/e/i);
+      const scaled = Number(`${mantissa}e${Number(exponent) + (roundTo as number)}`);
+      // From 2^53 up a double has no fraction left to round, and a non-finite `scaled`
+      // means the exponent is out of range; either way the parsed value stands.
+      finalResult =
+        Math.abs(scaled) < maxSafeScaled ? Math.round(scaled) / roundingFactor : decimalValue;
+    }
   } else if (leadingSlashRegex.test(numberGroup2)) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
     const numerator = parseInt(numberGroup1);

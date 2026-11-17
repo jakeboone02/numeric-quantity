@@ -205,6 +205,15 @@ export const numericQuantityTests: Record<
     ['111.2345e-2', 1, { round: 0 }],
     ['123.456789', 123, { round: -4 }],
     ['123.456789', 123.4568, { round: 4.8 }],
+    // Halves as written round up, even when the parsed double sits just below the half
+    // (`0.5005 * 1000` is `500.49999999999994`)
+    ['0.5005', 0.501],
+    ['-0.5005', -0.501],
+    ['1.005', 1.01, { round: 2 }],
+    ['0.285', 0.29, { round: 2 }],
+    ['1,005', 1.01, { round: 2, decimalSeparator: ',' }],
+    ['5.005e-1', 0.501],
+    ['0.05005e1', 0.501],
     // Absurdly large `round` values: the rounding factor overflows to `Infinity`,
     // so no rounding is applied (rounding to >308 decimals is a no-op for a double)
     ['1.23456789', 1.23456789, { round: 1e21 }],
