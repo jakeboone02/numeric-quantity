@@ -23,6 +23,8 @@ const percentageSuffixRegex = /\s*%$/;
 const superscriptNumeratorAfterDigitRegex = new RegExp('(\\p{Nd})([⁰¹²³⁴⁵⁶⁷⁸⁹]+\\s*[⁄/])', 'gu');
 
 const maxSafeBigInt = BigInt(Number.MAX_SAFE_INTEGER);
+/** Scaled decimals at or above this magnitude are already whole numbers as doubles. */
+const maxSafeScaled = 2 ** 53;
 /**
  * Upper bound on `10 ** exp` magnitudes evaluated exactly. Anything beyond this
  * overflows/underflows the `number` path to `Infinity`/`0` anyway, so bounding it
@@ -86,6 +88,19 @@ const toRoundedBigInt = (
   const rounded = (2n * numerator + denominator) / (2n * denominator);
 
   return rounded > maxSafeBigInt ? rounded : undefined;
+};
+
+/**
+ * Rounds the unsigned decimal `${mantissa}e${exponent}` half-up to `roundTo` places using
+ * the digits as written, then parses the result once, so it is the closest double.
+ */
+const roundDecimalDigits = (mantissa: string, exponent: number, roundTo: number) => {
+  const [whole, fraction = ''] = mantissa.split('.');
+  const digits = BigInt(`${whole}${fraction}`);
+  const shift = exponent + roundTo - fraction.length;
+  const rounded =
+    shift >= 0 ? digits * pow10(shift) : (2n * digits + pow10(-shift)) / (2n * pow10(-shift));
+  return Number(`${rounded}e-${roundTo}`);
 };
 
 /**
@@ -331,10 +346,26 @@ function numericQuantity(
   ) {
     // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal. Parse digits as
     // written; `finalResult` stringifies as "1e+21" from 1e21 up, breaking appended exponent.
-    const decimalValue = parseFloat(`${numberGroup1 || '0'}${numberGroup2}`);
-    finalResult = isNaN(roundingFactor)
-      ? decimalValue
-      : round(decimalValue, decimalValue * roundingFactor);
+    const decimalString = `${numberGroup1 || '0'}${numberGroup2}`;
+    const decimalValue = parseFloat(decimalString);
+    if (isNaN(roundingFactor)) {
+      finalResult = decimalValue;
+    } else {
+      // Scale by moving the exponent of the digits as written, not by multiplying the
+      // parsed double: `0.5005 * 1000` is `500.49999999999994`, but `0.5005e3` is `500.5`.
+      const [mantissa, exponent = '0'] = decimalString.split(/e/i);
+      const scaled = Number(`${mantissa}e${Number(exponent) + (roundTo as number)}`);
+      // A non-finite `scaled` means the exponent is out of range, so the parsed value stands.
+      // From 2^53 up `scaled` is already a whole number, so it can't show which way to round
+      // and dividing it can move the result; round the digits as written instead.
+      if (!Number.isFinite(scaled)) {
+        finalResult = decimalValue;
+      } else if (Math.abs(scaled) < maxSafeScaled) {
+        finalResult = Math.round(scaled) / roundingFactor;
+      } else {
+        finalResult = roundDecimalDigits(mantissa, Number(exponent), roundTo as number);
+      }
+    }
   } else if (leadingSlashRegex.test(numberGroup2)) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
     const numerator = parseInt(numberGroup1);
