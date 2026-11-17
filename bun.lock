@@ -12,7 +12,7 @@
         "oxfmt": "^0.79.0",
         "oxlint": "^1.94.0",
         "oxlint-tsgolint": "^7.0.2007",
-        "pkg-pr-new": "^0.0.93",
+        "pkg-pr-new": "^0.0.94",
         "tsdown": "^0.23.7",
         "typedoc": "^0.28.20",
         "typescript": "^6",
@@ -252,7 +252,7 @@
 
     "picomatch": ["picomatch@4.0.7", "", {}, "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA=="],
 
-    "pkg-pr-new": ["pkg-pr-new@0.0.93", "", { "bin": { "pkg-pr-new": "bin/cli.js" } }, "sha512-JH3HEO+m8sNFpalNAeGrNKjdwxNcXT3yuEuGMU/65dvLojPo+Ofnmc8la2v2ceisjXTOKQw/738Pj4KNFY7F+w=="],
+    "pkg-pr-new": ["pkg-pr-new@0.0.94", "", { "bin": { "pkg-pr-new": "bin/cli.js" } }, "sha512-+s3ZZl1Vt3wHfsIRH+chHG6/3wsu1N+Z5jitNYAPc0GGCYR8xmju34UShzTAMosi4WAYFCXvp80LZZc/fXSdpQ=="],
 
     "punycode.js": ["punycode.js@2.3.1", "", {}, "sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA=="],
 
