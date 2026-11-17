@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.3.7] - 2026-11-17
+
+### Fixed
+
+- Added page title to README.md.
+
 ## [v3.3.6] - 2026-11-17
 
 ### Fixed
@@ -286,7 +292,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.6...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.7...HEAD
+[v3.3.7]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.6...v3.3.7
 [v3.3.6]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.5...v3.3.6
 [v3.3.5]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.4...v3.3.5
 [v3.3.4]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.3...v3.3.4
