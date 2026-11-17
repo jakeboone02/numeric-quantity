@@ -188,6 +188,11 @@ export const numericQuantityTests: Record<
     ['1.1e2', 110],
     ['01.1e2', 110],
     ['-1.1e-2', -0.011],
+    // Whole parts from 1e21 up must keep their exponent
+    ['1000000000000000000000e2', 1e23],
+    ['1000000000000000000000.5e3', 1e24],
+    ['123456789012345678901234e-20', 1234.568],
+    ['-1,000,000,000,000,000,000,000e-3', -1e18],
   ],
   Rounding: [
     ['1.23456789', 1.23456789, { round: false }],
@@ -354,7 +359,8 @@ export const numericQuantityTests: Record<
     // No overflow: untouched by the bigint path
     ['1.5', 1.5, { bigIntOnOverflow }],
     ['.1e15', 100000000000000, { bigIntOnOverflow }],
-    ['9007199254740993.5', 9007199254740992, { round: false }],
+    // Same double as `Number('9007199254740993.5')` (and the bigint path's 9007199254740994n)
+    ['9007199254740993.5', 9007199254740994, { round: false }],
   ],
   'BigInt percentages': [
     // No overflow, so the (lossy) `number` path handles it

@@ -330,8 +330,10 @@ function numericQuantity(
     numberGroup2.startsWith('e') ||
     numberGroup2.startsWith('E')
   ) {
-    // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal
-    const decimalValue = parseFloat(`${finalResult}${numberGroup2}`);
+    // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal.
+    // Parse the digits as written: `finalResult` prints in exponent form from 1e21 up
+    // ("1e+21"), and a second exponent appended to that would be ignored.
+    const decimalValue = parseFloat(`${numberGroup1 || '0'}${numberGroup2}`);
     finalResult = isNaN(roundingFactor)
       ? decimalValue
       : round(decimalValue, decimalValue * roundingFactor);
