@@ -214,20 +214,39 @@ export const numericQuantityTests: Record<
     ['1,005', 1.01, { round: 2, decimalSeparator: ',' }],
     ['5.005e-1', 0.501],
     ['0.05005e1', 0.501],
-    // From 2^53 up the scaled double is whole, so the digits as written decide
+    // Scaled values from 2^53 up use exact bigint math
     ['900719925474099.83', 900719925474099.8, { round: 1 }],
     ['900719925474099.85', 900719925474099.9, { round: 1 }],
     ['-900719925474099.83', -900719925474099.8, { round: 1 }],
     ['9007199254740993.5', 9007199254740994, { round: 0 }],
     ['1e20', 1e20],
     ['1.5e300', 1.5e300, { round: 2 }],
-    // Absurdly large `round` values: the rounding factor overflows to `Infinity`,
-    // so no rounding is applied (rounding to >308 decimals is a no-op for a double)
+    // More digits than a double holds: exact digits decide, not the parsed double
+    ['0.49999999999999999999', 0, { round: 0 }],
+    ['0.50000000000000000001', 1, { round: 0 }],
+    ['1.0049999999999999999', 1, { round: 2 }],
+    // `10 ** round` is inexact above 1e22; result is still the closest double
+    ['1.25e-300', 1e-300, { round: 300 }],
+    ['1.5e-25', 2e-25, { round: 25 }],
+    ['1/3', 0.3333333333333333, { round: 30 }],
+    // Mixed numbers round as one rational (no error from adding the whole part afterwards)
+    ['3 4/7', 3.571],
+    ['3 7/9', 3.78, { round: 2 }],
+    ['-3 15/16', -3.938],
+    ['1 1/200', 1.01, { round: 2 }],
+    ['9007199254740993 1/2', 9007199254740994, { round: 0 }],
+    ['1 1/0', Infinity],
+    ['0/0', NaN],
+    // Pure fractions round halves as written
+    ['100005/200000', 0.5, { round: 1 }],
+    ['1/8', 0.13, { round: 2 }],
+    ['-1/8', -0.13, { round: 2 }],
+    // Absurdly large `round` values (>308): no rounding is applied (a no-op for a double)
     ['1.23456789', 1.23456789, { round: 1e21 }],
     ['1.23456789', 1.23456789, { round: 400 }],
     ['1 / 2345', 1 / 2345, { round: 1e21 }],
     ['1 2/345', 1 + 2 / 345, { round: 400 }],
-    // Factor is finite but scaling the value overflows; falls back to the unrounded value
+    // Large `round` values with large magnitudes stay exact
     ['1.5e300', 1.5e300, { round: 308 }],
   ],
   'Non-finite round values': [
@@ -360,9 +379,14 @@ export const numericQuantityTests: Record<
     // Pure fractions participate on the same rational path
     ['90071992547409930/2', 45035996273704965n, { bigIntOnOverflow }],
     ['90071992547409930/ 4', 22517998136852483n, { bigIntOnOverflow }],
-    ['90071992547409930/10000', 9007199254740.994, { bigIntOnOverflow }],
+    // Closest double to exact 9007199254740.993
+    ['90071992547409930/10000', 9007199254740.992, { bigIntOnOverflow }],
     // Rounding can push a non-overflowing integer part into overflow
     ['9007199254740991.6', 9007199254740992n, { bigIntOnOverflow }],
+    // Just under the overflow threshold the exact `number` rounding applies
+    ['9007199254740990.5', 9007199254740991, { bigIntOnOverflow, round: 0 }],
+    ['9007199254740990.49', 9007199254740990, { bigIntOnOverflow, round: 0 }],
+    ['9007199254740990 1/2', 9007199254740991, { bigIntOnOverflow, round: 0 }],
     // `round` is not consulted for bigint results
     ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow, round: false }],
     ['9007199254740993.5', 9007199254740994n, { bigIntOnOverflow, round: 0 }],
@@ -540,8 +564,11 @@ export const numericQuantityTests: Record<
     // Precision is no longer destroyed by re-rounding after the division
     ['12.345%', 0.12345, { percentage: 'decimal', round: 3 }],
     ['1/3%', 0.00333, { percentage: 'decimal', round: 3 }],
-    // 0.667 / 100 is not exactly representable
-    ['2/3%', 0.006670000000000001, { percentage: 'decimal', round: 3 }],
+    // Division is folded into the exact rounding, so no extra floating-point error
+    ['2/3%', 0.00667, { percentage: 'decimal', round: 3 }],
+    ['50.05%', 0.5005, { percentage: 'decimal', round: 2 }],
+    ['1 1/200%', 0.0101, { percentage: 'decimal', round: 2 }],
+    ['0.7%', 0.007, { percentage: 'decimal', round: 25 }],
     ['12345%', 123.45, { percentage: 'decimal', round: 3 }],
     // The non-dividing path is untouched
     ['12.345%', 12.345, { percentage: 'number', round: 3 }],

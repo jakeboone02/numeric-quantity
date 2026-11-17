@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- [#56] `round` now rounds half-up exactly from the digits as written and returns the closest double, on all paths (decimals, scientific notation, fractions, mixed numbers, percentages). Previously, floating-point scaling could round halves down (e.g. `'0.5005'` → `0.5`, now `0.501`; `'1.005'` with `round: 2` → `1`, now `1.01`) and leave error in the last digits of results (e.g. `'3 4/7'` → `3.5709999999999997`, now `3.571`; `'2/3%'` with `percentage: 'decimal'` → `0.006670000000000001`, now `0.00667`).
+
 ## [v3.3.7] - 2026-11-17
 
 ### Fixed
@@ -289,6 +293,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#52]: https://github.com/jakeboone02/numeric-quantity/pull/52
 [#54]: https://github.com/jakeboone02/numeric-quantity/pull/54
 [#55]: https://github.com/jakeboone02/numeric-quantity/pull/55
+[#56]: https://github.com/jakeboone02/numeric-quantity/pull/56
 
 <!-- Release comparison links -->
 

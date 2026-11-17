@@ -221,6 +221,22 @@ describe('verbose output', () => {
     expect(result.trailingInvalid).toBe('abc');
   });
 
+  test('rounded mixed number keeps raw parts in metadata', () => {
+    const result = numericQuantity('-3 4/7%', {
+      verbose: true,
+      percentage: 'decimal',
+    });
+    expect(result).toEqual({
+      value: -0.03571,
+      input: '-3 4/7%',
+      sign: '-',
+      whole: 3,
+      numerator: 4,
+      denominator: 7,
+      percentageSuffix: true,
+    });
+  });
+
   test('includes trailingInvalid even when allowTrailingInvalid is false', () => {
     const result = numericQuantity('100abc', {
       verbose: true,
