@@ -214,6 +214,13 @@ export const numericQuantityTests: Record<
     ['1,005', 1.01, { round: 2, decimalSeparator: ',' }],
     ['5.005e-1', 0.501],
     ['0.05005e1', 0.501],
+    // From 2^53 up the scaled double is whole, so the digits as written decide
+    ['900719925474099.83', 900719925474099.8, { round: 1 }],
+    ['900719925474099.85', 900719925474099.9, { round: 1 }],
+    ['-900719925474099.83', -900719925474099.8, { round: 1 }],
+    ['9007199254740993.5', 9007199254740994, { round: 0 }],
+    ['1e20', 1e20],
+    ['1.5e300', 1.5e300, { round: 2 }],
     // Absurdly large `round` values: the rounding factor overflows to `Infinity`,
     // so no rounding is applied (rounding to >308 decimals is a no-op for a double)
     ['1.23456789', 1.23456789, { round: 1e21 }],
