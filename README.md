@@ -1,3 +1,5 @@
+# numeric-quantity
+
 [![npm][badge-npm]](https://www.npmjs.com/package/numeric-quantity)
 ![workflow status](https://github.com/jakeboone02/numeric-quantity/actions/workflows/main.yml/badge.svg)
 [![codecov.io](https://codecov.io/github/jakeboone02/numeric-quantity/coverage.svg?branch=main)](https://codecov.io/github/jakeboone02/numeric-quantity?branch=main)
