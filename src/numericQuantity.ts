@@ -295,9 +295,8 @@ function numericQuantity(
     }
   }
 
-  // Numerify capture group 1
-  finalResult =
-    !numberGroup1 && numberGroup2 && numberGroup2.startsWith('.') ? 0 : parseInt(numberGroup1);
+  // Numerify capture group 1 (empty only for ".5"-style input; decimal branch handles it)
+  finalResult = parseInt(numberGroup1);
 
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
@@ -330,9 +329,8 @@ function numericQuantity(
     numberGroup2.startsWith('e') ||
     numberGroup2.startsWith('E')
   ) {
-    // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal.
-    // Parse the digits as written: `finalResult` prints in exponent form from 1e21 up
-    // ("1e+21"), and a second exponent appended to that would be ignored.
+    // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal. Parse digits as
+    // written; `finalResult` stringifies as "1e+21" from 1e21 up, breaking appended exponent.
     const decimalValue = parseFloat(`${numberGroup1 || '0'}${numberGroup2}`);
     finalResult = isNaN(roundingFactor)
       ? decimalValue
