@@ -441,7 +441,7 @@ function numericQuantity(
     finalResult = numerator / denominator;
     if (roundTo !== false && denominator !== 0) {
       exact = roundRational(numberGroup1, denominatorString, 0, roundTo, divExp);
-    } else if (roundTo === false && divExp) {
+    } else if (roundTo === false) {
       exact = divideRational(numberGroup1, denominatorString, divExp);
     }
   } else {

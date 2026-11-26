@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- [#57] With `round: false`, percentages and mixed numbers are now the closest double to the exact value, divided once instead of rounded at each step (e.g. `'0.9%'` with `percentage: 'decimal'` → `0.009`, previously `0.009000000000000001`; `'1 2/3'` → `1.6666666666666667`, previously `1.6666666666666665`). This also covers operands beyond `Number.MAX_SAFE_INTEGER` (e.g. `'9007199254740993 1/2'` → `9007199254740994`, previously `9007199254740992`) and exponents that overflow before the division (`'1e309%'` → `1e307`, previously `Infinity`). Results may differ in the last digit from earlier versions.
+- [#57] With `round: false`, percentages and mixed numbers are now the closest double to the exact value, divided once instead of rounded at each step (e.g. `'0.9%'` with `percentage: 'decimal'` → `0.009`, previously `0.009000000000000001`; `'1 2/3'` → `1.6666666666666667`, previously `1.6666666666666665`). This also covers operands beyond `Number.MAX_SAFE_INTEGER` in fractions and mixed numbers (e.g. `'9007199254740993/3'` → `3002399751580331`, previously `3002399751580330.5`; `'9007199254740993 1/2'` → `9007199254740994`, previously `9007199254740992`) and exponents that overflow before the division (`'1e309%'` → `1e307`, previously `Infinity`). Results may differ in the last digit from earlier versions.
 - [#58] Integer percentages beyond `Number.MAX_SAFE_INTEGER` are no longer rounded before the division, regardless of `round` (e.g. `'12345678901234567891%'` → `123456789012345680`, previously `123456789012345660`).
 
 ## [v3.3.8] - 2026-11-17
