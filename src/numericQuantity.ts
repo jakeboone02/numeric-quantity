@@ -55,13 +55,11 @@ const toRoundedBigInt = (
     numerator = BigInt(group1);
   } else if (group2.startsWith('.') || group2.startsWith('e') || group2.startsWith('E')) {
     // Decimal and/or scientific notation
-    const expIndex = group2.search(/[eE]/);
-    const exponent = expIndex === -1 ? 0 : parseInt(group2.slice(expIndex + 1));
+    const { fraction: fractionDigits, exponent } = splitDecimal(group2);
     // Defer to the `number` path for non-finite/absurd exponents, before allocating any
     // `bigint`s. Fractional digit counts are bounded by the input length, but the exponent
     // is not, so validate it first.
     if (!Number.isFinite(exponent) || Math.abs(exponent) > maxExactExponent) return undefined;
-    const fractionDigits = (expIndex === -1 ? group2 : group2.slice(0, expIndex)).slice(1);
     numerator = BigInt(`${group1}${fractionDigits}`);
     if (fractionDigits) denominator = pow10(fractionDigits.length);
     if (exponent > 0) numerator *= pow10(exponent);
@@ -124,13 +122,63 @@ const roundRational = (
   return Number(`${(2n * n + d) / (2n * d)}e-${outExp}`);
 };
 
+/** Bit length of a positive `bigint`. */
+const bitLength = (n: bigint) => n.toString(2).length;
+
 /**
- * Divides `numerator` by `denominator * 10 ** divExp` with a single rounding. Returns `NaN`
- * unless both operands are exact (safe) integers, so the caller keeps its own math.
+ * Closest double (ties to even) to the positive rational `n / d`, including subnormals and
+ * overflow to `Infinity`.
  */
-const divideExact = (numerator: number, denominator: number, divExp: number): number => {
-  const d = denominator * 10 ** divExp;
-  return Number.isSafeInteger(numerator) && Number.isSafeInteger(d) ? numerator / d : NaN;
+const bigRatioToNumber = (n: bigint, d: bigint): number => {
+  if (n === 0n) return 0;
+  // `n / d` is in [2 ** (e - 1), 2 ** (e + 1)); scale so the quotient has >= 55 bits
+  const e = bitLength(n) - bitLength(d);
+  const s = 55 - e;
+  const sn = s > 0 ? n << BigInt(s) : n;
+  const sd = s < 0 ? d << BigInt(-s) : d;
+  const q = sn / sd;
+  const sticky = sn % sd !== 0n;
+  // Keep 53 significant bits, fewer if subnormal (result LSB can't go below 2 ** -1074)
+  const drop = Math.max(bitLength(q) - 53, s - 1074);
+  const dropBig = BigInt(drop);
+  let m = q >> dropBig;
+  const rest = q - (m << dropBig);
+  const half = 1n << (dropBig - 1n);
+  if (rest > half || (rest === half && (sticky || (m & 1n) === 1n))) m += 1n;
+  return Number(m) * 2 ** (drop - s);
+};
+
+/**
+ * Divides `numerator` by `denominator * 10 ** divExp` with a single rounding. Both integer
+ * strings must be unsigned. Returns `NaN` for a zero denominator, so the caller keeps its
+ * own math (`Infinity`/`NaN`).
+ */
+const divideRational = (numerator: string, denominator: string, divExp: number): number => {
+  const n = Number(numerator);
+  const d = Number(denominator) * 10 ** divExp;
+  if (d === 0) return NaN;
+  if (Number.isSafeInteger(n) && Number.isSafeInteger(d)) return n / d;
+  return bigRatioToNumber(BigInt(numerator), BigInt(denominator) * pow10(divExp));
+};
+
+/** Numerator of the improper fraction for mixed number `whole numerator/denominator`. */
+const improperNumerator = (whole: string, numerator: string, denominator: string): string => {
+  const improper = parseInt(whole) * parseInt(denominator) + parseInt(numerator);
+  return Number.isSafeInteger(improper)
+    ? `${improper}`
+    : `${BigInt(whole) * BigInt(denominator) + BigInt(numerator)}`;
+};
+
+/**
+ * Splits a decimal/scientific tail (e.g. `".25e-3"`) into its fraction digits and exponent.
+ * The exponent is `Infinity` for absurdly long exponent digit runs.
+ */
+const splitDecimal = (group2: string): { fraction: string; exponent: number } => {
+  const expIndex = group2.search(/[eE]/);
+  return {
+    fraction: (expIndex === -1 ? group2 : group2.slice(0, expIndex)).slice(1),
+    exponent: expIndex === -1 ? 0 : Number(group2.slice(expIndex + 1)),
+  };
 };
 
 /**
@@ -343,11 +391,14 @@ function numericQuantity(
   // Numerify capture group 1 (empty only for ".5"-style input; decimal branch handles it)
   finalResult = parseInt(numberGroup1);
 
+  const divExp = percentageSuffix && opts.percentage !== 'number' ? 2 : 0;
+
   // If capture group 2 is null, then we're dealing with an integer
   // and there is nothing left to process
   if (!numberGroup2) {
-    finalResult = sign === '-' ? finalResult * -1 : finalResult;
-    return returnValue(applyPercentage(finalResult));
+    // Move the decimal point; `finalResult / 100` rounds twice beyond `MAX_SAFE_INTEGER`
+    if (divExp) finalResult = Number(`${numberGroup1}e-${divExp}`);
+    return returnValue(sign === '-' ? -finalResult : finalResult);
   }
 
   // Non-finite `round` values are treated as `false` (no rounding); negative values clamp to 0
@@ -359,8 +410,7 @@ function numericQuantity(
 
   // Result with any percentage division folded in, rounded once (to `roundTo` places, or to
   // the closest double without `roundTo`); `NaN` means "use `finalResult`"
-  let rounded = NaN;
-  const divExp = percentageSuffix && opts.percentage !== 'number' ? 2 : 0;
+  let exact = NaN;
 
   if (
     numberGroup2.startsWith('.') ||
@@ -369,21 +419,18 @@ function numericQuantity(
   ) {
     // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal. Parse digits as
     // written; `finalResult` stringifies as "1e+21" from 1e21 up, breaking appended exponent.
-    let expIndex = numberGroup2.indexOf('e');
-    if (expIndex === -1) expIndex = numberGroup2.indexOf('E');
-    const fraction = expIndex === -1 ? numberGroup2.slice(1) : numberGroup2.slice(1, expIndex);
-    const exponent = expIndex === -1 ? 0 : Number(numberGroup2.slice(expIndex + 1));
+    const { fraction, exponent } = splitDecimal(numberGroup2);
     const digits = `${numberGroup1 || '0'}${fraction}`;
     if (roundTo !== false) {
       // Round the digits as written, not the parsed double (`0.5005 * 1000` is
       // `500.49999999999994`). `NaN` (absurd exponent) falls back to the parsed value.
-      rounded = roundRational(digits, '1', exponent - fraction.length, roundTo, divExp);
+      exact = roundRational(digits, '1', exponent - fraction.length, roundTo, divExp);
     } else if (divExp && Math.abs(exponent) <= maxExactExponent) {
       // Move the decimal point instead of dividing the parsed double (`0.9 / 100` is
       // `0.009000000000000001`, but `9e-3` is `0.009`)
-      rounded = Number(`${digits}e${exponent - fraction.length - divExp}`);
+      exact = Number(`${digits}e${exponent - fraction.length - divExp}`);
     }
-    if (isNaN(rounded)) finalResult = parseFloat(`${numberGroup1 || '0'}${numberGroup2}`);
+    if (isNaN(exact)) finalResult = parseFloat(`${numberGroup1 || '0'}${numberGroup2}`);
   } else if (leadingSlashRegex.test(numberGroup2)) {
     // If the first non-space char is "/" it's a pure fraction (e.g. "1/2")
     const denominatorString = numberGroup2.replace('/', '').trim();
@@ -393,9 +440,9 @@ function numericQuantity(
     parsedDenominator = denominator;
     finalResult = numerator / denominator;
     if (roundTo !== false && denominator !== 0) {
-      rounded = roundRational(numberGroup1, denominatorString, 0, roundTo, divExp);
+      exact = roundRational(numberGroup1, denominatorString, 0, roundTo, divExp);
     } else if (roundTo === false && divExp) {
-      rounded = divideExact(numerator, denominator, divExp);
+      exact = divideRational(numberGroup1, denominatorString, divExp);
     }
   } else {
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
@@ -406,25 +453,17 @@ function numericQuantity(
     parsedNumerator = numerator;
     parsedDenominator = denominator;
     // Evaluate whole + fraction as one rational, not the fraction alone then add
-    const improper = finalResult * denominator + numerator;
+    const improper = improperNumerator(numberGroup1, numeratorString, denominatorString);
     if (roundTo !== false && denominator !== 0) {
-      rounded = roundRational(
-        Number.isSafeInteger(improper)
-          ? `${improper}`
-          : `${BigInt(numberGroup1) * BigInt(denominatorString) + BigInt(numeratorString)}`,
-        denominatorString,
-        0,
-        roundTo,
-        divExp
-      );
+      exact = roundRational(improper, denominatorString, 0, roundTo, divExp);
     } else if (roundTo === false) {
       // `1 + 2 / 3` is `1.6666666666666665`, but `5 / 3` is `1.6666666666666667`
-      rounded = divideExact(improper, denominator, divExp);
+      exact = divideRational(improper, denominatorString, divExp);
     }
     finalResult += numerator / denominator;
   }
 
-  finalResult = isNaN(rounded) ? applyPercentage(finalResult) : rounded;
+  finalResult = isNaN(exact) ? applyPercentage(finalResult) : exact;
 
   return returnValue(sign === '-' ? -finalResult : finalResult);
 }

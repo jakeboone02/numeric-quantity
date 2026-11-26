@@ -239,6 +239,13 @@ export const numericQuantityTests: Record<
     // Without `round`, too (`1 + 2 / 3` is `1.6666666666666665`)
     ['1 2/3', 5 / 3, { round: false }],
     ['-3 46/6', -64 / 6, { round: false }],
+    // Unsafe improper numerators are divided exactly, ties to even (`whole + n / d` drops the .5)
+    ['9007199254740993 1/2', 9007199254740994, { round: false }],
+    ['9007199254740992 1/1', 9007199254740992, { round: false }],
+    ['9007199254740994 1/1', 9007199254740996, { round: false }],
+    ['9007199254740992 100001/100000', 9007199254740994, { round: false }],
+    ['1 1/0', Infinity, { round: false }],
+    ['0 0/0', NaN, { round: false }],
     ['0/0', NaN],
     // Pure fractions round halves as written
     ['100005/200000', 0.5, { round: 1 }],
@@ -406,8 +413,8 @@ export const numericQuantityTests: Record<
     ['9007199254740993.5', 9007199254740994, { round: false }],
   ],
   'BigInt percentages': [
-    // No overflow, so the (lossy) `number` path handles it
-    ['9007199254740993%', 90071992547409.92, { bigIntOnOverflow, percentage: 'decimal' }],
+    // No overflow, so the `number` path handles it (exactly, from the digits as written)
+    ['9007199254740993%', 90071992547409.94, { bigIntOnOverflow, percentage: 'decimal' }],
     ['900719925474099300%', 9007199254740993n, { bigIntOnOverflow, percentage: 'decimal' }],
     ['900719925474099399%', 9007199254740994n, { bigIntOnOverflow, percentage: 'decimal' }],
     ['900719925474099350%', 9007199254740994n, { bigIntOnOverflow, percentage: 'decimal' }],
@@ -571,6 +578,23 @@ export const numericQuantityTests: Record<
     ['1.5e-3%', 0.000015, { percentage: 'decimal', round: false }],
     ['288/58%', 288 / 5800, { percentage: 'decimal', round: false }],
     ['1 7/668%', 675 / 66800, { percentage: 'decimal', round: false }],
+    // Unsafe operands are divided exactly, too
+    ['9007199254740993/3%', 30023997515803.31, { percentage: 'decimal', round: false }],
+    ['1 1/9007199254740993%', 1.0000000000000002 / 100, { percentage: 'decimal', round: false }],
+    [`1/1${'0'.repeat(321)}%`, 1e-323, { percentage: 'decimal', round: false }],
+    [`1/1${'0'.repeat(400)}%`, 0, { percentage: 'decimal', round: false }],
+    [`1${'0'.repeat(400)}/3%`, Infinity, { percentage: 'decimal', round: false }],
+    ['1/0%', Infinity, { percentage: 'decimal', round: false }],
+    ['0/0%', NaN, { percentage: 'decimal', round: false }],
+    // Exponents: overflow before the division no longer yields `Infinity`; absurd ones fall back
+    ['1e309%', 1e307, { percentage: 'decimal', round: false }],
+    ['1e10001%', Infinity, { percentage: 'decimal', round: false }],
+    ['1e-10001%', 0, { percentage: 'decimal', round: false }],
+    // Integers beyond `MAX_SAFE_INTEGER` aren't rounded before the division
+    ['12345678901234567891%', 123456789012345680, { percentage: 'decimal', round: false }],
+    ['12345678901234567891%', 123456789012345680, { percentage: 'decimal' }],
+    ['-12345678901234567891%', -123456789012345680, { percentage: 'decimal' }],
+    ['12345678901234567891%', Number('12345678901234567891'), { percentage: 'number' }],
     // Precision is no longer destroyed by re-rounding after the division
     ['12.345%', 0.12345, { percentage: 'decimal', round: 3 }],
     ['1/3%', 0.00333, { percentage: 'decimal', round: 3 }],
