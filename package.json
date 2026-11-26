@@ -54,13 +54,13 @@
     "check:all": "bun run fmt && bun run lint && bun run build && bun run test && bun run docs"
   },
   "devDependencies": {
-    "@types/bun": "^1.4.4",
-    "@types/node": "^26.6.6",
+    "@types/bun": "^1.4.5",
+    "@types/node": "^26.6.11",
     "@types/web": "^0.0.367",
     "@typescript/native-preview": "^7.0.0-dev.20260527.2",
-    "oxfmt": "^0.79.0",
-    "oxlint": "^1.94.0",
-    "oxlint-tsgolint": "^7.0.2007",
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
+    "oxlint-tsgolint": "^7.0.2009",
     "pkg-pr-new": "^0.0.94",
     "tsdown": "^0.23.7",
     "typedoc": "^0.28.20",
