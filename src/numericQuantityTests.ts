@@ -236,6 +236,9 @@ export const numericQuantityTests: Record<
     ['1 1/200', 1.01, { round: 2 }],
     ['9007199254740993 1/2', 9007199254740994, { round: 0 }],
     ['1 1/0', Infinity],
+    // Without `round`, too (`1 + 2 / 3` is `1.6666666666666665`)
+    ['1 2/3', 5 / 3, { round: false }],
+    ['-3 46/6', -64 / 6, { round: false }],
     ['0/0', NaN],
     // Pure fractions round halves as written
     ['100005/200000', 0.5, { round: 1 }],
@@ -561,6 +564,13 @@ export const numericQuantityTests: Record<
     ['1%', 0.01, { percentage: 'decimal', round: false }],
     ['1.0%', 0.01, { percentage: 'decimal', round: false }],
     ['1/1%', 0.01, { percentage: 'decimal', round: false }],
+    // Without `round`, the division is still done once (`0.9 / 100` is `0.009000000000000001`)
+    ['0.9%', 0.009, { percentage: 'decimal', round: false }],
+    ['1.1%', 0.011, { percentage: 'decimal', round: false }],
+    ['-0.07%', -0.0007, { percentage: 'decimal', round: false }],
+    ['1.5e-3%', 0.000015, { percentage: 'decimal', round: false }],
+    ['288/58%', 288 / 5800, { percentage: 'decimal', round: false }],
+    ['1 7/668%', 675 / 66800, { percentage: 'decimal', round: false }],
     // Precision is no longer destroyed by re-rounding after the division
     ['12.345%', 0.12345, { percentage: 'decimal', round: 3 }],
     ['1/3%', 0.00333, { percentage: 'decimal', round: 3 }],

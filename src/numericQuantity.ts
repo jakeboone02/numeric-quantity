@@ -125,6 +125,15 @@ const roundRational = (
 };
 
 /**
+ * Divides `numerator` by `denominator * 10 ** divExp` with a single rounding. Returns `NaN`
+ * unless both operands are exact (safe) integers, so the caller keeps its own math.
+ */
+const divideExact = (numerator: number, denominator: number, divExp: number): number => {
+  const d = denominator * 10 ** divExp;
+  return Number.isSafeInteger(numerator) && Number.isSafeInteger(d) ? numerator / d : NaN;
+};
+
+/**
  * Converts a string to a number, like an enhanced version of `parseFloat`.
  *
  * The string can include mixed numbers, vulgar fractions, or Roman numerals.
@@ -348,7 +357,8 @@ function numericQuantity(
       ? Math.floor(Math.max(0, opts.round))
       : false;
 
-  // Exactly rounded result with any percentage division folded in; `NaN` means "not rounded"
+  // Result with any percentage division folded in, rounded once (to `roundTo` places, or to
+  // the closest double without `roundTo`); `NaN` means "use `finalResult`"
   let rounded = NaN;
   const divExp = percentageSuffix && opts.percentage !== 'number' ? 2 : 0;
 
@@ -359,20 +369,19 @@ function numericQuantity(
   ) {
     // If first char of `numberGroup2` is "." or "e"/"E", it's a decimal. Parse digits as
     // written; `finalResult` stringifies as "1e+21" from 1e21 up, breaking appended exponent.
+    let expIndex = numberGroup2.indexOf('e');
+    if (expIndex === -1) expIndex = numberGroup2.indexOf('E');
+    const fraction = expIndex === -1 ? numberGroup2.slice(1) : numberGroup2.slice(1, expIndex);
+    const exponent = expIndex === -1 ? 0 : Number(numberGroup2.slice(expIndex + 1));
+    const digits = `${numberGroup1 || '0'}${fraction}`;
     if (roundTo !== false) {
       // Round the digits as written, not the parsed double (`0.5005 * 1000` is
       // `500.49999999999994`). `NaN` (absurd exponent) falls back to the parsed value.
-      let expIndex = numberGroup2.indexOf('e');
-      if (expIndex === -1) expIndex = numberGroup2.indexOf('E');
-      const fraction = expIndex === -1 ? numberGroup2.slice(1) : numberGroup2.slice(1, expIndex);
-      const exponent = expIndex === -1 ? 0 : Number(numberGroup2.slice(expIndex + 1));
-      rounded = roundRational(
-        `${numberGroup1 || '0'}${fraction}`,
-        '1',
-        exponent - fraction.length,
-        roundTo,
-        divExp
-      );
+      rounded = roundRational(digits, '1', exponent - fraction.length, roundTo, divExp);
+    } else if (divExp && Math.abs(exponent) <= maxExactExponent) {
+      // Move the decimal point instead of dividing the parsed double (`0.9 / 100` is
+      // `0.009000000000000001`, but `9e-3` is `0.009`)
+      rounded = Number(`${digits}e${exponent - fraction.length - divExp}`);
     }
     if (isNaN(rounded)) finalResult = parseFloat(`${numberGroup1 || '0'}${numberGroup2}`);
   } else if (leadingSlashRegex.test(numberGroup2)) {
@@ -385,6 +394,8 @@ function numericQuantity(
     finalResult = numerator / denominator;
     if (roundTo !== false && denominator !== 0) {
       rounded = roundRational(numberGroup1, denominatorString, 0, roundTo, divExp);
+    } else if (roundTo === false && divExp) {
+      rounded = divideExact(numerator, denominator, divExp);
     }
   } else {
     // Otherwise it's a mixed fraction (e.g. "1 2/3")
@@ -394,9 +405,9 @@ function numericQuantity(
     parsedWhole = finalResult;
     parsedNumerator = numerator;
     parsedDenominator = denominator;
+    // Evaluate whole + fraction as one rational, not the fraction alone then add
+    const improper = finalResult * denominator + numerator;
     if (roundTo !== false && denominator !== 0) {
-      // Round whole + fraction as one exact rational, not the fraction alone then add
-      const improper = finalResult * denominator + numerator;
       rounded = roundRational(
         Number.isSafeInteger(improper)
           ? `${improper}`
@@ -406,6 +417,9 @@ function numericQuantity(
         roundTo,
         divExp
       );
+    } else if (roundTo === false) {
+      // `1 + 2 / 3` is `1.6666666666666665`, but `5 / 3` is `1.6666666666666667`
+      rounded = divideExact(improper, denominator, divExp);
     }
     finalResult += numerator / denominator;
   }
