@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.3.9] - 2026-11-26
+
 ### Fixed
 
 - [#57] With `round: false`, percentages and mixed numbers are now the closest double to the exact value, divided once instead of rounded at each step (e.g. `'0.9%'` with `percentage: 'decimal'` → `0.009`, previously `0.009000000000000001`; `'1 2/3'` → `1.6666666666666667`, previously `1.6666666666666665`). This also covers operands beyond `Number.MAX_SAFE_INTEGER` in fractions and mixed numbers (e.g. `'9007199254740993/3'` → `3002399751580331`, previously `3002399751580330.5`; `'9007199254740993 1/2'` → `9007199254740994`, previously `9007199254740992`) and exponents that overflow before the division (`'1e309%'` → `1e307`, previously `Infinity`). Results may differ in the last digit from earlier versions.
@@ -306,7 +308,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release comparison links -->
 
-[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.8...HEAD
+[unreleased]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.9...HEAD
+[v3.3.9]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.8...v3.3.9
 [v3.3.8]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.7...v3.3.8
 [v3.3.7]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.6...v3.3.7
 [v3.3.6]: https://github.com/jakeboone02/numeric-quantity/compare/v3.3.5...v3.3.6
